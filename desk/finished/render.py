@@ -31,7 +31,7 @@ def chart(spec: dict) -> str:
         series.setdefault(short(r[si]) if si is not None else spec["y"], {})[r[xi]] = r[yi]
     w, h, pl, pb, pt = 640, 240, 40, 28, 12
     top = max((v for s in series.values() for v in s.values()), default=1) or 1
-    sx = lambda i: pl + i * (w - pl - 10) / max(len(xs) - 1, 1)  # noqa: E731
+    sx = lambda i: pl + 14 + i * (w - pl - 50) / max(len(xs) - 1, 1)  # noqa: E731
     sy = lambda v: pt + (h - pt - pb) * (1 - v / top)  # noqa: E731
     out = [f'<svg viewBox="0 0 {w} {h}" role="img" aria-label="{escape(spec["y"])} by {escape(spec["x"])}">']
     for k in range(5):
