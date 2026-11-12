@@ -25,11 +25,11 @@ flowchart LR
 
 25 minutes in 3 steps.
 
-| Step | Minutes | You produce | The check reads |
-|---|---|---|---|
-| `gate-the-change` | 10 | a gate that runs the golden set 3 times and the attacks once, and writes `SCORECARD.md` | the gate exits 0 on the solution; it fails under 27 of 30 on the median run or on any attack not refused |
-| `catch-the-drift` | 8 | a metric change updates `metrics.toml` and the golden references together | changing only one of the two fails the gate with a message naming the metric |
-| `mutate-the-agent` | 7 | a mutation run that breaks the agent on purpose | every mutant (no value index, `customer_id`, no validator) makes the gate fail |
+| Step               | Minutes | You produce                                                                             | The check reads                                                                                          |
+| ------------------ | ------- | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `gate-the-change`  | 10      | a gate that runs the golden set 3 times and the attacks once, and writes `SCORECARD.md` | the gate exits 0 on the solution; it fails under 27 of 30 on the median run or on any attack not refused |
+| `catch-the-drift`  | 8       | a metric change updates `metrics.toml` and the golden references together               | changing only one of the two fails the gate with a message naming the metric                             |
+| `mutate-the-agent` | 7       | a mutation run that breaks the agent on purpose                                         | every mutant (no value index, `customer_id`, no validator) makes the gate fail                           |
 
 ## Walkthrough
 

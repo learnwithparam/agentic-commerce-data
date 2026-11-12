@@ -12,7 +12,9 @@ from desk.finished.render import page
 
 
 def main() -> None:
-    p = argparse.ArgumentParser(prog="ask-finished", description="Ask the finished agent a question.")
+    p = argparse.ArgumentParser(
+        prog="ask-finished", description="Ask the finished agent a question."
+    )
     p.add_argument("question")
     p.add_argument("--json", action="store_true", help="print the answer contract as JSON")
     p.add_argument("--html", help="also write the answer as a web page to this file")
@@ -24,7 +26,10 @@ def main() -> None:
     print_answer(ans, a.json)
     if not a.json:
         for r in ans["reviews"]:
-            print(f"Review {r['review_id'][:8]}: \"{r['quote']}\"" + (f" ({r['gloss_en']})" if r["gloss_en"] else ""))
+            print(
+                f'Review {r["review_id"][:8]}: "{r["quote"]}"'
+                + (f" ({r['gloss_en']})" if r["gloss_en"] else "")
+            )
         if a.html:
             print(f"Wrote {a.html}")
     sys.exit(2 if ans["error"] and not a.json else 0)

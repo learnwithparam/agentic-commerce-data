@@ -38,13 +38,13 @@ Expect: `Done. All 5 rules pass.` and a `Progress:` line.
 
 ## If you get stuck
 
-| What you see | Fix |
-|---|---|
-| `FAIL the world is built` | Run `bun run world reset`. It rebuilds `data/olist.db` from the cache. |
+| What you see                      | Fix                                                                                         |
+| --------------------------------- | ------------------------------------------------------------------------------------------- |
+| `FAIL the world is built`         | Run `bun run world reset`. It rebuilds `data/olist.db` from the cache.                      |
 | `FAIL notes/first-look.md exists` | Create the file inside `00-orientation/01-meet-the-desk/problem/notes/`, not the repo root. |
-| `FAIL a Naive: line holds ...` | Copy the number the naive agent printed. Start the line with `Naive:`. |
-| `FAIL a Finished: line holds ...` | Copy the finished agent's number. It counts every spelling of the city. |
-| `FAIL a Gap: line ...` | Read the finished agent's assumption and say what the naive agent missed. |
+| `FAIL a Naive: line holds ...`    | Copy the number the naive agent printed. Start the line with `Naive:`.                      |
+| `FAIL a Finished: line holds ...` | Copy the finished agent's number. It counts every spelling of the city.                     |
+| `FAIL a Gap: line ...`            | Read the finished agent's assumption and say what the naive agent missed.                   |
 
 ## Words you will use
 

@@ -52,12 +52,12 @@ Expect: `Done. All 7 rules pass.`
 
 ## If you get stuck
 
-| What you see | Fix |
-|---|---|
-| `FAIL ... keep their reference query` | Put `sql` back and add the alternative under `accept`. |
+| What you see                                                 | Fix                                                          |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `FAIL ... keep their reference query`                        | Put `sql` back and add the alternative under `accept`.       |
 | `FAIL ... a fair definition that differs from the reference` | Accept only the other definition, not a copy and not a join. |
-| `FAIL a wrong total still fails` | Remove any accepted query that joins payments to items. |
-| A TOML error | Use `"""` around a query that spans lines. |
+| `FAIL a wrong total still fails`                             | Remove any accepted query that joins payments to items.      |
+| A TOML error                                                 | Use `"""` around a query that spans lines.                   |
 
 ## Words you will use
 

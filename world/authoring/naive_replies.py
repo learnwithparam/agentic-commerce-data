@@ -49,7 +49,10 @@ DEMO = {
 
 golden = tomllib.loads((ROOT / "world" / "golden.toml").read_text(encoding="utf-8"))["question"]
 assert set(NAIVE) == {q["id"] for q in golden}, "every golden question needs a naive reply"
-lines = [{"agent": "naive", "role": "fast", "question": q["question"], "reply": NAIVE[q["id"]]} for q in golden]
+lines = [
+    {"agent": "naive", "role": "fast", "question": q["question"], "reply": NAIVE[q["id"]]}
+    for q in golden
+]
 lines += [{"agent": "naive", "role": "fast", "question": k, "reply": v} for k, v in DEMO.items()]
 out = ROOT / "world" / "replay" / "naive.jsonl"
 out.write_text("".join(json.dumps(x, ensure_ascii=False) + "\n" for x in lines), encoding="utf-8")

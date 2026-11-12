@@ -32,18 +32,25 @@ export type Run = {
 export function readRun(dir: string, name: string): Run | null {
   const p = join(dir, "runs", `${name}.json`);
   if (!existsSync(p)) return null;
-  try { return JSON.parse(readFileSync(p, "utf8")) as Run; } catch { return null; }
+  try {
+    return JSON.parse(readFileSync(p, "utf8")) as Run;
+  } catch {
+    return null;
+  }
 }
 
 // The query whose rows the agent reported. A check re-runs this, so a number cannot be typed in by hand.
-export const reportedQuery = (r: RunResult) => r.sql.find((s) => s.id === r.rows_from)?.text ?? null;
+export const reportedQuery = (r: RunResult) =>
+  r.sql.find((s) => s.id === r.rows_from)?.text ?? null;
 
 export async function rowsComeFromTheirQuery(r: RunResult): Promise<boolean> {
   if (r.refused || r.error) return r.rows.length === 0;
   const sql = reportedQuery(r);
   if (!sql) return false;
   const again = await tryRunSql(sql);
-  return again !== null && again.rows.length === r.rows.length && rowsMatch(r.rows, again.rows, true);
+  return (
+    again !== null && again.rows.length === r.rows.length && rowsMatch(r.rows, again.rows, true)
+  );
 }
 
 // The ids that fail when the check judges the run itself, ignoring the match flags written in the file.

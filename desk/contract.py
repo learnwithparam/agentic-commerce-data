@@ -32,11 +32,27 @@ def empty_answer(question: str) -> dict[str, Any]:
     }
 
 
-def log_query(agent: str, question: str, sql: str, ok: bool, rows: int | None, error: str | None) -> None:
+def log_query(
+    agent: str, question: str, sql: str, ok: bool, rows: int | None, error: str | None
+) -> None:
     """Append every query an agent runs to data/logs/queries.jsonl. Checks in later parts read this log."""
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     with QUERY_LOG.open("a", encoding="utf-8") as f:
-        f.write(json.dumps({"at": time.time(), "agent": agent, "question": question, "sql": sql, "ok": ok, "rows": rows, "error": error}, ensure_ascii=False) + "\n")
+        f.write(
+            json.dumps(
+                {
+                    "at": time.time(),
+                    "agent": agent,
+                    "question": question,
+                    "sql": sql,
+                    "ok": ok,
+                    "rows": rows,
+                    "error": error,
+                },
+                ensure_ascii=False,
+            )
+            + "\n"
+        )
 
 
 def jsonable(v: Any) -> Any:

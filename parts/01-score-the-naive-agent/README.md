@@ -29,11 +29,11 @@ flowchart LR
 
 ## Steps
 
-| Step | Minutes | You produce | The check reads |
-|---|---|---|---|
-| [score-the-naive-agent](01-score-the-naive-agent/problem/README.md) | 10 | `runs/naive.json`: 30 answers, each judged by rows | the run file; it re-runs every query the agent ran and judges every answer itself |
-| [read-the-failures](02-read-the-failures/problem/README.md) | 10 | `notes/failures.md`: one line per miss with its trap | your lines, the run, and the traps in `world/golden.toml` |
-| [accept-many-answers](03-accept-many-answers/problem/README.md) | 15 | `golden.toml` where revenue and GMV accept both fair definitions | every accepted query, run on the database, against the fair definitions |
+| Step                                                                | Minutes | You produce                                                      | The check reads                                                                   |
+| ------------------------------------------------------------------- | ------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| [score-the-naive-agent](01-score-the-naive-agent/problem/README.md) | 10      | `runs/naive.json`: 30 answers, each judged by rows               | the run file; it re-runs every query the agent ran and judges every answer itself |
+| [read-the-failures](02-read-the-failures/problem/README.md)         | 10      | `notes/failures.md`: one line per miss with its trap             | your lines, the run, and the traps in `world/golden.toml`                         |
+| [accept-many-answers](03-accept-many-answers/problem/README.md)     | 15      | `golden.toml` where revenue and GMV accept both fair definitions | every accepted query, run on the database, against the fair definitions           |
 
 ## Walkthrough
 

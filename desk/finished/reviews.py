@@ -21,8 +21,12 @@ def _ensure_index() -> None:
     tmp = INDEX.with_suffix(".building")
     tmp.unlink(missing_ok=True)
     out = sqlite3.connect(tmp)
-    out.execute("CREATE VIRTUAL TABLE reviews USING fts5(review_id UNINDEXED, order_id UNINDEXED, score UNINDEXED, message, tokenize = 'unicode61 remove_diacritics 2')")
-    rows = src.execute("SELECT review_id, order_id, review_score, review_comment_message FROM order_reviews WHERE review_comment_message IS NOT NULL")
+    out.execute(
+        "CREATE VIRTUAL TABLE reviews USING fts5(review_id UNINDEXED, order_id UNINDEXED, score UNINDEXED, message, tokenize = 'unicode61 remove_diacritics 2')"
+    )
+    rows = src.execute(
+        "SELECT review_id, order_id, review_score, review_comment_message FROM order_reviews WHERE review_comment_message IS NOT NULL"
+    )
     out.executemany("INSERT INTO reviews VALUES (?, ?, ?, ?)", rows)
     out.commit()
     out.close()
@@ -30,7 +34,9 @@ def _ensure_index() -> None:
     tmp.rename(INDEX)
 
 
-def search(order_ids: list[str], terms: list[str], max_score: int = 5, limit: int = 3) -> list[dict]:
+def search(
+    order_ids: list[str], terms: list[str], max_score: int = 5, limit: int = 3
+) -> list[dict]:
     """Comments on these orders that match any term, best match first. Each hit keeps its review_id."""
     if not order_ids or not terms:
         return []
@@ -44,4 +50,7 @@ def search(order_ids: list[str], terms: list[str], max_score: int = 5, limit: in
         [match, *order_ids, max_score, limit],
     ).fetchall()
     conn.close()
-    return [{"review_id": r[0], "order_id": r[1], "score": int(r[2]), "quote": " ".join(r[3].split())} for r in rows]
+    return [
+        {"review_id": r[0], "order_id": r[1], "score": int(r[2]), "quote": " ".join(r[3].split())}
+        for r in rows
+    ]

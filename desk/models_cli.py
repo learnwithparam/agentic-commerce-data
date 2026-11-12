@@ -23,17 +23,25 @@ def main() -> None:
         for role in ROLES:
             ok = n > 0
             failed += not ok
-            print(f"provider replay  role {role:<5}  {'PASS' if ok else 'FAIL'}  {n} recorded replies, no key, cost 0")
+            print(
+                f"provider replay  role {role:<5}  {'PASS' if ok else 'FAIL'}  {n} recorded replies, no key, cost 0"
+            )
     else:
         key = KEYS.get(prov)
         if key and not os.environ.get(key):
-            print(f"provider {prov}  FAIL  {key} is not set. Copy .env.example to .env and fill it in.")
+            print(
+                f"provider {prov}  FAIL  {key} is not set. Copy .env.example to .env and fill it in."
+            )
             sys.exit(1)
         import litellm
 
         for role in ROLES:
             try:
-                res = litellm.completion(model=model_for(role, prov), messages=[{"role": "user", "content": "Reply with the word OK."}], max_tokens=5)
+                res = litellm.completion(
+                    model=model_for(role, prov),
+                    messages=[{"role": "user", "content": "Reply with the word OK."}],
+                    max_tokens=5,
+                )
                 try:
                     cost = f"USD {litellm.completion_cost(completion_response=res):.6f}"
                 except Exception:  # noqa: BLE001 - some providers have no price table

@@ -72,18 +72,18 @@ ran, and compare rows with the reference queries. Any framework passes.
 
 Start in [00-orientation](00-orientation/README.md). Each step has one command: `bun run verify <step-name>`.
 
-| Part | Minutes | Status |
-|---|---|---|
-| [orientation](00-orientation/README.md): meet the desk | 15 | ready |
-| [score-the-naive-agent](parts/01-score-the-naive-agent/README.md) | 35 | ready |
-| [lock-the-database](parts/02-lock-the-database/README.md) | 30 | planned |
-| [define-the-metrics](parts/03-define-the-metrics/README.md) | 35 | planned |
-| [retrieve-the-context](parts/04-retrieve-the-context/README.md) | 45 | planned |
-| [build-the-loop](parts/05-build-the-loop/README.md) | 45 | planned |
-| [answer-with-ui](parts/06-answer-with-ui/README.md) | 40 | planned |
-| [approve-the-write](parts/07-approve-the-write/README.md) | 25 | planned |
-| [delegate-over-a2a](parts/08-delegate-over-a2a/README.md) | 35 | planned |
-| [gate-every-change](parts/09-gate-every-change/README.md) | 25 | planned |
+| Part                                                              | Minutes | Status  |
+| ----------------------------------------------------------------- | ------- | ------- |
+| [orientation](00-orientation/README.md): meet the desk            | 15      | ready   |
+| [score-the-naive-agent](parts/01-score-the-naive-agent/README.md) | 35      | ready   |
+| [lock-the-database](parts/02-lock-the-database/README.md)         | 30      | planned |
+| [define-the-metrics](parts/03-define-the-metrics/README.md)       | 35      | planned |
+| [retrieve-the-context](parts/04-retrieve-the-context/README.md)   | 45      | planned |
+| [build-the-loop](parts/05-build-the-loop/README.md)               | 45      | planned |
+| [answer-with-ui](parts/06-answer-with-ui/README.md)               | 40      | planned |
+| [approve-the-write](parts/07-approve-the-write/README.md)         | 25      | planned |
+| [delegate-over-a2a](parts/08-delegate-over-a2a/README.md)         | 35      | planned |
+| [gate-every-change](parts/09-gate-every-change/README.md)         | 25      | planned |
 
 330 minutes of steps. [schedules.toml](schedules.toml) maps them onto one day, four evenings or six weekly sessions.
 [PARTS.md](PARTS.md) lists every step and what its check reads.

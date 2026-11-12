@@ -43,11 +43,11 @@ Expect: `Done. All 6 rules pass.`
 
 ## If you get stuck
 
-| What you see | Fix |
-|---|---|
-| `FAIL every failed question has a line` | Search the run for `"match": false` and list each `id`. |
+| What you see                                            | Fix                                                             |
+| ------------------------------------------------------- | --------------------------------------------------------------- |
+| `FAIL every failed question has a line`                 | Search the run for `"match": false` and list each `id`.         |
 | `FAIL each label is a trap that question can fall into` | Read that question's `traps` and `note` in `world/golden.toml`. |
-| `FAIL no line names a question the agent got right` | Remove lines for questions marked `MATCH`. |
+| `FAIL no line names a question the agent got right`     | Remove lines for questions marked `MATCH`.                      |
 
 ## Words you will use
 

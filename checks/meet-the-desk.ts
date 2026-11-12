@@ -23,12 +23,15 @@ export default [
   {
     says: "a Naive: line holds the naive agent's count, and the database agrees with it",
     test: async (d) => numberAfter(notes(d, "first-look.md"), "Naive") === (await naiveCount()),
-    tryNext: "run the naive agent on the Sao Paulo question and copy its number into a line that starts with Naive:",
+    tryNext:
+      "run the naive agent on the Sao Paulo question and copy its number into a line that starts with Naive:",
   },
   {
     says: "a Finished: line holds the finished agent's count, and the database agrees with it",
-    test: async (d) => numberAfter(notes(d, "first-look.md"), "Finished") === (await finishedCount()),
-    tryNext: "run the finished agent on the same question and copy its number into a line that starts with Finished:",
+    test: async (d) =>
+      numberAfter(notes(d, "first-look.md"), "Finished") === (await finishedCount()),
+    tryNext:
+      "run the finished agent on the same question and copy its number into a line that starts with Finished:",
   },
   {
     says: "a Gap: line says in at least five words why the two counts differ",

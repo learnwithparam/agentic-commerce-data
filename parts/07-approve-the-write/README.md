@@ -25,10 +25,10 @@ sequenceDiagram
 
 25 minutes in 2 steps.
 
-| Step | Minutes | You produce | The check reads |
-|---|---|---|---|
-| `ask-before-pausing` | 15 | an approval form and an interrupt; the mock API is called only after `approved: true` | without approval the mock API log is empty; after a scripted approval it holds one call; a rejection leaves it empty |
-| `log-the-decision` | 10 | `decisions.jsonl`: approver, time, question, evidence query ids | each approval and rejection writes one line whose approver comes from the session, never from the model |
+| Step                 | Minutes | You produce                                                                           | The check reads                                                                                                      |
+| -------------------- | ------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `ask-before-pausing` | 15      | an approval form and an interrupt; the mock API is called only after `approved: true` | without approval the mock API log is empty; after a scripted approval it holds one call; a rejection leaves it empty |
+| `log-the-decision`   | 10      | `decisions.jsonl`: approver, time, question, evidence query ids                       | each approval and rejection writes one line whose approver comes from the session, never from the model              |
 
 ## Walkthrough
 

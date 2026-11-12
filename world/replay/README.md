@@ -4,10 +4,10 @@ With `LLM_PROVIDER=replay` (the default), every model call is answered from the 
 the agent's name, the role (`fast`, `smart`, `judge`) and the question, so the same question always gets the same
 reply and checks are repeatable.
 
-| File | Agent | What it holds |
-|---|---|---|
-| `naive.jsonl` | naive | SQL for the 30 golden questions and the demo question, written from the schema only |
-| `finished.jsonl` | finished | a JSON plan per question, and English glosses for the demo's reviews |
+| File             | Agent    | What it holds                                                                       |
+| ---------------- | -------- | ----------------------------------------------------------------------------------- |
+| `naive.jsonl`    | naive    | SQL for the 30 golden questions and the demo question, written from the schema only |
+| `finished.jsonl` | finished | a JSON plan per question, and English glosses for the demo's reviews                |
 
 These replies were written by the course author, not recorded from a model, in the shape a model returns. The
 naive replies make the mistakes a model makes when it sees only the schema; the finished plans use the placeholders

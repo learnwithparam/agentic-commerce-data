@@ -4,7 +4,7 @@
 // --for <step-name> writes into that step's problem/ folder, where `bun run verify <step-name>` reads it.
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
-import { judge, goldenPathFor, loadGolden } from "../checks/lib/golden";
+import { goldenPathFor, judge, loadGolden } from "../checks/lib/golden";
 import type { Run, RunResult } from "../checks/lib/runs";
 import { findStep, ROOT } from "./structure";
 
@@ -23,7 +23,9 @@ const forStep = flag("--for");
 const goldenArg = flag("--golden");
 const agent = args[0] ?? "ask";
 if (!AGENTS[agent]) {
-  console.log(`There is no agent called "${agent}". Use: bun run score ask, bun run score naive, bun run score finished.`);
+  console.log(
+    `There is no agent called "${agent}". Use: bun run score ask, bun run score naive, bun run score finished.`,
+  );
   process.exit(1);
 }
 let outDir = ROOT;
@@ -39,21 +41,38 @@ const goldenPath = goldenArg ? join(ROOT, goldenArg) : goldenPathFor(outDir);
 const golden = loadGolden(goldenPath);
 
 async function ask(question: string): Promise<Record<string, any>> {
-  const proc = Bun.spawn([...AGENTS[agent], question, "--json"], { cwd: ROOT, stdout: "pipe", stderr: "pipe" });
-  const [out, err] = await Promise.all([new Response(proc.stdout).text(), new Response(proc.stderr).text()]);
+  const proc = Bun.spawn([...AGENTS[agent], question, "--json"], {
+    cwd: ROOT,
+    stdout: "pipe",
+    stderr: "pipe",
+  });
+  const [out, err] = await Promise.all([
+    new Response(proc.stdout).text(),
+    new Response(proc.stderr).text(),
+  ]);
   await proc.exited;
   const line = out.trim().split("\n").pop() ?? "";
-  try { return JSON.parse(line); } catch {
-    return { error: `the agent did not print one JSON object: ${(err || out).trim().split("\n").pop() ?? "no output"}` };
+  try {
+    return JSON.parse(line);
+  } catch {
+    return {
+      error: `the agent did not print one JSON object: ${(err || out).trim().split("\n").pop() ?? "no output"}`,
+    };
   }
 }
 
-try { Bun.spawnSync(["uv", "--version"]); } catch {
-  console.log("uv: command not found. Install uv from https://docs.astral.sh/uv/ and open a new terminal.");
+try {
+  Bun.spawnSync(["uv", "--version"]);
+} catch {
+  console.log(
+    "uv: command not found. Install uv from https://docs.astral.sh/uv/ and open a new terminal.",
+  );
   process.exit(2);
 }
 
-console.log(`Scoring the ${agent} agent on ${golden.length} golden questions (${relative(ROOT, goldenPath)}).`);
+console.log(
+  `Scoring the ${agent} agent on ${golden.length} golden questions (${relative(ROOT, goldenPath)}).`,
+);
 const results: RunResult[] = new Array(golden.length);
 let next = 0;
 async function worker() {
@@ -64,21 +83,41 @@ async function worker() {
     const rows = Array.isArray(a.rows) ? a.rows : [];
     const verdict = a.error || a.refused ? { match: false, matchedBy: null } : await judge(q, rows);
     results[i] = {
-      id: q.id, question: q.question, sql: a.sql ?? [], rows_from: a.rows_from ?? null, columns: a.columns ?? [], rows,
-      refused: Boolean(a.refused), error: a.error ?? null, match: verdict.match, matched_by: verdict.matchedBy,
+      id: q.id,
+      question: q.question,
+      sql: a.sql ?? [],
+      rows_from: a.rows_from ?? null,
+      columns: a.columns ?? [],
+      rows,
+      refused: Boolean(a.refused),
+      error: a.error ?? null,
+      match: verdict.match,
+      matched_by: verdict.matchedBy,
     };
   }
 }
 await Promise.all(Array.from({ length: 6 }, worker));
 
 for (const r of results) {
-  const why = r.error ? `error: ${r.error}` : r.refused ? "refused" : r.match ? (r.matched_by === "reference" ? "" : `(${r.matched_by})`) : "rows differ from the reference";
+  const why = r.error
+    ? `error: ${r.error}`
+    : r.refused
+      ? "refused"
+      : r.match
+        ? r.matched_by === "reference"
+          ? ""
+          : `(${r.matched_by})`
+        : "rows differ from the reference";
   console.log(`  ${r.match ? "MATCH" : "MISS "}  ${r.id}  ${why}`.trimEnd());
 }
 const matched = results.filter((r) => r.match).length;
 const run: Run = {
-  version: 1, agent, command: AGENTS[agent].filter((x) => x !== "--quiet").join(" "),
-  provider: process.env.LLM_PROVIDER || "replay", golden: relative(ROOT, goldenPath), results,
+  version: 1,
+  agent,
+  command: AGENTS[agent].filter((x) => x !== "--quiet").join(" "),
+  provider: process.env.LLM_PROVIDER || "replay",
+  golden: relative(ROOT, goldenPath),
+  results,
   score: { matched, total: results.length },
 };
 mkdirSync(join(outDir, "runs"), { recursive: true });
@@ -86,4 +125,7 @@ const out = join(outDir, "runs", `${agent}.json`);
 writeFileSync(out, JSON.stringify(run, null, 2) + "\n");
 console.log(`Score: ${matched} of ${results.length} match.`);
 console.log(`Wrote ${relative(ROOT, out)}`);
-if (results.some((r) => r.error)) console.log("Some questions ended in an error. Look them up in 00-orientation/troubleshooting.md.");
+if (results.some((r) => r.error))
+  console.log(
+    "Some questions ended in an error. Look them up in 00-orientation/troubleshooting.md.",
+  );

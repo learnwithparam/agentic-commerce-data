@@ -8,7 +8,11 @@ import { failedIds, readRun } from "./lib/runs";
 type Line = { id: string; label: string };
 const LINE = /^\s*-\s*([a-z0-9-]+)\s*:\s*([a-z-]+)/;
 const lines = (d: string): Line[] =>
-  (notes(d, "failures.md") ?? "").split("\n").map((l) => l.match(LINE)).filter(Boolean).map((m) => ({ id: m![1], label: m![2] }));
+  (notes(d, "failures.md") ?? "")
+    .split("\n")
+    .map((l) => l.match(LINE))
+    .filter(Boolean)
+    .map((m) => ({ id: m![1], label: m![2] }));
 const failures = (d: string) => failedIds(readRun(d, "naive")!, loadGolden(goldenPathFor(d)));
 
 export default [
@@ -20,7 +24,8 @@ export default [
   {
     says: "runs/naive.json is in this folder",
     test: (d) => readRun(d, "naive") !== null,
-    tryNext: "it ships with the starter; if you deleted it, run bun run score naive --for read-the-failures",
+    tryNext:
+      "it ships with the starter; if you deleted it, run bun run score naive --for read-the-failures",
   },
   {
     says: "every failed question has a line: - <question-id>: <label>",
@@ -28,7 +33,8 @@ export default [
       const named = new Set(lines(d).map((l) => l.id));
       return (await failures(d)).every((id) => named.has(id));
     },
-    tryNext: "list every MISS from the run; each line starts with a dash, the question id, a colon and a label",
+    tryNext:
+      "list every MISS from the run; each line starts with a dash, the question id, a colon and a label",
   },
   {
     says: `every label is one of: ${TRAP_LABELS.join(", ")}`,
@@ -44,7 +50,8 @@ export default [
         return q !== undefined && (q.traps.length === 0 || q.traps.includes(l.label));
       });
     },
-    tryNext: "compare the agent's SQL with the reference SQL in world/golden.toml and name what differs",
+    tryNext:
+      "compare the agent's SQL with the reference SQL in world/golden.toml and name what differs",
   },
   {
     says: "no line names a question the agent got right",

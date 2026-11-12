@@ -21,83 +21,82 @@ and no step folders, and `bun run check` skips them until their steps exist.
 
 ## Ready
 
-| Part | Step | Minutes | What the check reads |
-|---|---|---|---|
-| orientation (`00-orientation/`) | `meet-the-desk` | 15 | the world's row counts; `notes/first-look.md`, whose `Naive:` and `Finished:` numbers it recomputes from the database |
-| score-the-naive-agent (`parts/01-score-the-naive-agent/`) | `score-the-naive-agent` | 10 | `runs/naive.json`; re-runs every recorded query and judges every answer against the reference rows |
-| | `read-the-failures` | 10 | `notes/failures.md`, the run, and the `traps` of each question in `world/golden.toml` |
-| | `accept-many-answers` | 15 | the step's `golden.toml`; runs every accepted query against the fair definitions in `checks/lib/definitions.ts` and the fan-out totals |
+| Part                                                      | Step                    | Minutes | What the check reads                                                                                                                   |
+| --------------------------------------------------------- | ----------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| orientation (`00-orientation/`)                           | `meet-the-desk`         | 15      | the world's row counts; `notes/first-look.md`, whose `Naive:` and `Finished:` numbers it recomputes from the database                  |
+| score-the-naive-agent (`parts/01-score-the-naive-agent/`) | `score-the-naive-agent` | 10      | `runs/naive.json`; re-runs every recorded query and judges every answer against the reference rows                                     |
+|                                                           | `read-the-failures`     | 10      | `notes/failures.md`, the run, and the `traps` of each question in `world/golden.toml`                                                  |
+|                                                           | `accept-many-answers`   | 15      | the step's `golden.toml`; runs every accepted query against the fair definitions in `checks/lib/definitions.ts` and the fan-out totals |
 
 ## Planned
 
-
 ### lock-the-database (`parts/02-lock-the-database/`), 30 minutes
 
-| Step | Minutes | The learner produces | What the check reads |
-|---|---|---|---|
-| `open-read-only` | 8 | the SQL tool opens `file:...?mode=ro` | sends `DELETE FROM orders` straight to the tool; expects a read-only error and unchanged row counts |
-| `validate-the-query` | 12 | a `sqlglot` validator: one SELECT, the 9 known tables, `LIMIT 1000` added, no `ATTACH` or `PRAGMA` | 12 attack strings from `checks/attacks.toml` each refused with a reason; all 30 golden reference queries pass |
-| `refuse-the-mutation` | 10 | the agent refuses 'Delete the test orders' and 'Set seller X to inactive' | `ask --json` returns `refused: true` and a reason; `data/logs/queries.jsonl` holds no write verb |
+| Step                  | Minutes | The learner produces                                                                               | What the check reads                                                                                          |
+| --------------------- | ------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `open-read-only`      | 8       | the SQL tool opens `file:...?mode=ro`                                                              | sends `DELETE FROM orders` straight to the tool; expects a read-only error and unchanged row counts           |
+| `validate-the-query`  | 12      | a `sqlglot` validator: one SELECT, the 9 known tables, `LIMIT 1000` added, no `ATTACH` or `PRAGMA` | 12 attack strings from `checks/attacks.toml` each refused with a reason; all 30 golden reference queries pass |
+| `refuse-the-mutation` | 10      | the agent refuses 'Delete the test orders' and 'Set seller X to inactive'                          | `ask --json` returns `refused: true` and a reason; `data/logs/queries.jsonl` holds no write verb              |
 
 ### define-the-metrics (`parts/03-define-the-metrics/`), 35 minutes
 
-| Step | Minutes | The learner produces | What the check reads |
-|---|---|---|---|
-| `define-the-metrics` | 15 | `metrics.toml`: `late_delivery_rate`, `gmv`, `active_seller`, `repeat_customer`, each with description, SQL, grain, owner | each metric's SQL passes the validator and returns rows; `repeat_customer` must use `customer_unique_id` |
-| `query-through-metrics` | 12 | the agent uses a metric first and writes free SQL only when none fits | on the metric questions of the golden set, `metric_ids` names the right metric and the rows match |
-| `state-the-assumptions` | 8 | every answer lists its assumptions | `assumptions` is non-empty on every golden answer; late-delivery answers mention the estimated date |
+| Step                    | Minutes | The learner produces                                                                                                      | What the check reads                                                                                     |
+| ----------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `define-the-metrics`    | 15      | `metrics.toml`: `late_delivery_rate`, `gmv`, `active_seller`, `repeat_customer`, each with description, SQL, grain, owner | each metric's SQL passes the validator and returns rows; `repeat_customer` must use `customer_unique_id` |
+| `query-through-metrics` | 12      | the agent uses a metric first and writes free SQL only when none fits                                                     | on the metric questions of the golden set, `metric_ids` names the right metric and the rows match        |
+| `state-the-assumptions` | 8       | every answer lists its assumptions                                                                                        | `assumptions` is non-empty on every golden answer; late-delivery answers mention the estimated date      |
 
 ### retrieve-the-context (`parts/04-retrieve-the-context/`), 45 minutes
 
-| Step | Minutes | The learner produces | What the check reads |
-|---|---|---|---|
-| `describe-the-tables` | 8 | `tables/*.md`: one card per table with purpose, grain, keys and traps | 9 cards exist; each names its grain and at least one trap |
-| `prune-the-schema` | 8 | the agent sends only the cards it needs to the SQL writer | the selected tables include every table of the reference SQL for at least 27 of 30 questions |
-| `index-the-values` | 10 | a value index over cities, states and categories | a lookup of 'Sao Paulo' returns all 9 stored spellings; the Sao Paulo golden questions match |
-| `remember-past-questions` | 7 | a store of verified question and SQL pairs used as examples | a pair whose rows do not match its reference is rejected on insert |
-| `search-the-reviews` | 12 | review search with multilingual embeddings, filtered by SQL first | every returned `review_id` belongs to the seller and window asked; an English query finds Portuguese late-delivery comments |
+| Step                      | Minutes | The learner produces                                                  | What the check reads                                                                                                        |
+| ------------------------- | ------- | --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `describe-the-tables`     | 8       | `tables/*.md`: one card per table with purpose, grain, keys and traps | 9 cards exist; each names its grain and at least one trap                                                                   |
+| `prune-the-schema`        | 8       | the agent sends only the cards it needs to the SQL writer             | the selected tables include every table of the reference SQL for at least 27 of 30 questions                                |
+| `index-the-values`        | 10      | a value index over cities, states and categories                      | a lookup of 'Sao Paulo' returns all 9 stored spellings; the Sao Paulo golden questions match                                |
+| `remember-past-questions` | 7       | a store of verified question and SQL pairs used as examples           | a pair whose rows do not match its reference is rejected on insert                                                          |
+| `search-the-reviews`      | 12      | review search with multilingual embeddings, filtered by SQL first     | every returned `review_id` belongs to the seller and window asked; an English query finds Portuguese late-delivery comments |
 
 ### build-the-loop (`parts/05-build-the-loop/`), 45 minutes
 
-| Step | Minutes | The learner produces | What the check reads |
-|---|---|---|---|
-| `route-the-question` | 12 | a router: sql, reviews, both, refuse or handoff | `route` in `ask --json` matches the expected route for at least 36 of 40 questions |
-| `correct-the-error` | 10 | on a SQL error or empty result the agent rewrites and retries at most twice | with a broken column name injected, at least 4 of 5 answers still match; the query log shows at most 2 retries |
-| `check-the-relevance` | 8 | a relevance check on review hits | none of 5 seeded off-topic reviews is cited |
-| `cite-the-rows` | 15 | every number cites a query id and row ids; every quote cites a `review_id` | re-running each cited query reproduces the number; every cited review contains its quote |
+| Step                  | Minutes | The learner produces                                                        | What the check reads                                                                                           |
+| --------------------- | ------- | --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `route-the-question`  | 12      | a router: sql, reviews, both, refuse or handoff                             | `route` in `ask --json` matches the expected route for at least 36 of 40 questions                             |
+| `correct-the-error`   | 10      | on a SQL error or empty result the agent rewrites and retries at most twice | with a broken column name injected, at least 4 of 5 answers still match; the query log shows at most 2 retries |
+| `check-the-relevance` | 8       | a relevance check on review hits                                            | none of 5 seeded off-topic reviews is cited                                                                    |
+| `cite-the-rows`       | 15      | every number cites a query id and row ids; every quote cites a `review_id`  | re-running each cited query reproduces the number; every cited review contains its quote                       |
 
 ### answer-with-ui (`parts/06-answer-with-ui/`), 40 minutes
 
-| Step | Minutes | The learner produces | What the check reads |
-|---|---|---|---|
-| `render-the-answer` | 15 | A2UI v1.0 messages using the course catalog: Table, LineChart, AssumptionCard, ReviewQuote | for 5 golden questions the `ui` data model holds the same rows as `rows` |
-| `validate-the-surface` | 10 | a schema check against the A2UI v1.0 JSON schemas pinned in `checks/schemas/` | 5 broken surfaces are rejected with the failing JSON path; every golden surface validates |
-| `stream-the-events` | 15 | `POST /ask` streams AG-UI events | the SSE stream has the events in a valid order; the first event arrives within 2 seconds |
+| Step                   | Minutes | The learner produces                                                                       | What the check reads                                                                      |
+| ---------------------- | ------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------- |
+| `render-the-answer`    | 15      | A2UI v1.0 messages using the course catalog: Table, LineChart, AssumptionCard, ReviewQuote | for 5 golden questions the `ui` data model holds the same rows as `rows`                  |
+| `validate-the-surface` | 10      | a schema check against the A2UI v1.0 JSON schemas pinned in `checks/schemas/`              | 5 broken surfaces are rejected with the failing JSON path; every golden surface validates |
+| `stream-the-events`    | 15      | `POST /ask` streams AG-UI events                                                           | the SSE stream has the events in a valid order; the first event arrives within 2 seconds  |
 
 ### approve-the-write (`parts/07-approve-the-write/`), 25 minutes
 
-| Step | Minutes | The learner produces | What the check reads |
-|---|---|---|---|
-| `ask-before-pausing` | 15 | an approval form and an interrupt; the mock API is called only after `approved: true` | without approval the mock API log is empty; after a scripted approval it holds one call; a rejection leaves it empty |
-| `log-the-decision` | 10 | `decisions.jsonl`: approver, time, question, evidence query ids | each approval and rejection writes one line whose approver comes from the session, never from the model |
+| Step                 | Minutes | The learner produces                                                                  | What the check reads                                                                                                 |
+| -------------------- | ------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `ask-before-pausing` | 15      | an approval form and an interrupt; the mock API is called only after `approved: true` | without approval the mock API log is empty; after a scripted approval it holds one call; a rejection leaves it empty |
+| `log-the-decision`   | 10      | `decisions.jsonl`: approver, time, question, evidence query ids                       | each approval and rejection writes one line whose approver comes from the session, never from the model              |
 
 ### delegate-over-a2a (`parts/08-delegate-over-a2a/`), 35 minutes
 
-| Step | Minutes | The learner produces | What the check reads |
-|---|---|---|---|
-| `publish-the-card` | 7 | an Agent Card at `/.well-known/agent-card.json` | the card validates against the pinned A2A 1.0 schema; every skill has an id, description and examples |
-| `delegate-to-logistics` | 10 | hand-off questions go to the logistics agent as an A2A task | 3 hand-off answers carry the logistics task id; each task ends `TASK_STATE_COMPLETED` |
-| `stream-the-task` | 6 | the call streams and passes task updates on | with the logistics agent slowed to 70 seconds the answer completes; an injected error reaches the user |
-| `sign-the-card` | 6 | a signed card (JWS, ES256) and `/.well-known/jwks.json` | the signature verifies; changing one byte of the card fails verification |
-| `refuse-the-unsigned` | 6 | every remote card is verified against your own allowlist | the unsigned pricing agent and a card signed by an unknown key are refused; logistics is accepted |
+| Step                    | Minutes | The learner produces                                        | What the check reads                                                                                   |
+| ----------------------- | ------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `publish-the-card`      | 7       | an Agent Card at `/.well-known/agent-card.json`             | the card validates against the pinned A2A 1.0 schema; every skill has an id, description and examples  |
+| `delegate-to-logistics` | 10      | hand-off questions go to the logistics agent as an A2A task | 3 hand-off answers carry the logistics task id; each task ends `TASK_STATE_COMPLETED`                  |
+| `stream-the-task`       | 6       | the call streams and passes task updates on                 | with the logistics agent slowed to 70 seconds the answer completes; an injected error reaches the user |
+| `sign-the-card`         | 6       | a signed card (JWS, ES256) and `/.well-known/jwks.json`     | the signature verifies; changing one byte of the card fails verification                               |
+| `refuse-the-unsigned`   | 6       | every remote card is verified against your own allowlist    | the unsigned pricing agent and a card signed by an unknown key are refused; logistics is accepted      |
 
 ### gate-every-change (`parts/09-gate-every-change/`), 25 minutes
 
-| Step | Minutes | The learner produces | What the check reads |
-|---|---|---|---|
-| `gate-the-change` | 10 | a gate that runs the golden set 3 times and the attacks once, and writes `SCORECARD.md` | the gate exits 0 on the solution; it fails under 27 of 30 on the median run or on any attack not refused |
-| `catch-the-drift` | 8 | a metric change updates `metrics.toml` and the golden references together | changing only one of the two fails the gate with a message naming the metric |
-| `mutate-the-agent` | 7 | a mutation run that breaks the agent on purpose | every mutant (no value index, `customer_id`, no validator) makes the gate fail |
+| Step               | Minutes | The learner produces                                                                    | What the check reads                                                                                     |
+| ------------------ | ------- | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `gate-the-change`  | 10      | a gate that runs the golden set 3 times and the attacks once, and writes `SCORECARD.md` | the gate exits 0 on the solution; it fails under 27 of 30 on the median run or on any attack not refused |
+| `catch-the-drift`  | 8       | a metric change updates `metrics.toml` and the golden references together               | changing only one of the two fails the gate with a message naming the metric                             |
+| `mutate-the-agent` | 7       | a mutation run that breaks the agent on purpose                                         | every mutant (no value index, `customer_id`, no validator) makes the gate fail                           |
 
 ## Notes for part sessions
 
@@ -110,4 +109,3 @@ and no step folders, and `bun run check` skips them until their steps exist.
 - `answer-with-ui`: `desk/finished/render.py` renders a static page with the same content the A2UI surface must hold.
 - `gate-every-change`: the gate cannot be a GitHub workflow written by a session that may not touch `.github/`;
   make it a command (`bun run verify gate-the-change`) and leave the workflow file to the course owner.
-

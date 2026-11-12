@@ -17,7 +17,9 @@ def short(v) -> str:
 
 def table(cols: list[str], rows: list[list]) -> str:
     head = "".join(f"<th>{escape(c)}</th>" for c in cols)
-    body = "".join("<tr>" + "".join(f"<td>{escape(short(c))}</td>" for c in r) + "</tr>" for r in rows[:15])
+    body = "".join(
+        "<tr>" + "".join(f"<td>{escape(short(c))}</td>" for c in r) + "</tr>" for r in rows[:15]
+    )
     return f"<table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>"
 
 
@@ -33,17 +35,26 @@ def chart(spec: dict) -> str:
     top = max((v for s in series.values() for v in s.values()), default=1) or 1
     sx = lambda i: pl + 14 + i * (w - pl - 50) / max(len(xs) - 1, 1)  # noqa: E731
     sy = lambda v: pt + (h - pt - pb) * (1 - v / top)  # noqa: E731
-    out = [f'<svg viewBox="0 0 {w} {h}" role="img" aria-label="{escape(spec["y"])} by {escape(spec["x"])}">']
+    out = [
+        f'<svg viewBox="0 0 {w} {h}" role="img" aria-label="{escape(spec["y"])} by {escape(spec["x"])}">'
+    ]
     for k in range(5):
         v = top * k / 4
-        out.append(f'<line x1="{pl}" x2="{w - 10}" y1="{sy(v):.1f}" y2="{sy(v):.1f}" class="grid"/><text x="{pl - 6}" y="{sy(v) + 4:.1f}" class="tick" text-anchor="end">{v:.0f}</text>')
+        out.append(
+            f'<line x1="{pl}" x2="{w - 10}" y1="{sy(v):.1f}" y2="{sy(v):.1f}" class="grid"/><text x="{pl - 6}" y="{sy(v) + 4:.1f}" class="tick" text-anchor="end">{v:.0f}</text>'
+        )
     for i, x in enumerate(xs):
         if i % max(len(xs) // 6, 1) == 0:
-            out.append(f'<text x="{sx(i):.1f}" y="{h - 8}" class="tick" text-anchor="middle">{escape(str(x))}</text>')
+            out.append(
+                f'<text x="{sx(i):.1f}" y="{h - 8}" class="tick" text-anchor="middle">{escape(str(x))}</text>'
+            )
     legend = []
     for n, (name, pts) in enumerate(series.items()):
         color = PALETTE[n % len(PALETTE)]
-        d = " ".join(f"{'M' if j == 0 else 'L'}{sx(xs.index(x)):.1f},{sy(pts.get(x, 0)):.1f}" for j, x in enumerate(xs))
+        d = " ".join(
+            f"{'M' if j == 0 else 'L'}{sx(xs.index(x)):.1f},{sy(pts.get(x, 0)):.1f}"
+            for j, x in enumerate(xs)
+        )
         out.append(f'<path d="{d}" fill="none" stroke="{color}" stroke-width="2.5"/>')
         legend.append(f'<span><i style="background:{color}"></i>{escape(name)}</span>')
     out.append("</svg>")
@@ -70,24 +81,39 @@ blockquote{margin:0 0 12px;padding:0 0 0 12px;border-left:3px solid var(--accent
 
 
 def page(ans: dict) -> str:
-    parts = [f"<header><b>Olist operations desk</b><span class='cite'>route: {escape(str(ans['route']))}</span></header>",
-             f"<h1>{escape(ans['question'])}</h1>"]
+    parts = [
+        f"<header><b>Olist operations desk</b><span class='cite'>route: {escape(str(ans['route']))}</span></header>",
+        f"<h1>{escape(ans['question'])}</h1>",
+    ]
     if ans["refused"] or ans["error"]:
-        parts.append(f"<div class='card refused'><h2>{'Refused' if ans['refused'] else 'Error'}</h2>{escape(ans['reason'] or ans['error'] or '')}</div>")
+        parts.append(
+            f"<div class='card refused'><h2>{'Refused' if ans['refused'] else 'Error'}</h2>{escape(ans['reason'] or ans['error'] or '')}</div>"
+        )
     else:
-        parts.append(f"<div class='card answer'>{escape(ans['answer'])} <span class='cite'>[{escape(str(ans['rows_from']))}]</span></div>")
+        parts.append(
+            f"<div class='card answer'>{escape(ans['answer'])} <span class='cite'>[{escape(str(ans['rows_from']))}]</span></div>"
+        )
         left = f"<div class='card'><h2>Rows from {escape(str(ans['rows_from']))}</h2>{table(ans['columns'], ans['rows'])}</div>"
         right = ""
         if ans.get("chart"):
             right += f"<div class='card'><h2>{escape(ans['chart']['y'])} by {escape(ans['chart']['x'])} [{escape(ans['chart']['query'])}]</h2>{chart(ans['chart'])}</div>"
         if ans["assumptions"]:
-            right += "<div class='card assume'><h2>Assumptions</h2><ul>" + "".join(f"<li>{escape(a)}</li>" for a in ans["assumptions"]) + "</ul></div>"
+            right += (
+                "<div class='card assume'><h2>Assumptions</h2><ul>"
+                + "".join(f"<li>{escape(a)}</li>" for a in ans["assumptions"])
+                + "</ul></div>"
+            )
         parts.append(f"<div class='grid2'><div>{left}</div><div>{right}</div></div>")
         if ans["reviews"]:
             quotes = "".join(
                 f"<blockquote><p>“{escape(r['quote'])}”</p><p class='gloss'>{escape(r['gloss_en'])}</p>"
-                f"<span class='cite'>review {escape(r['review_id'])} &middot; {r['score']} star</span></blockquote>" for r in ans["reviews"])
+                f"<span class='cite'>review {escape(r['review_id'])} &middot; {r['score']} star</span></blockquote>"
+                for r in ans["reviews"]
+            )
             parts.append(f"<div class='card'><h2>What customers wrote</h2>{quotes}</div>")
-        parts.append("<div class='card'><h2>Queries behind this answer</h2>" + "".join(
-            f"<pre>-- {escape(s['id'])}\n{escape(s['text'])}</pre>" for s in ans["sql"]) + "</div>")
+        parts.append(
+            "<div class='card'><h2>Queries behind this answer</h2>"
+            + "".join(f"<pre>-- {escape(s['id'])}\n{escape(s['text'])}</pre>" for s in ans["sql"])
+            + "</div>"
+        )
     return f"<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Operations desk answer</title><style>{CSS}</style></head><body><main>{''.join(parts)}</main></body></html>"

@@ -6,7 +6,7 @@ import type { Rule } from "../scripts/verify";
 import { rowsMatch } from "./lib/compare";
 import { runSql, tryRunSql } from "./lib/db";
 import { FAIR, FAN_OUT } from "./lib/definitions";
-import { judge, loadGolden, WORLD_GOLDEN, type Question } from "./lib/golden";
+import { judge, loadGolden, type Question, WORLD_GOLDEN } from "./lib/golden";
 import { readRun } from "./lib/runs";
 
 const IDS = Object.keys(FAIR);
@@ -20,13 +20,22 @@ const sameRows = async (a: string, b: string) => {
 export default [
   {
     says: "golden.toml in this folder has the same questions as world/golden.toml",
-    test: (d) => existsSync(join(d, "golden.toml")) && mine(d).map((q) => q.id).join() === loadGolden(WORLD_GOLDEN).map((q) => q.id).join(),
+    test: (d) =>
+      existsSync(join(d, "golden.toml")) &&
+      mine(d)
+        .map((q) => q.id)
+        .join() ===
+        loadGolden(WORLD_GOLDEN)
+          .map((q) => q.id)
+          .join(),
     tryNext: "edit the golden.toml that ships in this folder; keep every question and its id",
   },
   {
     says: "revenue-total and gmv-2018 keep their reference query",
     test: async (d) => {
-      for (const id of IDS) if (!(await sameRows(pick(mine(d), id).sql, pick(loadGolden(WORLD_GOLDEN), id).sql))) return false;
+      for (const id of IDS)
+        if (!(await sameRows(pick(mine(d), id).sql, pick(loadGolden(WORLD_GOLDEN), id).sql)))
+          return false;
       return true;
     },
     tryNext: "leave sql as it is and add the other definition under accept = [ ... ]",
@@ -41,7 +50,8 @@ export default [
       }
       return true;
     },
-    tryNext: "add accept = [\"\"\"SELECT ...\"\"\"] to both questions and run each query once to see it work",
+    tryNext:
+      'add accept = ["""SELECT ..."""] to both questions and run each query once to see it work',
   },
   {
     says: "every accepted query returns a fair definition that differs from the reference",
@@ -57,13 +67,17 @@ export default [
       }
       return true;
     },
-    tryNext: "accept only the other fair definition: payments or items plus freight for revenue, with or without freight for GMV",
+    tryNext:
+      "accept only the other fair definition: payments or items plus freight for revenue, with or without freight for GMV",
   },
   {
     says: "no other question changed",
     test: (d) => {
       const world = loadGolden(WORLD_GOLDEN);
-      return mine(d).every((q) => IDS.includes(q.id) || (q.sql === pick(world, q.id).sql && (q.accept ?? []).length === 0));
+      return mine(d).every(
+        (q) =>
+          IDS.includes(q.id) || (q.sql === pick(world, q.id).sql && (q.accept ?? []).length === 0),
+      );
     },
     tryNext: "undo edits to the other questions; only revenue-total and gmv-2018 change here",
   },
@@ -78,14 +92,17 @@ export default [
       }
       return true;
     },
-    tryNext: "the naive agent used the other definition; accept that one. Run bun run score naive --for accept-many-answers",
+    tryNext:
+      "the naive agent used the other definition; accept that one. Run bun run score naive --for accept-many-answers",
   },
   {
     says: "a wrong total still fails: the fan-out totals match neither question",
     test: async (d) => {
-      for (const id of IDS) if ((await judge(pick(mine(d), id), (await runSql(FAN_OUT[id])).rows)).match) return false;
+      for (const id of IDS)
+        if ((await judge(pick(mine(d), id), (await runSql(FAN_OUT[id])).rows)).match) return false;
       return true;
     },
-    tryNext: "remove any accepted query that joins payments to items; that join counts a payment once per item",
+    tryNext:
+      "remove any accepted query that joins payments to items; that join counts a payment once per item",
   },
 ] satisfies Rule[];

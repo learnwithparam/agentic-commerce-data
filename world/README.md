@@ -27,23 +27,23 @@ agent gives must come from a query a check can run again here.
 
 ## The traps, measured on this data
 
-| Trap | What is in the data |
-|---|---|
-| spelling | `seller_city` holds Sao Paulo in 9 spellings (704 sellers); `= 'sao paulo'` finds 694. One spelling uses a combining accent, so a typed `'são paulo'` matches nothing. |
-| customer-id | `customer_id` is one per order: 99,441 of them for 96,096 people (`customer_unique_id`). |
-| undefined-metric | Payments sum to 16,008,872.12; item price plus freight to 15,843,553.24. |
-| date-text | Every estimated delivery date is at midnight, so a text comparison counts a delivery on the estimated day as late (8.11% against 6.77% of delivered orders). |
-| fan-out | 1,000,163 geolocation rows cover far fewer zip prefixes; orders have several items and several payments. |
-| status-filter | 8 statuses; 8 delivered orders have no delivery date. |
-| translation | Category names are Portuguese; 2 categories in products have no English translation, and 610 products have no category. |
+| Trap             | What is in the data                                                                                                                                                    |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| spelling         | `seller_city` holds Sao Paulo in 9 spellings (704 sellers); `= 'sao paulo'` finds 694. One spelling uses a combining accent, so a typed `'são paulo'` matches nothing. |
+| customer-id      | `customer_id` is one per order: 99,441 of them for 96,096 people (`customer_unique_id`).                                                                               |
+| undefined-metric | Payments sum to 16,008,872.12; item price plus freight to 15,843,553.24.                                                                                               |
+| date-text        | Every estimated delivery date is at midnight, so a text comparison counts a delivery on the estimated day as late (8.11% against 6.77% of delivered orders).           |
+| fan-out          | 1,000,163 geolocation rows cover far fewer zip prefixes; orders have several items and several payments.                                                               |
+| status-filter    | 8 statuses; 8 delivered orders have no delivery date.                                                                                                                  |
+| translation      | Category names are Portuguese; 2 categories in products have no English translation, and 610 products have no category.                                                |
 
 ## Commands
 
-| Command | What it does |
-|---|---|
-| `bun run world` | Build `data/olist.db` if it is missing, then print the row counts and test the read-only open. |
-| `bun run world reset` | Delete the database and the logs, and build them again from the cache. |
-| `bun run world status` | Print the row counts. |
+| Command                | What it does                                                                                   |
+| ---------------------- | ---------------------------------------------------------------------------------------------- |
+| `bun run world`        | Build `data/olist.db` if it is missing, then print the row counts and test the read-only open. |
+| `bun run world reset`  | Delete the database and the logs, and build them again from the cache.                         |
+| `bun run world status` | Print the row counts.                                                                          |
 
 ## Logs a check can read
 

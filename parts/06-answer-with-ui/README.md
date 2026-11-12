@@ -21,11 +21,11 @@ flowchart LR
 
 40 minutes in 3 steps.
 
-| Step | Minutes | You produce | The check reads |
-|---|---|---|---|
-| `render-the-answer` | 15 | A2UI v1.0 messages using the course catalog: Table, LineChart, AssumptionCard, ReviewQuote | for 5 golden questions the `ui` data model holds the same rows as `rows` |
-| `validate-the-surface` | 10 | a schema check against the A2UI v1.0 JSON schemas pinned in `checks/schemas/` | 5 broken surfaces are rejected with the failing JSON path; every golden surface validates |
-| `stream-the-events` | 15 | `POST /ask` streams AG-UI events | the SSE stream has the events in a valid order; the first event arrives within 2 seconds |
+| Step                   | Minutes | You produce                                                                                | The check reads                                                                           |
+| ---------------------- | ------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------- |
+| `render-the-answer`    | 15      | A2UI v1.0 messages using the course catalog: Table, LineChart, AssumptionCard, ReviewQuote | for 5 golden questions the `ui` data model holds the same rows as `rows`                  |
+| `validate-the-surface` | 10      | a schema check against the A2UI v1.0 JSON schemas pinned in `checks/schemas/`              | 5 broken surfaces are rejected with the failing JSON path; every golden surface validates |
+| `stream-the-events`    | 15      | `POST /ask` streams AG-UI events                                                           | the SSE stream has the events in a valid order; the first event arrives within 2 seconds  |
 
 ## Walkthrough
 

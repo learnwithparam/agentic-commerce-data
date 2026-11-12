@@ -40,7 +40,9 @@ def _recordings() -> dict[tuple[str, str, str], str]:
     return out
 
 
-def complete(role: str, messages: list[dict], *, agent: str, question: str, max_tokens: int = 1500) -> str:
+def complete(
+    role: str, messages: list[dict], *, agent: str, question: str, max_tokens: int = 1500
+) -> str:
     prov = provider()
     if prov not in PROVIDERS:
         raise LLMError(f"LLM_PROVIDER={prov!r} is not known. Use one of: {', '.join(PROVIDERS)}.")
@@ -54,16 +56,28 @@ def complete(role: str, messages: list[dict], *, agent: str, question: str, max_
         return reply
     key = KEYS.get(prov)
     if key and not os.environ.get(key):
-        raise LLMError(f"LLM_PROVIDER={prov} needs {key} in .env. Copy .env.example to .env and fill it in.")
+        raise LLMError(
+            f"LLM_PROVIDER={prov} needs {key} in .env. Copy .env.example to .env and fill it in."
+        )
     import litellm  # imported here so replay mode starts fast
 
     try:
-        res = litellm.completion(model=model_for(role, prov), messages=messages, max_tokens=max_tokens)
+        res = litellm.completion(
+            model=model_for(role, prov), messages=messages, max_tokens=max_tokens
+        )
     except Exception as e:  # noqa: BLE001 - every provider raises its own types
-        raise LLMError(f"The {prov} call for the {role} role failed: {type(e).__name__}. Run `uv run models` to test the provider.") from e
+        raise LLMError(
+            f"The {prov} call for the {role} role failed: {type(e).__name__}. Run `uv run models` to test the provider."
+        ) from e
     reply = res.choices[0].message.content or ""
     if os.environ.get("LLM_RECORD") == "1":
         REPLAY_DIR.mkdir(parents=True, exist_ok=True)
         with (REPLAY_DIR / "recorded.jsonl").open("a", encoding="utf-8") as f:
-            f.write(json.dumps({"agent": agent, "role": role, "question": question, "reply": reply}, ensure_ascii=False) + "\n")
+            f.write(
+                json.dumps(
+                    {"agent": agent, "role": role, "question": question, "reply": reply},
+                    ensure_ascii=False,
+                )
+                + "\n"
+            )
     return reply

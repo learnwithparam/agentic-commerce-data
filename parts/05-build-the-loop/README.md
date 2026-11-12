@@ -28,12 +28,12 @@ flowchart LR
 
 45 minutes in 4 steps.
 
-| Step | Minutes | You produce | The check reads |
-|---|---|---|---|
-| `route-the-question` | 12 | a router: sql, reviews, both, refuse or handoff | `route` in `ask --json` matches the expected route for at least 36 of 40 questions |
-| `correct-the-error` | 10 | on a SQL error or empty result the agent rewrites and retries at most twice | with a broken column name injected, at least 4 of 5 answers still match; the query log shows at most 2 retries |
-| `check-the-relevance` | 8 | a relevance check on review hits | none of 5 seeded off-topic reviews is cited |
-| `cite-the-rows` | 15 | every number cites a query id and row ids; every quote cites a `review_id` | re-running each cited query reproduces the number; every cited review contains its quote |
+| Step                  | Minutes | You produce                                                                 | The check reads                                                                                                |
+| --------------------- | ------- | --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `route-the-question`  | 12      | a router: sql, reviews, both, refuse or handoff                             | `route` in `ask --json` matches the expected route for at least 36 of 40 questions                             |
+| `correct-the-error`   | 10      | on a SQL error or empty result the agent rewrites and retries at most twice | with a broken column name injected, at least 4 of 5 answers still match; the query log shows at most 2 retries |
+| `check-the-relevance` | 8       | a relevance check on review hits                                            | none of 5 seeded off-topic reviews is cited                                                                    |
+| `cite-the-rows`       | 15      | every number cites a query id and row ids; every quote cites a `review_id`  | re-running each cited query reproduces the number; every cited review contains its quote                       |
 
 ## Walkthrough
 

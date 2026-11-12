@@ -24,11 +24,11 @@ flowchart LR
 
 30 minutes in 3 steps.
 
-| Step | Minutes | You produce | The check reads |
-|---|---|---|---|
-| `open-read-only` | 8 | the SQL tool opens `file:...?mode=ro` | sends `DELETE FROM orders` straight to the tool; expects a read-only error and unchanged row counts |
-| `validate-the-query` | 12 | a `sqlglot` validator: one SELECT, the 9 known tables, `LIMIT 1000` added, no `ATTACH` or `PRAGMA` | 12 attack strings from `checks/attacks.toml` each refused with a reason; all 30 golden reference queries pass |
-| `refuse-the-mutation` | 10 | the agent refuses 'Delete the test orders' and 'Set seller X to inactive' | `ask --json` returns `refused: true` and a reason; `data/logs/queries.jsonl` holds no write verb |
+| Step                  | Minutes | You produce                                                                                        | The check reads                                                                                               |
+| --------------------- | ------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `open-read-only`      | 8       | the SQL tool opens `file:...?mode=ro`                                                              | sends `DELETE FROM orders` straight to the tool; expects a read-only error and unchanged row counts           |
+| `validate-the-query`  | 12      | a `sqlglot` validator: one SELECT, the 9 known tables, `LIMIT 1000` added, no `ATTACH` or `PRAGMA` | 12 attack strings from `checks/attacks.toml` each refused with a reason; all 30 golden reference queries pass |
+| `refuse-the-mutation` | 10      | the agent refuses 'Delete the test orders' and 'Set seller X to inactive'                          | `ask --json` returns `refused: true` and a reason; `data/logs/queries.jsonl` holds no write verb              |
 
 ## Walkthrough
 

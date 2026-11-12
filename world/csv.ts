@@ -11,18 +11,49 @@ export function* parseCsv(text: string): Generator<string[]> {
     const c = text[i];
     if (quoted) {
       if (c === '"') {
-        if (text[i + 1] === '"') { field += '"'; i += 2; continue; }
-        quoted = false; i++; continue;
+        if (text[i + 1] === '"') {
+          field += '"';
+          i += 2;
+          continue;
+        }
+        quoted = false;
+        i++;
+        continue;
       }
-      field += c; i++; continue;
+      field += c;
+      i++;
+      continue;
     }
-    if (c === '"' && field === "") { quoted = true; i++; continue; }
-    if (c === ",") { row.push(field); field = ""; i++; continue; }
-    if (c === "\r" && text[i + 1] === "\n") { i++; continue; }
-    if (c === "\n") { row.push(field); yield row; row = []; field = ""; i++; continue; }
-    field += c; i++;
+    if (c === '"' && field === "") {
+      quoted = true;
+      i++;
+      continue;
+    }
+    if (c === ",") {
+      row.push(field);
+      field = "";
+      i++;
+      continue;
+    }
+    if (c === "\r" && text[i + 1] === "\n") {
+      i++;
+      continue;
+    }
+    if (c === "\n") {
+      row.push(field);
+      yield row;
+      row = [];
+      field = "";
+      i++;
+      continue;
+    }
+    field += c;
+    i++;
   }
-  if (field !== "" || row.length) { row.push(field); yield row; }
+  if (field !== "" || row.length) {
+    row.push(field);
+    yield row;
+  }
 }
 
 export type ColumnType = "INTEGER" | "REAL" | "TEXT";

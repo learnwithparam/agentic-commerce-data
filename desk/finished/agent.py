@@ -42,7 +42,9 @@ Reviews:
 def _json(reply: str) -> dict:
     m = re.search(r"\{.*\}", reply, re.S)
     if not m:
-        raise LLMError("The model's plan was not JSON. Run the question again, or try another provider.")
+        raise LLMError(
+            "The model's plan was not JSON. Run the question again, or try another provider."
+        )
     return json.loads(m.group(0))
 
 
@@ -53,7 +55,11 @@ def expand(sql: str, notes: list[str]) -> str:
             found = values.lookup(name, arg)
             if not found:
                 raise guard.Refused(f"no stored value of {name} looks like {arg!r}")
-            note = f"{arg} ({name}) covers {len(found)} stored spellings: " + ", ".join(repr(v) for v in found) + "."
+            note = (
+                f"{arg} ({name}) covers {len(found)} stored spellings: "
+                + ", ".join(repr(v) for v in found)
+                + "."
+            )
             if len(found) > 1 and note not in notes:
                 notes.append(note)
             return values.sql_list(found)
@@ -78,9 +84,13 @@ def fill(template: str, results: dict[str, tuple[list[str], list[list]]]) -> str
 def ask(question: str) -> dict:
     ans = empty_answer(question)
     messages = [
-        {"role": "system", "content": SYSTEM.format(
-            metrics="\n".join(f"- {k}: {v['description']}" for k, v in METRICS.items()),
-            tables=", ".join(sorted(guard.TABLES)))},
+        {
+            "role": "system",
+            "content": SYSTEM.format(
+                metrics="\n".join(f"- {k}: {v['description']}" for k, v in METRICS.items()),
+                tables=", ".join(sorted(guard.TABLES)),
+            ),
+        },
         {"role": "user", "content": question},
     ]
     try:
@@ -94,7 +104,9 @@ def ask(question: str) -> dict:
         ans["reason"] = plan.get("reason") or "The desk does not answer this."
         return ans
     ans["metric_ids"] = [m for m in plan.get("metric_ids", []) if m in METRICS]
-    ans["assumptions"] = [METRICS[m]["assumption"] for m in ans["metric_ids"]] + list(plan.get("assumptions", []))
+    ans["assumptions"] = [METRICS[m]["assumption"] for m in ans["metric_ids"]] + list(
+        plan.get("assumptions", [])
+    )
     results: dict[str, tuple[list[str], list[list]]] = {}
     for q in plan.get("queries", []):
         try:
@@ -117,7 +129,10 @@ def ask(question: str) -> dict:
     if rid in results:
         ans["rows_from"] = rid
         ans["columns"], ans["rows"] = results[rid]
-        ans["citations"] = [{"claim": ", ".join(str(c) for c in row), "query": rid, "row_ids": [i]} for i, row in enumerate(ans["rows"][:10])]
+        ans["citations"] = [
+            {"claim": ", ".join(str(c) for c in row), "query": rid, "row_ids": [i]}
+            for i, row in enumerate(ans["rows"][:10])
+        ]
     chart = plan.get("chart")
     if chart and chart.get("query") in results:
         cols, rows = results[chart["query"]]
@@ -125,12 +140,21 @@ def ask(question: str) -> dict:
     rs = plan.get("review_search")
     if rs and rs.get("orders_query") in results:
         order_ids = [r[0] for r in results[rs["orders_query"]][1]]
-        hits = reviews.search(order_ids, rs.get("terms", []), rs.get("max_score", 5), rs.get("limit", 3))
+        hits = reviews.search(
+            order_ids, rs.get("terms", []), rs.get("max_score", 5), rs.get("limit", 3)
+        )
         glosses: dict = {}
         if hits:
             listing = "\n".join(f"{h['review_id']}: {h['quote']}" for h in hits)
             try:
-                glosses = _json(complete("fast", [{"role": "user", "content": GLOSS.format(reviews=listing)}], agent=AGENT + "-gloss", question=question))
+                glosses = _json(
+                    complete(
+                        "fast",
+                        [{"role": "user", "content": GLOSS.format(reviews=listing)}],
+                        agent=AGENT + "-gloss",
+                        question=question,
+                    )
+                )
             except LLMError:
                 glosses = {}
         ans["reviews"] = [{**h, "gloss_en": glosses.get(h["review_id"], "")} for h in hits]

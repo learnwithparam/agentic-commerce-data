@@ -24,11 +24,11 @@ flowchart LR
 
 35 minutes in 3 steps.
 
-| Step | Minutes | You produce | The check reads |
-|---|---|---|---|
-| `define-the-metrics` | 15 | `metrics.toml`: `late_delivery_rate`, `gmv`, `active_seller`, `repeat_customer`, each with description, SQL, grain, owner | each metric's SQL passes the validator and returns rows; `repeat_customer` must use `customer_unique_id` |
-| `query-through-metrics` | 12 | the agent uses a metric first and writes free SQL only when none fits | on the metric questions of the golden set, `metric_ids` names the right metric and the rows match |
-| `state-the-assumptions` | 8 | every answer lists its assumptions | `assumptions` is non-empty on every golden answer; late-delivery answers mention the estimated date |
+| Step                    | Minutes | You produce                                                                                                               | The check reads                                                                                          |
+| ----------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `define-the-metrics`    | 15      | `metrics.toml`: `late_delivery_rate`, `gmv`, `active_seller`, `repeat_customer`, each with description, SQL, grain, owner | each metric's SQL passes the validator and returns rows; `repeat_customer` must use `customer_unique_id` |
+| `query-through-metrics` | 12      | the agent uses a metric first and writes free SQL only when none fits                                                     | on the metric questions of the golden set, `metric_ids` names the right metric and the rows match        |
+| `state-the-assumptions` | 8       | every answer lists its assumptions                                                                                        | `assumptions` is non-empty on every golden answer; late-delivery answers mention the estimated date      |
 
 ## Walkthrough
 

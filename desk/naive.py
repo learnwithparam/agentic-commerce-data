@@ -27,7 +27,10 @@ Schema:
 
 
 def schema_text(conn: sqlite3.Connection) -> str:
-    return "\n".join(r[0] + ";" for r in conn.execute("SELECT sql FROM sqlite_master WHERE type = 'table' ORDER BY name"))
+    return "\n".join(
+        r[0] + ";"
+        for r in conn.execute("SELECT sql FROM sqlite_master WHERE type = 'table' ORDER BY name")
+    )
 
 
 def strip_fences(reply: str) -> str:
@@ -80,7 +83,9 @@ def main() -> None:
     p = argparse.ArgumentParser(prog="ask-naive", description="Ask the naive agent a question.")
     p.add_argument("question")
     p.add_argument("--json", action="store_true", help="print the answer contract as JSON")
-    p.add_argument("--user", default="cm-ana", help="who is asking (used from the approval part on)")
+    p.add_argument(
+        "--user", default="cm-ana", help="who is asking (used from the approval part on)"
+    )
     a = p.parse_args()
     ans = ask(a.question)
     print_answer(ans, a.json)

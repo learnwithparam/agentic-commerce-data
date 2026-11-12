@@ -26,11 +26,19 @@ export async function runSql(sql: string): Promise<Result> {
 }
 
 export async function tryRunSql(sql: string): Promise<Result | null> {
-  try { return await runSql(sql); } catch { return null; }
+  try {
+    return await runSql(sql);
+  } catch {
+    return null;
+  }
 }
 
 // The row count of every table, against the counts the pinned download must produce.
 export async function worldIsIntact(): Promise<boolean> {
   const d = await openDb();
-  return SOURCE.file.every((f) => (d.query(`SELECT COUNT(*) AS n FROM "${f.table}"`).get() as { n: number }).n === (f as any).rows);
+  return SOURCE.file.every(
+    (f) =>
+      (d.query(`SELECT COUNT(*) AS n FROM "${f.table}"`).get() as { n: number }).n ===
+      (f as any).rows,
+  );
 }

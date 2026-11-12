@@ -14,8 +14,15 @@ from sqlglot import exp
 from desk.paths import DB_PATH
 
 TABLES = {
-    "orders", "order_items", "order_payments", "order_reviews", "customers", "sellers", "products",
-    "product_category_name_translation", "geolocation",
+    "orders",
+    "order_items",
+    "order_payments",
+    "order_reviews",
+    "customers",
+    "sellers",
+    "products",
+    "product_category_name_translation",
+    "geolocation",
 }
 ROW_CAP = 1000
 SECONDS = 10
@@ -42,7 +49,17 @@ def check(sql: str) -> str:
     tree = trees[0]
     if not isinstance(tree, (exp.Select, exp.Union, exp.Intersect, exp.Except)):
         raise Refused(f"only SELECT is allowed, found {tree.key.upper()}")
-    for bad in (exp.Insert, exp.Update, exp.Delete, exp.Drop, exp.Create, exp.Alter, exp.Command, exp.Pragma, exp.Attach):
+    for bad in (
+        exp.Insert,
+        exp.Update,
+        exp.Delete,
+        exp.Drop,
+        exp.Create,
+        exp.Alter,
+        exp.Command,
+        exp.Pragma,
+        exp.Attach,
+    ):
         if any(True for _ in tree.find_all(bad)):
             raise Refused(f"{bad.__name__.upper()} is not allowed inside a query")
     ctes = {c.alias_or_name for c in tree.find_all(exp.CTE)}

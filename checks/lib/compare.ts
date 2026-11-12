@@ -6,7 +6,8 @@ const NUMERIC = /^-?\d+(\.\d+)?$/;
 
 export function cell(v: unknown): string {
   if (v === null || v === undefined) return "null";
-  if (typeof v === "number" || typeof v === "bigint") return `n:${(Math.round(Number(v) * 100) / 100).toFixed(2)}`;
+  if (typeof v === "number" || typeof v === "bigint")
+    return `n:${(Math.round(Number(v) * 100) / 100).toFixed(2)}`;
   if (typeof v === "boolean") return `n:${v ? "1.00" : "0.00"}`;
   const s = String(v).trim();
   if (NUMERIC.test(s)) return `n:${(Math.round(Number(s) * 100) / 100).toFixed(2)}`;
@@ -30,7 +31,8 @@ function sameRows(agent: unknown[][], ref: unknown[][], orderMatters: boolean): 
   const a = agent.map(rowKey);
   const b = ref.map(rowKey);
   if (orderMatters) return a.every((x, i) => x === b[i]);
-  a.sort(); b.sort();
+  a.sort();
+  b.sort();
   return a.every((x, i) => x === b[i]);
 }
 
@@ -42,5 +44,11 @@ export function rowsMatch(agent: unknown[][], ref: unknown[][], orderMatters = f
   if (width < k) return false;
   if (width === k) return sameRows(agent, ref, orderMatters);
   if (width > 8) return false;
-  return combos(width, k).some((cols) => sameRows(agent.map((r) => cols.map((c) => r[c])), ref, orderMatters));
+  return combos(width, k).some((cols) =>
+    sameRows(
+      agent.map((r) => cols.map((c) => r[c])),
+      ref,
+      orderMatters,
+    ),
+  );
 }
