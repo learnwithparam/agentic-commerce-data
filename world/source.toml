@@ -1,0 +1,79 @@
+# Where the Olist data comes from. `bun run world` downloads each file, checks its SHA-256, and builds data/olist.db.
+# The data is NOT stored in this repo.
+#
+# Dataset: "Brazilian E-Commerce Public Dataset by Olist", published by Olist on Kaggle:
+#   https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce
+# Licence: CC BY-NC-SA 4.0, https://creativecommons.org/licenses/by-nc-sa/4.0/
+#
+# The download is pinned to one commit of a public GitHub copy of the Kaggle files, so every learner and CI
+# build the same bytes without a Kaggle account. If you prefer, download the zip from Kaggle with your own
+# account, unzip the CSVs into world/.cache/, and `bun run world` uses them if their checksums match.
+
+[source]
+base = "https://raw.githubusercontent.com/tunguyenn99/ecommerce-data-modeling/63401c2739ae42dd9bbfa7e20227fe7b7de725a3/dataset"
+commit = "63401c2739ae42dd9bbfa7e20227fe7b7de725a3"
+kaggle = "https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce"
+licence = "CC BY-NC-SA 4.0"
+
+[[file]]
+name = "olist_customers_dataset.csv"
+table = "customers"
+rows = 99441
+bytes = 9033957
+sha256 = "983a422239e1712ded753b3bf9ecf47dc73f144d306029dcfa99e70a226883d2"
+
+[[file]]
+name = "olist_geolocation_dataset.csv"
+table = "geolocation"
+rows = 1000163
+bytes = 61273883
+sha256 = "b514f6fc991b9566aeba02aa5d67e2c3630f034b60a0e05aa0d082a3b66d88d6"
+
+[[file]]
+name = "olist_order_items_dataset.csv"
+table = "order_items"
+rows = 112650
+bytes = 15438671
+sha256 = "0bc4d068c4fe38cbb01bd90e8746e3c613fe7b4baef75fab7b0e329701c3e279"
+
+[[file]]
+name = "olist_order_payments_dataset.csv"
+table = "order_payments"
+rows = 103886
+bytes = 5777138
+sha256 = "4f713964f2815dbbaa40b9488268c55aac3627bfce5aa96cf58d1f3616de3cc0"
+
+[[file]]
+name = "olist_order_reviews_dataset.csv"
+table = "order_reviews"
+rows = 99224
+bytes = 14451670
+sha256 = "012b61c7593e34f51fa614efdf802b9c7056ce6aae5307ddb93236e7cfc797d7"
+
+[[file]]
+name = "olist_orders_dataset.csv"
+table = "orders"
+rows = 99441
+bytes = 17654914
+sha256 = "8df58ef3d2d7e9944010f7beecd9b75367f5588ec6e3c91cec19ae3345ef9ecf"
+
+[[file]]
+name = "olist_products_dataset.csv"
+table = "products"
+rows = 32951
+bytes = 2379446
+sha256 = "3e6569628a17fbc75fd206ee357b59e20364b9afa90f5b6cd5b4d624c58aa9cc"
+
+[[file]]
+name = "olist_sellers_dataset.csv"
+table = "sellers"
+rows = 3095
+bytes = 174703
+sha256 = "1f643d2b950373b85735e7794b20986f528d7a000432e7c6f9bcbb44d0846a0e"
+
+[[file]]
+name = "product_category_name_translation.csv"
+table = "product_category_name_translation"
+rows = 71
+bytes = 2613
+sha256 = "a81f0d1f27b27e7293f761bc79e3ce8f348ee39c4b3ed3e49bde38f478586278"
