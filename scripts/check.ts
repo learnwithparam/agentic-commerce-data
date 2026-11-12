@@ -15,7 +15,7 @@ const VERB_THING = /^[a-z]+(-[a-z0-9]+)+$/;
 // 1. No Makefile anywhere.
 function walk(dir: string, out: string[] = []): string[] {
   for (const e of readdirSync(dir)) {
-    if (e === "node_modules" || e === ".git") continue;
+    if (["node_modules", ".git", ".venv", "__pycache__", ".cache", "data"].includes(e)) continue; // tool and data folders, all git-ignored
     const p = join(dir, e);
     statSync(p).isDirectory() ? walk(p, out) : out.push(p);
   }

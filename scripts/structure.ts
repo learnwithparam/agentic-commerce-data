@@ -21,9 +21,19 @@ export const bareName = (folder: string) => folder.replace(/^\d+-/, "");
 // The orientation is the first part: 00-orientation/ holds its step folders next to its README.
 const ORIENTATION = join(ROOT, "00-orientation");
 
+// A planned part has a README marked TODO(part session) and no step folders yet. A later session builds its steps;
+// until then the standard does not count it. PARTS.md lists every planned part.
+export const isPlanned = (dir: string) =>
+  dirs(dir).length === 0 && existsSync(join(dir, "README.md")) && readFileSync(join(dir, "README.md"), "utf8").includes("TODO(part session)");
+
+export function plannedParts(): string[] {
+  const root = join(ROOT, "parts");
+  return dirs(root).filter((p) => isPlanned(join(root, p))).map(bareName);
+}
+
 export function parts(): Part[] {
   const root = join(ROOT, "parts");
-  const found = dirs(root).map((p) => ({ name: bareName(p), dir: join(root, p) }));
+  const found = dirs(root).map((p) => ({ name: bareName(p), dir: join(root, p) })).filter((p) => !isPlanned(p.dir));
   if (dirs(ORIENTATION).some((s) => existsSync(join(ORIENTATION, s, "step.toml")))) found.unshift({ name: "orientation", dir: ORIENTATION });
   return found.map(({ name, dir }) => {
     const steps = dirs(dir).filter((s) => dir !== ORIENTATION || existsSync(join(dir, s, "step.toml"))).map((s) => {
