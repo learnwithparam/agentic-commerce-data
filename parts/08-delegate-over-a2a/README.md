@@ -1,13 +1,24 @@
 # Delegate over A2A
 
-This part is planned. Its steps are built by a later session; the table below is the contract for that work.
+This part is planned. Its steps do not exist yet. The table below says what each step will ask you to build, and
+what its check will read.
 
 ## The problem
 
-Carrier data belongs to the logistics team, which runs its own agent. Eon, which moved 3 of about 20 agents out of
-process over A2A, found that a blocking send failed at its gateway's 60-second limit and that error events were
-dropped silently ([AAIF blog](https://aaif.io/blog/what-we-learned-putting-a2a-into-production)). An agent that
-accepts any card from any host can be pointed at an impostor.
+The carrier data belongs to the logistics team. That team runs its own agent. Your agent must pass carrier
+questions to it. A2A is a standard way for one agent to send a task to another agent.
+
+Eon moved 3 of its about 20 agents to separate services that talk over A2A. It learned two things
+([AAIF blog](https://aaif.io/blog/what-we-learned-putting-a2a-into-production)):
+
+- A send that waited for the full answer failed at its gateway's 60-second limit.
+- Error events were lost, and nobody saw a message.
+
+Trust is a problem too. Each agent publishes an Agent Card, a small file that says who it is and what it can do.
+An agent that accepts any card from any server can be tricked into talking to a fake.
+
+For example, this part will give you a pricing agent with no signature on its card. Your agent must refuse it. The
+logistics agent signs its card with a key on your list, so your agent accepts it.
 
 ```mermaid
 flowchart LR

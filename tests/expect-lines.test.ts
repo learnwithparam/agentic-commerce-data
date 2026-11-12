@@ -1,26 +1,35 @@
-// Replays the README and orientation commands in replay mode and checks the output carries each Expect line.
+// Replays the README and orientation commands in replay mode
+// and checks the output carries each Expect line.
 // Needs uv; skipped when uv is not installed (CI runs only bun run check).
 import { expect, test } from "bun:test";
 import { join } from "node:path";
 
 const ROOT = join(import.meta.dir, "..");
 const hasUv = Bun.spawnSync(["sh", "-c", "command -v uv"]).exitCode === 0;
-const run = (cmd: string) => {
-  const p = Bun.spawnSync(["sh", "-c", cmd], {
+
+// Replay mode answers from recorded replies, so no model key is needed.
+function outputOf(command: string): string {
+  const env = { ...process.env };
+  env.LLM_PROVIDER = "replay";
+  const finished = Bun.spawnSync(["sh", "-c", command], {
     cwd: ROOT,
-    env: { ...process.env, LLM_PROVIDER: "replay" },
+    env,
     stdout: "pipe",
     stderr: "pipe",
   });
-  return new TextDecoder().decode(p.stdout);
-};
+  return new TextDecoder().decode(finished.stdout);
+}
 
+// Each case is a command and the lines its output must contain.
 const CASES: [string, string[]][] = [
   ["bun run world", ["orders 99441", "sellers 3095", "Read-only open: ok, a DELETE was refused."]],
   [
-    `uv run --quiet ask-finished "Which Sao Paulo sellers had the most late deliveries in 2018?" --html data/answer-test.html`,
+    "uv run --quiet ask-finished " +
+      '"Which Sao Paulo sellers had the most late deliveries in 2018?" ' +
+      "--html data/answer-test.html",
     [
-      "Seller ea8482cd71df3c1969d7b9473ff13abc had the most late deliveries in 2018: 71 of 795 delivered orders (8.9%).",
+      "Seller ea8482cd71df3c1969d7b9473ff13abc had the most late deliveries in 2018: " +
+        "71 of 795 delivered orders (8.9%).",
       "Wrote data/answer-test.html",
     ],
   ],
@@ -46,12 +55,12 @@ const CASES: [string, string[]][] = [
   ["bun run verify score-the-naive-agent solution", ["Done. All 6 rules pass."]],
 ];
 
-for (const [cmd, wants] of CASES) {
+for (const [command, expectedLines] of CASES) {
   test.skipIf(!hasUv)(
-    cmd,
+    command,
     () => {
-      const out = run(cmd);
-      for (const w of wants) expect(out).toContain(w);
+      const output = outputOf(command);
+      for (const expectedLine of expectedLines) expect(output).toContain(expectedLine);
     },
     120_000,
   );

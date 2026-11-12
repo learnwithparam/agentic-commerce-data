@@ -1,6 +1,7 @@
 """The answer contract every agent in this course returns: `uv run ask "<question>" --json`.
 
-Checks read this object, the queries it names and the database. They never read the prose in `answer`.
+Checks read this object, the queries it names and the database.
+They never read the prose in `answer`.
 """
 
 from __future__ import annotations
@@ -10,7 +11,10 @@ import sys
 import time
 from typing import Any
 
-from desk.paths import LOG_DIR, QUERY_LOG
+from desk.paths import LOG_FOLDER, QUERY_LOG
+
+# The plain-text answer shows this many rows; the JSON answer always holds all of them.
+ROWS_SHOWN = 20
 
 
 def empty_answer(question: str) -> dict[str, Any]:
@@ -32,54 +36,56 @@ def empty_answer(question: str) -> dict[str, Any]:
     }
 
 
-def log_query(
-    agent: str, question: str, sql: str, ok: bool, rows: int | None, error: str | None
-) -> None:
-    """Append every query an agent runs to data/logs/queries.jsonl. Checks in later parts read this log."""
-    LOG_DIR.mkdir(parents=True, exist_ok=True)
-    with QUERY_LOG.open("a", encoding="utf-8") as f:
-        f.write(
-            json.dumps(
-                {
-                    "at": time.time(),
-                    "agent": agent,
-                    "question": question,
-                    "sql": sql,
-                    "ok": ok,
-                    "rows": rows,
-                    "error": error,
-                },
-                ensure_ascii=False,
-            )
-            + "\n"
-        )
+def log_query_success(agent: str, question: str, sql: str, row_count: int) -> None:
+    """Log a query that ran. Checks in later parts read data/logs/queries.jsonl."""
+    _append_to_query_log(agent, question, sql, {"ok": True, "rows": row_count, "error": None})
 
 
-def jsonable(v: Any) -> Any:
-    if isinstance(v, float):
-        return round(v, 6)
-    return v
+def log_query_failure(agent: str, question: str, sql: str, error: str) -> None:
+    """Log a query that failed or was refused, with the reason."""
+    _append_to_query_log(agent, question, sql, {"ok": False, "rows": None, "error": error})
 
 
-def print_answer(ans: dict[str, Any], as_json: bool) -> None:
+def _append_to_query_log(agent: str, question: str, sql: str, outcome: dict[str, Any]) -> None:
+    entry = {"at": time.time(), "agent": agent, "question": question, "sql": sql, **outcome}
+    LOG_FOLDER.mkdir(parents=True, exist_ok=True)
+    with QUERY_LOG.open("a", encoding="utf-8") as log_file:
+        log_file.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+
+def rounded_for_json(value: Any) -> Any:
+    """Round floats so the same answer prints the same JSON on every machine."""
+    if isinstance(value, float):
+        return round(value, 6)
+    return value
+
+
+def print_answer(answer: dict[str, Any], as_json: bool) -> None:
     if as_json:
-        ans = dict(ans)
-        ans["rows"] = [[jsonable(c) for c in r] for r in ans["rows"]]
-        sys.stdout.write(json.dumps(ans, ensure_ascii=False) + "\n")
-        return
-    if ans["refused"]:
-        print(f"Refused: {ans['reason']}")
-        return
-    if ans["error"]:
-        print(f"Error: {ans['error']}")
-        return
-    print(ans["answer"])
-    if ans["rows"]:
+        print_answer_as_json(answer)
+    elif answer["refused"]:
+        print(f"Refused: {answer['reason']}")
+    elif answer["error"]:
+        print(f"Error: {answer['error']}")
+    else:
+        print_answer_as_text(answer)
+
+
+def print_answer_as_json(answer: dict[str, Any]) -> None:
+    answer = dict(answer)
+    answer["rows"] = [[rounded_for_json(cell) for cell in row] for row in answer["rows"]]
+    sys.stdout.write(json.dumps(answer, ensure_ascii=False) + "\n")
+
+
+def print_answer_as_text(answer: dict[str, Any]) -> None:
+    print(answer["answer"])
+    rows = answer["rows"]
+    if rows:
         print()
-        print(" | ".join(ans["columns"]))
-        for r in ans["rows"][:20]:
-            print(" | ".join("" if c is None else str(c) for c in r))
-        if len(ans["rows"]) > 20:
-            print(f"... {len(ans['rows'])} rows")
-    for a in ans["assumptions"]:
-        print(f"Assumption: {a}")
+        print(" | ".join(answer["columns"]))
+        for row in rows[:ROWS_SHOWN]:
+            print(" | ".join("" if cell is None else str(cell) for cell in row))
+        if len(rows) > ROWS_SHOWN:
+            print(f"... {len(rows)} rows")
+    for assumption in answer["assumptions"]:
+        print(f"Assumption: {assumption}")

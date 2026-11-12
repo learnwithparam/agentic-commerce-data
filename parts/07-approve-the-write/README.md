@@ -1,13 +1,19 @@
 # Approve the write
 
-This part is planned. Its steps are built by a later session; the table below is the contract for that work.
+This part is planned. Its steps do not exist yet. The table below says what each step will ask you to build, and
+what its check will read.
 
 ## The problem
 
-Pausing a seller cuts their income. The agent may find the evidence and draft the action, but a named person
-decides, and the write never goes through SQL. Grab built its analytics agents to also support fraud
-investigation, where every action needs a trail
+Pausing a seller cuts their income. The agent may find the evidence and write a draft of the action. But a named
+person decides. The change never goes through SQL.
+
+Grab built its data agents to also help with fraud checks. There, every action needs a record of who did what
 ([Grab Engineering](https://engineering.grab.com/transforming-the-analytics-landscape-with-RAG-powered-LLM)).
+
+For example, a category manager writes "Pause seller 3442f8". The agent shows a form with the evidence. Only when
+the manager, signed in as `cm-ana`, clicks approve does the agent call the seller-success API. Then it writes one
+line to `decisions.jsonl`.
 
 ```mermaid
 sequenceDiagram

@@ -1,14 +1,24 @@
 # Define the metrics
 
-This part is planned. Its steps are built by a later session; the table below is the contract for that work.
+This part is planned. Its steps do not exist yet. The table below says what each step will ask you to build, and
+what its check will read.
 
 ## The problem
 
-"Revenue" has two right answers in this data (payments 16,008,872.12, items plus freight 15,843,553.24), and
-"late" has two. Anthropic reports its analytics accuracy did not exceed 21% without written skills and metric
-definitions, and stayed above 95% with them
-([Anthropic](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude)). The metric
-file becomes the agent's default path; free SQL is the exception and says so.
+A metric is a business number with one fixed meaning, such as revenue or the share of late orders. In this data,
+"revenue" has two right answers: the payments (16,008,872.12) and the items plus freight (15,843,553.24). "Late"
+also has two.
+
+For example, order `8563039e855156e48fccee4d611a3196` arrived at `2018-03-20 00:59:25`. Its estimated delivery
+date is `2018-03-20 00:00:00`. If you compare the two as text, the order is late. If you compare the dates, it
+came on the estimated day, so it is on time. Across all delivered orders, that is 8.11% late against 6.77% late.
+
+Anthropic wrote down skills and metric definitions for its own data questions. Without them, accuracy was 21% at
+most. With them, it stayed above 95%
+([Anthropic](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude)).
+
+So the metric file becomes the agent's normal path. When the agent writes free SQL instead, that is the exception,
+and the answer says so.
 
 ```mermaid
 flowchart LR

@@ -1,14 +1,25 @@
 # Lock the database
 
-This part is planned. Its steps are built by a later session; the table below is the contract for that work.
+This part is planned. Its steps do not exist yet. The table below says what each step will ask you to build, and
+what its check will read.
 
 ## The problem
 
-The naive agent splits the model's reply on `;` and runs every statement on a read-write connection. One prompt
-injection hidden in a review comment could drop a table, and one bad join could scan a million geolocation rows.
-LinkedIn's SQL Bot checks that tables and fields exist and runs `EXPLAIN` before any query executes
+The naive agent cuts the model's reply at every `;` and runs each piece. It runs them on a connection that can
+change the data.
+
+So one hidden order in a review comment could delete a whole table. This kind of attack is called a prompt
+injection: text in the data that tells the model what to do. And one bad join could read a million geolocation
+rows.
+
+LinkedIn's SQL Bot checks that every table and column exists before a query runs. It also runs `EXPLAIN` first,
+to see how much work the query will do
 ([LinkedIn Engineering](https://www.linkedin.com/blog/engineering/ai/practical-text-to-sql-for-data-analytics)).
-You prove the agent cannot change or scan the wrong rows before you teach it anything else.
+Before you teach the agent anything else, you prove it cannot change data or read too many rows.
+
+For example, the finished agent already does this. Ask it `uv run ask-finished "Delete the test orders"`. It
+prints `Refused: This desk answers questions with read-only queries.` Then it gives the reason: "Deleting orders
+changes the system of record; ask the data platform team to do it through their change process."
 
 ```mermaid
 flowchart LR

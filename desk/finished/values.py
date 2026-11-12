@@ -1,7 +1,8 @@
 """The value index: every way a city, state or category is written in the data, mapped to one name.
 
-The model writes `{{seller_city:Sao Paulo}}` in its SQL; the index expands it to every stored spelling of that
-city, so `WHERE seller_city IN (...)` finds all of them. Built from the data on first use.
+The model writes `{{seller_city:Sao Paulo}}` in its SQL; the index expands it to every stored
+spelling of that city, so `WHERE seller_city IN (...)` finds all of them. Built from the data on
+first use.
 """
 
 from __future__ import annotations
@@ -12,8 +13,9 @@ import unicodedata
 from collections import defaultdict
 from functools import lru_cache
 
-from desk.finished.guard import connect_ro
+from desk.finished.guard import connect_read_only
 
+# For each placeholder name, the table and column whose stored values it stands for.
 COLUMNS = {
     "seller_city": ("sellers", "seller_city"),
     "customer_city": ("customers", "customer_city"),
@@ -22,49 +24,59 @@ COLUMNS = {
     "product_category_name": ("products", "product_category_name"),
 }
 
+# Splits 'sao paulo / sao paulo', 'sao paulo - sp' and 'maua/sao paulo' before the separator.
+CITY_SEPARATOR = re.compile(r"\s*/\s*|\s+-\s+")
+# A state code typed after the city, as in 'sao paulo sp'.
+TRAILING_STATE_CODE = re.compile(r"\s+sp$")
 
-def fold(s: str) -> str:
+
+def fold(text: str) -> str:
     """Lower case, no accents, single spaces."""
-    s = unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode().lower()
-    return " ".join(s.split())
+    without_accents = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode()
+    return " ".join(without_accents.lower().split())
 
 
 def canonical_city(raw: str, known: set[str]) -> str | None:
-    """Map one stored city spelling to a clean city name, or None when it names no city (for example 'sp')."""
-    s = fold(raw)
-    s = re.split(r"\s*/\s*|\s+-\s+", s)[
-        0
-    ].strip()  # 'sao paulo / sao paulo', 'sao paulo - sp', 'maua/sao paulo'
-    s = re.sub(r"\s+sp$", "", s)  # 'sao paulo sp'
-    if s in known:
-        return s
-    if len(s) <= 3:
-        return None  # a state code typed as a city
-    close = difflib.get_close_matches(s, list(known), n=1, cutoff=0.88)
+    """Map one stored city spelling to a clean city name, or None when it names no city.
+
+    For example 'sp' names no city: it is a state code typed as a city.
+    """
+    city = CITY_SEPARATOR.split(fold(raw))[0].strip()
+    city = TRAILING_STATE_CODE.sub("", city)
+    if city in known:
+        return city
+    if len(city) <= 3:
+        return None
+    close = difflib.get_close_matches(city, list(known), n=1, cutoff=0.88)
     return close[0] if close else None
 
 
 @lru_cache(maxsize=1)
 def index() -> dict[str, dict[str, list[str]]]:
-    conn = connect_ro()
-    known = {
-        fold(r[0])
-        for r in conn.execute(
-            "SELECT DISTINCT customer_city FROM customers WHERE customer_city IS NOT NULL"
-        )
-    }
-    out: dict[str, dict[str, list[str]]] = {}
-    for col, (table, column) in COLUMNS.items():
+    """For each placeholder name: clean name -> every stored spelling of it."""
+    connection = connect_read_only()
+    customer_cities = connection.execute(
+        "SELECT DISTINCT customer_city FROM customers WHERE customer_city IS NOT NULL"
+    )
+    known_cities = {fold(city) for (city,) in customer_cities}
+    spellings_by_name: dict[str, dict[str, list[str]]] = {}
+    for placeholder, (table, column) in COLUMNS.items():
         groups: dict[str, list[str]] = defaultdict(list)
-        for (v,) in conn.execute(
+        stored_values = connection.execute(
             f"SELECT DISTINCT {column} FROM {table} WHERE {column} IS NOT NULL"
-        ):
-            key = canonical_city(v, known) if col.endswith("_city") else fold(v)
-            if key:
-                groups[key].append(v)
-        out[col] = {k: sorted(v) for k, v in groups.items()}
-    conn.close()
-    return out
+        )
+        for (stored,) in stored_values:
+            if placeholder.endswith("_city"):
+                clean_name = canonical_city(stored, known_cities)
+            else:
+                clean_name = fold(stored)
+            if clean_name:
+                groups[clean_name].append(stored)
+        spellings_by_name[placeholder] = {
+            name: sorted(spellings) for name, spellings in groups.items()
+        }
+    connection.close()
+    return spellings_by_name
 
 
 def lookup(column: str, text: str) -> list[str]:
@@ -79,16 +91,23 @@ def lookup(column: str, text: str) -> list[str]:
 
 
 def sql_list(values: list[str]) -> str:
-    """Render values as a SQL list. A value with a combining accent is spelled with char() so it survives copy and paste."""
-    parts = []
-    for v in values:
-        if all(ord(c) < 128 for c in v):
-            parts.append("'" + v.replace("'", "''") + "'")
-        else:
-            parts.append(
-                " || ".join(
-                    f"char({ord(c)})" if ord(c) >= 128 else "'" + c.replace("'", "''") + "'"
-                    for c in v
-                ).replace("' || '", "")
-            )
-    return "(" + ", ".join(parts) + ")"
+    """Render values as a SQL list.
+
+    A value with a combining accent is spelled with char() so it survives copy and paste.
+    """
+    return "(" + ", ".join(sql_text(value) for value in values) + ")"
+
+
+def sql_text(value: str) -> str:
+    if value.isascii():
+        return quoted(value)
+    pieces = [
+        f"char({ord(character)})" if ord(character) >= 128 else quoted(character)
+        for character in value
+    ]
+    # Join plain letters back into one quoted run: 'a' || 'b' becomes 'ab'.
+    return " || ".join(pieces).replace("' || '", "")
+
+
+def quoted(text: str) -> str:
+    return "'" + text.replace("'", "''") + "'"

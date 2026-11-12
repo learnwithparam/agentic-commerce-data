@@ -1,14 +1,23 @@
 # Retrieve schema, values and reviews
 
-This part is planned. Its steps are built by a later session; the table below is the contract for that work.
+This part is planned. Its steps do not exist yet. The table below says what each step will ask you to build, and
+what its check will read.
 
 ## The problem
 
-The model cannot guess that nine spellings in `seller_city` mean one city (one of them uses a combining accent),
-or that `product_name_lenght` is a real column. Uber's Finch keeps an index of column values and aliases so the
-values in a `WHERE` match the data
-([Uber Engineering](https://www.uber.com/blog/unlocking-financial-insights-with-finch/)). The reason behind a
-late-delivery spike is in 40,977 Portuguese review comments, not in a column.
+The model cannot guess some facts about this data:
+
+- Nine different spellings in `seller_city` all mean one city. One of them uses a special accent character.
+- `product_name_lenght` is a real column name, even with the typo.
+
+For example, the stored spellings of Sao Paulo include `sao paulo`, `sao paulop`, `sao pauo` and
+`sao paulo / sao paulo`. A query that types only `'sao paulo'` finds 694 sellers, not 704.
+
+Uber's Finch keeps an index of column values and their other names. So the values in a `WHERE` match what is
+really in the data ([Uber Engineering](https://www.uber.com/blog/unlocking-financial-insights-with-finch/)).
+
+Some answers are not in any column at all. The reason behind a jump in late deliveries is in 40,977 Portuguese
+review comments.
 
 ```mermaid
 flowchart TB
