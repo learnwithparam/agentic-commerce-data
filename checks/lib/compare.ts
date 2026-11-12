@@ -1,54 +1,81 @@
 // Result match: the way every golden question is judged. Rows are compared, never SQL text.
-// Numbers are rounded to 2 places, text is trimmed, column names and column order are ignored, and extra columns
-// in the agent's rows are allowed as long as some choice of columns matches the reference exactly.
+// Numbers are rounded to 2 places, text is trimmed, column names and column order are ignored,
+// and extra columns in the agent's rows are allowed as long as some choice of columns matches
+// the reference exactly.
 
-const NUMERIC = /^-?\d+(\.\d+)?$/;
+const LOOKS_LIKE_A_NUMBER = /^-?\d+(\.\d+)?$/;
 
-export function cell(v: unknown): string {
-  if (v === null || v === undefined) return "null";
-  if (typeof v === "number" || typeof v === "bigint")
-    return `n:${(Math.round(Number(v) * 100) / 100).toFixed(2)}`;
-  if (typeof v === "boolean") return `n:${v ? "1.00" : "0.00"}`;
-  const s = String(v).trim();
-  if (NUMERIC.test(s)) return `n:${(Math.round(Number(s) * 100) / 100).toFixed(2)}`;
-  return `s:${s.normalize("NFC")}`;
+// Beyond this many columns, trying every choice of columns would take too long.
+const MOST_COLUMNS_TO_TRY = 8;
+
+function roundedNumber(value: number): string {
+  const rounded = Math.round(value * 100) / 100;
+  return `n:${rounded.toFixed(2)}`;
 }
 
-const rowKey = (r: unknown[]) => r.map(cell).sort().join("\u0001");
+// Turn one cell into a label that is equal for values a person would call equal:
+// 3, 3.0 and "3.00" all become "n:3.00".
+export function cell(value: unknown): string {
+  if (value === null || value === undefined) return "null";
+  if (typeof value === "number" || typeof value === "bigint") return roundedNumber(Number(value));
+  if (typeof value === "boolean") return value ? "n:1.00" : "n:0.00";
+  const text = String(value).trim();
+  if (LOOKS_LIKE_A_NUMBER.test(text)) return roundedNumber(Number(text));
+  return `s:${text.normalize("NFC")}`;
+}
 
-function combos(n: number, k: number): number[][] {
-  const out: number[][] = [];
-  const go = (start: number, acc: number[]) => {
-    if (acc.length === k) return void out.push([...acc]);
-    for (let i = start; i < n; i++) go(i + 1, [...acc, i]);
+// Sorting the cells makes the key ignore column order.
+function rowKey(row: unknown[]): string {
+  const cells = row.map(cell);
+  cells.sort();
+  return cells.join("\u0001");
+}
+
+// Every way to choose `chosenCount` column positions out of `columnCount`, in order.
+function columnChoices(columnCount: number, chosenCount: number): number[][] {
+  const choices: number[][] = [];
+  const extend = (nextColumn: number, chosenSoFar: number[]) => {
+    if (chosenSoFar.length === chosenCount) {
+      choices.push([...chosenSoFar]);
+      return;
+    }
+    for (let column = nextColumn; column < columnCount; column++) {
+      extend(column + 1, [...chosenSoFar, column]);
+    }
   };
-  go(0, []);
-  return out;
+  extend(0, []);
+  return choices;
 }
 
-function sameRows(agent: unknown[][], ref: unknown[][], orderMatters: boolean): boolean {
-  if (agent.length !== ref.length) return false;
-  const a = agent.map(rowKey);
-  const b = ref.map(rowKey);
-  if (orderMatters) return a.every((x, i) => x === b[i]);
-  a.sort();
-  b.sort();
-  return a.every((x, i) => x === b[i]);
+function sameRows(agentRows: unknown[][], referenceRows: unknown[][], orderMatters: boolean) {
+  if (agentRows.length !== referenceRows.length) return false;
+  const agentKeys = agentRows.map(rowKey);
+  const referenceKeys = referenceRows.map(rowKey);
+  if (!orderMatters) {
+    agentKeys.sort();
+    referenceKeys.sort();
+  }
+  return agentKeys.every((key, i) => key === referenceKeys[i]);
 }
 
-export function rowsMatch(agent: unknown[][], ref: unknown[][], orderMatters = false): boolean {
-  if (agent.length !== ref.length) return false;
-  if (ref.length === 0) return true;
-  const k = ref[0].length;
-  const width = agent[0]?.length ?? 0;
-  if (width < k) return false;
-  if (width === k) return sameRows(agent, ref, orderMatters);
-  if (width > 8) return false;
-  return combos(width, k).some((cols) =>
-    sameRows(
-      agent.map((r) => cols.map((c) => r[c])),
-      ref,
-      orderMatters,
-    ),
+function keepColumns(rows: unknown[][], columns: number[]): unknown[][] {
+  return rows.map((row) => columns.map((column) => row[column]));
+}
+
+export function rowsMatch(
+  agentRows: unknown[][],
+  referenceRows: unknown[][],
+  orderMatters = false,
+): boolean {
+  if (agentRows.length !== referenceRows.length) return false;
+  if (referenceRows.length === 0) return true;
+  const referenceWidth = referenceRows[0].length;
+  const agentWidth = agentRows[0]?.length ?? 0;
+  if (agentWidth < referenceWidth) return false;
+  if (agentWidth === referenceWidth) return sameRows(agentRows, referenceRows, orderMatters);
+  if (agentWidth > MOST_COLUMNS_TO_TRY) return false;
+  const choices = columnChoices(agentWidth, referenceWidth);
+  return choices.some((columns) =>
+    sameRows(keepColumns(agentRows, columns), referenceRows, orderMatters),
   );
 }
