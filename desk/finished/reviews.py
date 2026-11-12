@@ -42,7 +42,9 @@ def ensure_index() -> None:
     half_built.rename(INDEX)
 
 
-def search(order_ids: list[str], terms: list[str], max_score: int = 5, limit: int = 3) -> list[dict]:
+def search(
+    order_ids: list[str], terms: list[str], max_score: int = 5, limit: int = 3
+) -> list[dict]:
     """Comments on these orders that match any term, best match first.
 
     Each hit keeps its review_id.

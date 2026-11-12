@@ -31,6 +31,17 @@ LATE_DELIVERY_CONDITION = (
     "date(o.order_delivered_customer_date) > date(o.order_estimated_delivery_date)"
 )
 
+
+def glosses_as_one_line() -> str:
+    """The glosses as one line of JSON, the way the replay has always stored them.
+
+    The formatter may spread glosses.json over many lines, so the reply is rebuilt
+    from the parsed data instead of copied from the file's text.
+    """
+    glosses = json.loads(GLOSSES_PATH.read_text(encoding="utf-8"))
+    return json.dumps(glosses, ensure_ascii=False) + "\n"
+
+
 METRICS_USED = {
     "late-share-delivered": ["late_delivery_rate"],
     "late-orders-2018": ["late_delivery_rate"],
@@ -168,7 +179,7 @@ def main() -> None:
                 "agent": "finished-gloss",
                 "role": "fast",
                 "question": DEMO_QUESTION,
-                "reply": GLOSSES_PATH.read_text(encoding="utf-8"),
+                "reply": glosses_as_one_line(),
             }
         )
     lines = "".join(json.dumps(reply, ensure_ascii=False) + "\n" for reply in replies)

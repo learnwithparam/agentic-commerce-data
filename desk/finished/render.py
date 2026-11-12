@@ -50,26 +50,26 @@ class ChartScale:
     x_count: int
     top_value: float
 
-    def x(self, position: int) -> float:
+    def x_position(self, position: int) -> float:
         plot_width = CHART_WIDTH - LEFT_MARGIN - 50
         return LEFT_MARGIN + 14 + position * plot_width / max(self.x_count - 1, 1)
 
-    def y(self, value: float) -> float:
+    def y_position(self, value: float) -> float:
         plot_height = CHART_HEIGHT - TOP_MARGIN - BOTTOM_MARGIN
         return TOP_MARGIN + plot_height * (1 - value / self.top_value)
 
 
-def chart(spec: dict) -> str:
-    columns, rows = spec["columns"], spec["rows"]
-    x_column = columns.index(spec["x"])
+def chart(chart_plan: dict) -> str:
+    columns, rows = chart_plan["columns"], chart_plan["rows"]
+    x_column = columns.index(chart_plan["x"])
     x_values = sorted({row[x_column] for row in rows})
-    lines = points_by_series(spec)
-    all_y_values = (y for points in lines.values() for y in points.values())
+    lines = points_by_series(chart_plan)
+    all_y_values = (y_value for points in lines.values() for y_value in points.values())
     top_value = max(all_y_values, default=1) or 1
     scale = ChartScale(len(x_values), top_value)
     svg = [
         f'<svg viewBox="0 0 {CHART_WIDTH} {CHART_HEIGHT}" role="img" '
-        f'aria-label="{escape(spec["y"])} by {escape(spec["x"])}">'
+        f'aria-label="{escape(chart_plan["y"])} by {escape(chart_plan["x"])}">'
     ]
     svg += grid_lines(scale)
     svg += x_labels(scale, x_values)
@@ -82,23 +82,20 @@ def chart(spec: dict) -> str:
     return "".join(svg) + f'<div class="legend">{"".join(legend)}</div>'
 
 
-def points_by_series(spec: dict) -> dict[str, dict]:
+def points_by_series(chart_plan: dict) -> dict[str, dict]:
     """Group the rows into one line per series: series name -> {x: y}.
 
     Without a series column there is one line, named after the y column.
     """
-    columns = spec["columns"]
-    x_column = columns.index(spec["x"])
-    y_column = columns.index(spec["y"])
+    columns = chart_plan["columns"]
+    x_column = columns.index(chart_plan["x"])
+    y_column = columns.index(chart_plan["y"])
     series_column = None
-    if spec.get("series") in columns:
-        series_column = columns.index(spec["series"])
+    if chart_plan.get("series") in columns:
+        series_column = columns.index(chart_plan["series"])
     lines: dict[str, dict] = {}
-    for row in spec["rows"]:
-        if series_column is not None:
-            name = short(row[series_column])
-        else:
-            name = spec["y"]
+    for row in chart_plan["rows"]:
+        name = short(row[series_column]) if series_column is not None else chart_plan["y"]
         lines.setdefault(name, {})[row[x_column]] = row[y_column]
     return lines
 
@@ -107,11 +104,11 @@ def grid_lines(scale: ChartScale) -> list[str]:
     lines = []
     for step in range(GRID_LINE_COUNT):
         value = scale.top_value * step / 4
-        y = scale.y(value)
+        y_position = scale.y_position(value)
         lines.append(
             f'<line x1="{LEFT_MARGIN}" x2="{CHART_WIDTH - 10}" '
-            f'y1="{y:.1f}" y2="{y:.1f}" class="grid"/>'
-            f'<text x="{LEFT_MARGIN - 6}" y="{y + 4:.1f}" class="tick" '
+            f'y1="{y_position:.1f}" y2="{y_position:.1f}" class="grid"/>'
+            f'<text x="{LEFT_MARGIN - 6}" y="{y_position + 4:.1f}" class="tick" '
             f'text-anchor="end">{value:.0f}</text>'
         )
     return lines
@@ -124,7 +121,7 @@ def x_labels(scale: ChartScale, x_values: list) -> list[str]:
     for position, x_value in enumerate(x_values):
         if position % every == 0:
             labels.append(
-                f'<text x="{scale.x(position):.1f}" y="{CHART_HEIGHT - 8}" class="tick" '
+                f'<text x="{scale.x_position(position):.1f}" y="{CHART_HEIGHT - 8}" class="tick" '
                 f'text-anchor="middle">{escape(str(x_value))}</text>'
             )
     return labels
@@ -135,7 +132,9 @@ def line_path(scale: ChartScale, x_values: list, points: dict, color: str) -> st
     steps = []
     for position, x_value in enumerate(x_values):
         command = "M" if position == 0 else "L"
-        steps.append(f"{command}{scale.x(position):.1f},{scale.y(points.get(x_value, 0)):.1f}")
+        x_position = scale.x_position(position)
+        y_position = scale.y_position(points.get(x_value, 0))
+        steps.append(f"{command}{x_position:.1f},{y_position:.1f}")
     drawing = " ".join(steps)
     return f'<path d="{drawing}" fill="none" stroke="{color}" stroke-width="2.5"/>'
 
@@ -218,9 +217,11 @@ def answer_cards(answer: dict) -> list[str]:
     return cards
 
 
-def chart_card(spec: dict) -> str:
-    title = f"{escape(spec['y'])} by {escape(spec['x'])} [{escape(spec['query'])}]"
-    return f"<div class='card'><h2>{title}</h2>{chart(spec)}</div>"
+def chart_card(chart_plan: dict) -> str:
+    title = (
+        f"{escape(chart_plan['y'])} by {escape(chart_plan['x'])} [{escape(chart_plan['query'])}]"
+    )
+    return f"<div class='card'><h2>{title}</h2>{chart(chart_plan)}</div>"
 
 
 def assumptions_card(assumptions: list[str]) -> str:

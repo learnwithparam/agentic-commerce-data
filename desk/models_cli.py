@@ -20,10 +20,7 @@ def main() -> None:
     if provider not in PROVIDERS:
         print(f"LLM_PROVIDER={provider!r} is not known. Use one of: {', '.join(PROVIDERS)}.")
         sys.exit(1)
-    if provider == "replay":
-        failed = check_replay()
-    else:
-        failed = check_live_provider(provider)
+    failed = check_replay() if provider == "replay" else check_live_provider(provider)
     sys.exit(1 if failed else 0)
 
 
