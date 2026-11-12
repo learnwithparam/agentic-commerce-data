@@ -21,7 +21,7 @@ const STEP_SECTIONS = [
   "## If you get stuck",
   "## Words you will use",
 ];
-const HYPE = new RegExp(
+const HYPE_WORDS = new RegExp(
   "\\b(supercharge|unleash|unlock|seamless(ly)?|leverage|dive into|game[- ]changer|" +
     "revolutioni[sz]e|magic(al)?|cutting[- ]edge|AI-powered)\\b",
   "i",
@@ -35,11 +35,11 @@ const MODEL_ID = /\b(claude-[a-z0-9-]+-\d|gpt-\d[\w.-]*|gemini-\d[\w.-]*|o\d-(mi
 // Tool and data folders are all git-ignored, so the standard does not look inside them.
 const SKIPPED_FOLDERS = ["node_modules", ".git", ".venv", "__pycache__", ".cache", "data"];
 
-function walk(folder: string, found: string[] = []): string[] {
+function allFilesIn(folder: string, found: string[] = []): string[] {
   for (const entry of readdirSync(folder)) {
     if (SKIPPED_FOLDERS.includes(entry)) continue;
     const path = join(folder, entry);
-    if (statSync(path).isDirectory()) walk(path, found);
+    if (statSync(path).isDirectory()) allFilesIn(path, found);
     else found.push(path);
   }
   return found;
@@ -61,7 +61,7 @@ function checkNoMakefile(files: string[]) {
 // 2. Prose rules on every Markdown file.
 function checkProseLine(file: string, line: string, lineNumber: number) {
   if (line.includes("—")) fail(file, `line ${lineNumber}: em dash`);
-  const hypeWord = line.match(HYPE);
+  const hypeWord = line.match(HYPE_WORDS);
   if (hypeWord) fail(file, `line ${lineNumber}: hype word "${hypeWord[0]}"`);
   const timeWord = line.match(TIME_WORDS);
   if (timeWord && !file.includes("schedules")) {
@@ -315,7 +315,7 @@ function checkSchedules(allParts: Part[]) {
   }
 }
 
-const files = walk(ROOT);
+const files = allFilesIn(ROOT);
 const markdownFiles = files.filter((file) => file.endsWith(".md"));
 const allParts = parts();
 
