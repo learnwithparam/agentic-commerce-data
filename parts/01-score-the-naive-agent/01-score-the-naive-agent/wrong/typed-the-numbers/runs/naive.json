@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "agent": "naive",
+  "command": "uv run ask-naive",
+  "provider": "replay",
+  "golden": "world/golden.toml",
+  "results": [
+    {
+      "id": "sellers-in-sao-paulo",
+      "question": "How many sellers are based in Sao Paulo city?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(*) AS seller_count FROM sellers WHERE seller_city = 'sao paulo'"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "seller_count"
+      ],
+      "rows": [
+        [
+          704
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "sellers-in-sp-state",
+      "question": "How many sellers are in the state of Sao Paulo?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(*) FROM sellers WHERE seller_state = 'SP'"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "COUNT(*)"
+      ],
+      "rows": [
+        [
+          1849
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "orders-total",
+      "question": "How many orders are in the data?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(*) AS total_orders FROM orders"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "total_orders"
+      ],
+      "rows": [
+        [
+          99441
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "orders-delivered",
+      "question": "How many orders were delivered?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(*) AS delivered_orders FROM orders WHERE order_status = 'delivered'"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "delivered_orders"
+      ],
+      "rows": [
+        [
+          96478
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "orders-canceled-2017",
+      "question": "How many orders placed in 2017 were canceled?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(*) AS canceled_orders\nFROM orders\nWHERE order_status = 'canceled'\n  AND strftime('%Y', order_purchase_timestamp) = '2017'"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "canceled_orders"
+      ],
+      "rows": [
+        [
+          265
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "distinct-customers",
+      "question": "How many distinct customers have ordered from us?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(DISTINCT customer_id) AS customers FROM customers"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "customers"
+      ],
+      "rows": [
+        [
+          96096
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "repeat-customers-2017",
+      "question": "How many customers placed more than one order in 2017?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(*) AS repeat_customers\nFROM (\n  SELECT customer_id\n  FROM orders\n  WHERE strftime('%Y', order_purchase_timestamp) = '2017'\n  GROUP BY customer_id\n  HAVING COUNT(*) > 1\n)"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "repeat_customers"
+      ],
+      "rows": [
+        [
+          1256
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "repeat-customer-share",
+      "question": "What percentage of customers have ordered more than once?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT ROUND(100.0 * SUM(CASE WHEN order_count > 1 THEN 1 ELSE 0 END) / COUNT(*), 2) AS repeat_pct\nFROM (\n  SELECT customer_id, COUNT(*) AS order_count\n  FROM orders\n  GROUP BY customer_id\n)"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "repeat_pct"
+      ],
+      "rows": [
+        [
+          3.12
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "revenue-total",
+      "question": "What is our total revenue?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT ROUND(SUM(price + freight_value), 2) AS total_revenue FROM order_items"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "total_revenue"
+      ],
+      "rows": [
+        [
+          16008872.12
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "gmv-2018",
+      "question": "What was GMV in 2018?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT ROUND(SUM(oi.price), 2) AS gmv_2018\nFROM order_items oi\nJOIN orders o ON oi.order_id = o.order_id\nWHERE strftime('%Y', o.order_purchase_timestamp) = '2018'"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "gmv_2018"
+      ],
+      "rows": [
+        [
+          8643697.6
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "late-share-delivered",
+      "question": "What percentage of delivered orders arrived late?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT ROUND(100.0 * SUM(CASE WHEN order_delivered_customer_date > order_estimated_delivery_date THEN 1 ELSE 0 END) / COUNT(*), 2) AS late_pct\nFROM orders\nWHERE order_status = 'delivered' AND order_delivered_customer_date IS NOT NULL"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "late_pct"
+      ],
+      "rows": [
+        [
+          6.77
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "late-orders-2018",
+      "question": "How many orders placed in 2018 were delivered late?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(*) AS late_orders\nFROM orders\nWHERE strftime('%Y', order_purchase_timestamp) = '2018'\n  AND order_delivered_customer_date > order_estimated_delivery_date"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "late_orders"
+      ],
+      "rows": [
+        [
+          4079
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "late-share-bed-bath-by-month",
+      "question": "What share of delivered orders in cama_mesa_banho arrived late, by month of purchase in 2018?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT strftime('%Y-%m', o.order_purchase_timestamp) AS month,\n       ROUND(100.0 * SUM(CASE WHEN o.order_delivered_customer_date > o.order_estimated_delivery_date THEN 1 ELSE 0 END) / COUNT(*), 2) AS late_pct\nFROM orders o\nJOIN order_items oi ON o.order_id = oi.order_id\nJOIN products p ON oi.product_id = p.product_id\nWHERE p.product_category_name = 'cama_mesa_banho'\n  AND o.order_status = 'delivered'\n  AND strftime('%Y', o.order_purchase_timestamp) = '2018'\nGROUP BY month\nORDER BY month"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "month",
+        "late_pct"
+      ],
+      "rows": [
+        [
+          "2018-01",
+          4.64
+        ],
+        [
+          "2018-02",
+          19.39
+        ],
+        [
+          "2018-03",
+          21.47
+        ],
+        [
+          "2018-04",
+          5.5
+        ],
+        [
+          "2018-05",
+          5.67
+        ],
+        [
+          "2018-06",
+          1.08
+        ],
+        [
+          "2018-07",
+          1.57
+        ],
+        [
+          "2018-08",
+          5.05
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "late-sellers-sao-paulo-2018q2",
+      "question": "Which sellers in Sao Paulo city had 5 or more late deliveries in 2018 Q2?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT s.seller_id, COUNT(*) AS late_deliveries\nFROM orders o\nJOIN order_items oi ON o.order_id = oi.order_id\nJOIN sellers s ON oi.seller_id = s.seller_id\nWHERE s.seller_city = 'sao paulo'\n  AND o.order_purchase_timestamp BETWEEN '2018-04-01' AND '2018-06-30'\n  AND o.order_delivered_customer_date > o.order_estimated_delivery_date\nGROUP BY s.seller_id\nHAVING COUNT(*) >= 5\nORDER BY late_deliveries DESC"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "seller_id",
+        "late_deliveries"
+      ],
+      "rows": [
+        [
+          "955fee9216a65b617aa5c0531780ce60",
+          21
+        ],
+        [
+          "6560211a19b47992c3666cc44a7e94c0",
+          15
+        ],
+        [
+          "ba143b05f0110f0dc71ad71b4466ce92",
+          8
+        ],
+        [
+          "1025f0e2d44d7041d6cf58b6550e0bfa",
+          8
+        ],
+        [
+          "ceaec5548eefc6e23e6607c5435102e7",
+          7
+        ],
+        [
+          "8b321bb669392f5163d04c59e235e066",
+          7
+        ],
+        [
+          "7a67c85e85bb2ce8582c35f2203ad736",
+          6
+        ],
+        [
+          "9f505651f4a6abe901a56cdc21508025",
+          5
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "top-categories-gmv-2018",
+      "question": "What were the top 10 product categories by GMV in 2018, with English names?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT p.product_category_name, ROUND(SUM(oi.price), 2) AS gmv\nFROM order_items oi\nJOIN orders o ON oi.order_id = o.order_id\nJOIN products p ON oi.product_id = p.product_id\nWHERE strftime('%Y', o.order_purchase_timestamp) = '2018'\nGROUP BY p.product_category_name\nORDER BY gmv DESC\nLIMIT 10"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "product_category_name",
+        "gmv"
+      ],
+      "rows": [
+        [
+          "health_beauty",
+          885191.12
+        ],
+        [
+          "watches_gifts",
+          771986.75
+        ],
+        [
+          "bed_bath_table",
+          650794.7
+        ],
+        [
+          "sports_leisure",
+          621999.34
+        ],
+        [
+          "computers_accessories",
+          594771.04
+        ],
+        [
+          "housewares",
+          491576.96
+        ],
+        [
+          "furniture_decor",
+          476466.13
+        ],
+        [
+          "auto",
+          404210.57
+        ],
+        [
+          "baby",
+          299052.56
+        ],
+        [
+          "cool_stuff",
+          273910.05
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "categories-without-translation",
+      "question": "Which product categories have no English translation?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT DISTINCT p.product_category_name\nFROM products p\nLEFT JOIN product_category_name_translation t ON p.product_category_name = t.product_category_name\nWHERE t.product_category_name IS NULL"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "product_category_name"
+      ],
+      "rows": [
+        [
+          "pc_gamer"
+        ],
+        [
+          "portateis_cozinha_e_preparadores_de_alimentos"
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "products-without-category",
+      "question": "How many products have no category?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(*) FROM products WHERE product_category_name IS NULL"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "COUNT(*)"
+      ],
+      "rows": [
+        [
+          610
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "average-review-score",
+      "question": "What is the average review score?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT ROUND(AVG(review_score), 2) AS avg_review_score FROM order_reviews"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "avg_review_score"
+      ],
+      "rows": [
+        [
+          4.09
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "one-star-share-2018",
+      "question": "What percentage of reviews created in 2018 gave one star?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT ROUND(100.0 * SUM(CASE WHEN review_score = 1 THEN 1 ELSE 0 END) / COUNT(*), 2) AS one_star_pct\nFROM order_reviews\nWHERE strftime('%Y', review_creation_date) = '2018'"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "one_star_pct"
+      ],
+      "rows": [
+        [
+          12
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "reviews-with-comments",
+      "question": "How many reviews have a written comment?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(*) FROM order_reviews WHERE review_comment_message IS NOT NULL"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "COUNT(*)"
+      ],
+      "rows": [
+        [
+          40977
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "top-customer-states",
+      "question": "Which 5 customer states placed the most orders?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT c.customer_state, COUNT(o.order_id) AS order_count\nFROM orders o\nJOIN customers c ON o.customer_id = c.customer_id\nGROUP BY c.customer_state\nORDER BY order_count DESC\nLIMIT 5"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "customer_state",
+        "order_count"
+      ],
+      "rows": [
+        [
+          "SP",
+          41746
+        ],
+        [
+          "RJ",
+          12852
+        ],
+        [
+          "MG",
+          11635
+        ],
+        [
+          "RS",
+          5466
+        ],
+        [
+          "PR",
+          5045
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "average-delivery-days",
+      "question": "On average, how many days does a delivered order take from purchase to the customer?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT ROUND(AVG(julianday(order_delivered_customer_date) - julianday(order_purchase_timestamp)), 2) AS avg_delivery_days\nFROM orders\nWHERE order_status = 'delivered'"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "avg_delivery_days"
+      ],
+      "rows": [
+        [
+          12.56
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "delivered-without-date",
+      "question": "How many delivered orders have no delivery date?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(*) FROM orders WHERE order_status = 'delivered' AND order_delivered_customer_date IS NULL"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "COUNT(*)"
+      ],
+      "rows": [
+        [
+          8
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "active-sellers-2018",
+      "question": "How many sellers sold at least one item in 2018?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(DISTINCT oi.seller_id) AS active_sellers\nFROM order_items oi\nJOIN orders o ON oi.order_id = o.order_id\nWHERE strftime('%Y', o.order_purchase_timestamp) = '2018'"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "active_sellers"
+      ],
+      "rows": [
+        [
+          2383
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "multi-seller-orders",
+      "question": "How many orders contain items from more than one seller?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(*) AS orders_with_multiple_sellers\nFROM (\n  SELECT order_id\n  FROM order_items\n  GROUP BY order_id\n  HAVING COUNT(DISTINCT seller_id) > 1\n)"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "orders_with_multiple_sellers"
+      ],
+      "rows": [
+        [
+          1278
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "payment-type-share",
+      "question": "What share of payment value came from each payment type?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT payment_type,\n       ROUND(100.0 * SUM(payment_value) / (SELECT SUM(payment_value) FROM order_payments), 2) AS pct_of_value\nFROM order_payments\nGROUP BY payment_type\nORDER BY pct_of_value DESC"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "payment_type",
+        "pct_of_value"
+      ],
+      "rows": [
+        [
+          "credit_card",
+          78.34
+        ],
+        [
+          "boleto",
+          17.92
+        ],
+        [
+          "voucher",
+          2.37
+        ],
+        [
+          "debit_card",
+          1.36
+        ],
+        [
+          "not_defined",
+          0
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "average-order-value-2017",
+      "question": "What was the average order value in 2017, based on payments?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT ROUND(SUM(op.payment_value) / COUNT(DISTINCT o.order_id), 2) AS avg_order_value\nFROM orders o\nJOIN order_items oi ON o.order_id = oi.order_id\nJOIN order_payments op ON o.order_id = op.order_id\nWHERE strftime('%Y', o.order_purchase_timestamp) = '2017'"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "avg_order_value"
+      ],
+      "rows": [
+        [
+          160.74
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "payments-health-beauty-2018",
+      "question": "What was the total payment value of 2018 orders that included a beleza_saude product?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT ROUND(SUM(op.payment_value), 2) AS total_paid\nFROM order_payments op\nJOIN orders o ON op.order_id = o.order_id\nJOIN order_items oi ON o.order_id = oi.order_id\nJOIN products p ON oi.product_id = p.product_id\nWHERE p.product_category_name = 'beleza_saude'\n  AND strftime('%Y', o.order_purchase_timestamp) = '2018'"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "total_paid"
+      ],
+      "rows": [
+        [
+          891175.61
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "top-sellers-gmv-2018",
+      "question": "Which 5 sellers had the highest GMV in 2018?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT oi.seller_id, ROUND(SUM(oi.price), 2) AS gmv\nFROM order_items oi\nJOIN orders o ON oi.order_id = o.order_id\nWHERE strftime('%Y', o.order_purchase_timestamp) = '2018'\nGROUP BY oi.seller_id\nORDER BY gmv DESC\nLIMIT 5"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "seller_id",
+        "gmv"
+      ],
+      "rows": [
+        [
+          "4869f7a5dfa277a7dca6462dcf3b52b2",
+          151292.81
+        ],
+        [
+          "955fee9216a65b617aa5c0531780ce60",
+          138989.02
+        ],
+        [
+          "1025f0e2d44d7041d6cf58b6550e0bfa",
+          130593.12
+        ],
+        [
+          "7d13fca15225358621be4086e1eb0964",
+          122261.02
+        ],
+        [
+          "7c67e1448b00f6e969d365cea6b010ab",
+          120504.38
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "customers-in-sao-paulo",
+      "question": "How many distinct customers in Sao Paulo city have ordered from us?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(*) AS customers FROM customers WHERE customer_city = 'sao paulo'"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "customers"
+      ],
+      "rows": [
+        [
+          14984
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    }
+  ],
+  "score": {
+    "matched": 30,
+    "total": 30
+  }
+}

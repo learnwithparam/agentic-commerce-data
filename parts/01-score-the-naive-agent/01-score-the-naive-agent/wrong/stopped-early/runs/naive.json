@@ -1,0 +1,243 @@
+{
+  "version": 1,
+  "agent": "naive",
+  "command": "uv run ask-naive",
+  "provider": "replay",
+  "golden": "world/golden.toml",
+  "results": [
+    {
+      "id": "sellers-in-sao-paulo",
+      "question": "How many sellers are based in Sao Paulo city?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(*) AS seller_count FROM sellers WHERE seller_city = 'sao paulo'"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "seller_count"
+      ],
+      "rows": [
+        [
+          694
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": false,
+      "matched_by": null
+    },
+    {
+      "id": "sellers-in-sp-state",
+      "question": "How many sellers are in the state of Sao Paulo?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(*) FROM sellers WHERE seller_state = 'SP'"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "COUNT(*)"
+      ],
+      "rows": [
+        [
+          1849
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "orders-total",
+      "question": "How many orders are in the data?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(*) AS total_orders FROM orders"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "total_orders"
+      ],
+      "rows": [
+        [
+          99441
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "orders-delivered",
+      "question": "How many orders were delivered?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(*) AS delivered_orders FROM orders WHERE order_status = 'delivered'"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "delivered_orders"
+      ],
+      "rows": [
+        [
+          96478
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "orders-canceled-2017",
+      "question": "How many orders placed in 2017 were canceled?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(*) AS canceled_orders\nFROM orders\nWHERE order_status = 'canceled'\n  AND strftime('%Y', order_purchase_timestamp) = '2017'"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "canceled_orders"
+      ],
+      "rows": [
+        [
+          265
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": true,
+      "matched_by": "reference"
+    },
+    {
+      "id": "distinct-customers",
+      "question": "How many distinct customers have ordered from us?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(DISTINCT customer_id) AS customers FROM customers"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "customers"
+      ],
+      "rows": [
+        [
+          99441
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": false,
+      "matched_by": null
+    },
+    {
+      "id": "repeat-customers-2017",
+      "question": "How many customers placed more than one order in 2017?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT COUNT(*) AS repeat_customers\nFROM (\n  SELECT customer_id\n  FROM orders\n  WHERE strftime('%Y', order_purchase_timestamp) = '2017'\n  GROUP BY customer_id\n  HAVING COUNT(*) > 1\n)"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "repeat_customers"
+      ],
+      "rows": [
+        [
+          0
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": false,
+      "matched_by": null
+    },
+    {
+      "id": "repeat-customer-share",
+      "question": "What percentage of customers have ordered more than once?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT ROUND(100.0 * SUM(CASE WHEN order_count > 1 THEN 1 ELSE 0 END) / COUNT(*), 2) AS repeat_pct\nFROM (\n  SELECT customer_id, COUNT(*) AS order_count\n  FROM orders\n  GROUP BY customer_id\n)"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "repeat_pct"
+      ],
+      "rows": [
+        [
+          0
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": false,
+      "matched_by": null
+    },
+    {
+      "id": "revenue-total",
+      "question": "What is our total revenue?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT ROUND(SUM(price + freight_value), 2) AS total_revenue FROM order_items"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "total_revenue"
+      ],
+      "rows": [
+        [
+          15843553.24
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": false,
+      "matched_by": null
+    },
+    {
+      "id": "gmv-2018",
+      "question": "What was GMV in 2018?",
+      "sql": [
+        {
+          "id": "q1",
+          "text": "SELECT ROUND(SUM(oi.price), 2) AS gmv_2018\nFROM order_items oi\nJOIN orders o ON oi.order_id = o.order_id\nWHERE strftime('%Y', o.order_purchase_timestamp) = '2018'"
+        }
+      ],
+      "rows_from": "q1",
+      "columns": [
+        "gmv_2018"
+      ],
+      "rows": [
+        [
+          7386050.8
+        ]
+      ],
+      "refused": false,
+      "error": null,
+      "match": false,
+      "matched_by": null
+    }
+  ],
+  "score": {
+    "matched": 4,
+    "total": 10
+  }
+}
