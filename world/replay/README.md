@@ -5,11 +5,16 @@ With `LLM_PROVIDER=replay` (the default), the files here answer every model call
 The script finds a reply by three things: the agent's name, the role (`fast`, `smart` or `judge`) and the question.
 So the same question always gets the same reply, and every check gives the same result each time.
 
-For example, this is one line of `naive.jsonl`. When the naive agent asks its `fast` model about Sao Paulo
+For example, this is one line of `naive.jsonl`, spread over a few lines so it is easy to read. When the naive agent asks its `fast` model about Sao Paulo
 sellers, it gets this SQL back:
 
 ```json
-{"agent": "naive", "role": "fast", "question": "How many sellers are based in Sao Paulo city?", "reply": "SELECT COUNT(*) AS seller_count FROM sellers WHERE seller_city = 'sao paulo';"}
+{
+  "agent": "naive",
+  "role": "fast",
+  "question": "How many sellers are based in Sao Paulo city?",
+  "reply": "SELECT COUNT(*) AS seller_count FROM sellers WHERE seller_city = 'sao paulo';"
+}
 ```
 
 | File             | Agent    | What it holds                                                                       |
