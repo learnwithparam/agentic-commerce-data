@@ -103,7 +103,7 @@ Expect: `Part define-the-metrics is done: 3/3 steps pass.`
 **Extension, not graded.** Add a fifth metric with an owner other than yourself. Add a test that fails when its
 grain is wrong.
 
-## FINISHED
+## Finished
 
 You now have one written meaning for each desk metric, an agent that uses those meanings first, and answers that
 show their assumptions. A reader can see what each number means and who owns it.
