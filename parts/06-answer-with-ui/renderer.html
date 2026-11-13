@@ -5,16 +5,18 @@
 <title>Ops desk</title>
 <style>
   :root { --ink: #1f2937; --soft: #6b7280; --line: #e5e7eb; --accent: #2563eb; --card: #f9fafb; }
-  body { margin: 0; font: 14px/1.5 system-ui, sans-serif; color: var(--ink); background: #fff; }
+  body { margin: 0; font: 14px/1.5 system-ui, sans-serif; color: var(--ink); background: #fff; overflow-wrap: anywhere; }
   main { max-width: 1040px; margin: 0 auto; padding: 20px 24px; }
   h1 { font-size: 18px; margin: 0 0 12px; }
-  form { display: flex; gap: 8px; margin-bottom: 16px; }
-  form input { flex: 1; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; font: inherit; }
+  form { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  form label { flex-basis: 100%; font-weight: 600; }
+  form input { flex: 1; min-width: 0; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; font: inherit; }
   form button { padding: 8px 14px; border: 0; border-radius: 6px; background: var(--accent); color: #fff; }
   .layout { display: grid; grid-template-columns: 1fr 260px; gap: 20px; }
   .events { font: 12px/1.6 ui-monospace, monospace; color: var(--soft); border-left: 1px solid var(--line); padding-left: 14px; }
   .events b { color: var(--ink); font-weight: 600; }
   .column > * { margin-bottom: 14px; }
+  .scroll { overflow-x: auto; }
   table { border-collapse: collapse; width: 100%; font-size: 13px; }
   th, td { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--line); }
   th { color: var(--soft); font-weight: 600; }
@@ -23,14 +25,16 @@
   .quote p { margin: 0; font-style: italic; }
   .quote small { color: var(--soft); }
   .waiting { color: var(--soft); }
+  @media (max-width: 760px) { .layout { grid-template-columns: 1fr; } .events { border-left: 0; padding-left: 0; } }
 </style>
 </head>
 <body>
 <main>
   <h1>Ops desk</h1>
   <form id="ask">
+    <label for="question">Your question</label>
     <input id="question" value="Which Sao Paulo sellers had the most late deliveries in 2018?">
-    <button type="submit">Ask</button>
+    <button type="submit">Ask the desk</button>
   </form>
   <div class="layout">
     <div id="surface" class="waiting">Ask a question to see the answer.</div>
@@ -77,22 +81,28 @@ function element(tag, text, className) {
   return made;
 }
 
-function shortId(value) {
-  const text = value == null ? "" : String(value);
-  return /^[0-9a-f]{32}$/.test(text) ? `${text.slice(0, 8)}...` : text;
+function plainWords(name) {
+  return String(name).replaceAll("_", " ");
 }
 
 function drawTable(surface, component) {
   const table = element("table");
+  const head = element("thead");
   const header = element("tr");
-  for (const column of resolved(surface, component.columns) || []) header.append(element("th", column));
-  table.append(header);
+  for (const column of resolved(surface, component.columns) || []) {
+    header.append(element("th", plainWords(column)));
+  }
+  const body = element("tbody");
   for (const row of resolved(surface, component.rows) || []) {
     const line = element("tr");
-    for (const cell of row) line.append(element("td", shortId(cell)));
-    table.append(line);
+    for (const cell of row) line.append(element("td", cell));
+    body.append(line);
   }
-  return table;
+  head.append(header);
+  table.append(head, body);
+  const wrapper = element("div", undefined, "scroll");
+  wrapper.append(table);
+  return wrapper;
 }
 
 function drawChart(surface, component) {
@@ -124,7 +134,8 @@ function drawChart(surface, component) {
     svg.append(label);
   });
   const card = element("div", undefined, "card");
-  card.append(element("h3", `${component.y} by ${component.x}`), svg);
+  const title = component.title ?? plainWords(`${component.y} by ${component.x}`);
+  card.append(element("h3", title), svg);
   return card;
 }
 
@@ -142,13 +153,16 @@ function drawQuote(surface, component) {
   card.append(element("p", `"${resolved(surface, component.quote)}"`));
   const gloss = resolved(surface, component.gloss);
   if (gloss) card.append(element("small", `${gloss} `));
-  card.append(element("small", `review ${shortId(resolved(surface, component.reviewId))}`));
+  card.append(element("small", `Review ${resolved(surface, component.reviewId)}`));
   return card;
 }
 
 function draw(surface, id) {
   const component = surface.components[id];
-  if (!component) return element("div", `missing component ${id}`);
+  if (!component) {
+    console.log(`Missing component: ${id}`);
+    return element("div", "This part of the answer did not arrive. Ask the question again.");
+  }
   if (component.component === "Column") {
     const column = element("div", undefined, "column");
     for (const child of component.children) column.append(draw(surface, child));
@@ -159,7 +173,8 @@ function draw(surface, id) {
   if (component.component === "LineChart") return drawChart(surface, component);
   if (component.component === "AssumptionCard") return drawAssumptions(surface, component);
   if (component.component === "ReviewQuote") return drawQuote(surface, component);
-  return element("div", `not in the catalog: ${component.component}`);
+  console.log(`Not in the catalog: ${component.component}`);
+  return element("div", "The desk cannot draw this part of the answer. Ask the question again.");
 }
 
 function show() {
@@ -176,7 +191,7 @@ function logEvent(event, startedAt) {
   line.append(element("b", event.type), ` ${seconds}s`);
   document.getElementById("events").append(line);
   if (event.type === "TOOL_CALL_START") {
-    document.getElementById("surface").textContent = `Running ${event.toolCallName}...`;
+    document.getElementById("surface").textContent = `Working: ${plainWords(event.toolCallName)}`;
   }
   if (event.type === "ACTIVITY_SNAPSHOT" && event.activityType === "a2ui-surface") {
     for (const message of event.content.a2ui_operations) apply(message);

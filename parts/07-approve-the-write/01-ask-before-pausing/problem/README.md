@@ -8,7 +8,7 @@ But a named person must decide. Until then, nothing changes.
 The model may even write "approved": true in its plan. For example, the recorded plan for "Pause seller
 ea8482cd, too many late deliveries in 2018" says `"approved": true`. That is the model's word, not a person's.
 
-![The approval form: the seller, the reason, the evidence queries, and Approve or Reject](../images/expected.png)
+![The approval form: the seller, the reason, the evidence queries, and Approve pause or Reject pause](../images/expected.png)
 
 ## Your challenge
 

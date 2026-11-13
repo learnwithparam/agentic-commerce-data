@@ -33,9 +33,10 @@ def short(value) -> str:
 
 
 def table(columns: list[str], rows: list[list]) -> str:
-    head = "".join(f"<th>{escape(column)}</th>" for column in columns)
+    head = "".join(f"<th>{escape(column.replace('_', ' '))}</th>" for column in columns)
     body = "".join(table_row(row) for row in rows[:TABLE_ROWS_SHOWN])
-    return f"<table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>"
+    table_html = f"<table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>"
+    return f"<div class='scroll'>{table_html}</div>"
 
 
 def table_row(row: list) -> str:
@@ -148,6 +149,7 @@ CSS = (
     "main{max-width:960px;margin:0 auto;padding:24px 16px}header{display:flex;"
     "justify-content:space-between;align-items:baseline;margin-bottom:12px}\n"
     "header b{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}"
+    "body{overflow-wrap:anywhere}.scroll{overflow-x:auto}\n"
     "h1{font-size:22px;margin:4px 0 16px}\n"
     ".card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;"
     "margin-bottom:14px}\n"
@@ -174,7 +176,7 @@ CSS = (
 def page(answer: dict) -> str:
     parts = [
         "<header><b>Olist operations desk</b>"
-        f"<span class='cite'>route: {escape(str(answer['route']))}</span></header>",
+        f"<span class='cite'>How it answered: {escape(str(answer['route']))}</span></header>",
         f"<h1>{escape(answer['question'])}</h1>",
     ]
     if answer["refused"] or answer["error"]:
@@ -190,9 +192,14 @@ def page(answer: dict) -> str:
 
 
 def refusal_card(answer: dict) -> str:
-    heading = "Refused" if answer["refused"] else "Error"
     reason = answer["reason"] or answer["error"] or ""
-    return f"<div class='card refused'><h2>{heading}</h2>{escape(reason)}</div>"
+    if answer["refused"]:
+        return f"<div class='card refused'><h2>Refused</h2>{escape(reason)}</div>"
+    advice = "Try a narrower question, such as one city or one year."
+    return (
+        "<div class='card refused'><h2>The desk could not answer</h2>"
+        f"<p>{escape(reason)}</p><p>{advice}</p></div>"
+    )
 
 
 def answer_cards(answer: dict) -> list[str]:
@@ -218,9 +225,8 @@ def answer_cards(answer: dict) -> list[str]:
 
 
 def chart_card(chart_plan: dict) -> str:
-    title = (
-        f"{escape(chart_plan['y'])} by {escape(chart_plan['x'])} [{escape(chart_plan['query'])}]"
-    )
+    names = f"{chart_plan['y']} by {chart_plan['x']}".replace("_", " ")
+    title = f"{escape(names)} [{escape(chart_plan['query'])}]"
     return f"<div class='card'><h2>{title}</h2>{chart(chart_plan)}</div>"
 
 

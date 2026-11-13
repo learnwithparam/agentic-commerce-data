@@ -163,18 +163,35 @@ def form_page(answer: dict) -> str:
     model = answer["ui"][0]["createSurface"]["dataModel"]
     evidence_rows = "".join(evidence_html(item) for item in model["evidence"])
     page = (PART_FOLDER / "form.html").read_text(encoding="utf-8")
-    page = page.replace("{{action}}", escape(model["action"]))
+    city, state = seller_location(model["seller_id"])
+    page = page.replace("{{action_label}}", escape(action_label(model["action"])))
+    page = page.replace("{{seller_city}}", escape(city))
+    page = page.replace("{{seller_state}}", escape(state))
     page = page.replace("{{seller_id}}", escape(model["seller_id"]))
     page = page.replace("{{reason}}", escape(model["reason"]))
     page = page.replace("{{user}}", escape(answer.get("user", "")))
     return page.replace("{{evidence}}", evidence_rows)
 
 
+def action_label(action: str) -> str:
+    """The action as plain words for a person: pause_seller becomes Pause seller."""
+    return action.replace("_", " ").capitalize()
+
+
+def seller_location(seller_id: str) -> tuple[str, str]:
+    """The seller's city and state. Olist has no seller names, so the place is the plain label."""
+    _columns, rows = guard.run(
+        "SELECT seller_city, seller_state FROM sellers "
+        f"WHERE seller_id = '{seller_id.replace(chr(39), '')}'"
+    )
+    return (str(rows[0][0]), str(rows[0][1])) if rows else ("Unknown city", "unknown state")
+
+
 def evidence_html(item: dict) -> str:
-    header = "".join(f"<th>{escape(column)}</th>" for column in item["columns"])
+    header = "".join(f"<th>{escape(column.replace('_', ' '))}</th>" for column in item["columns"])
     first_row = item["rows"][0] if item["rows"] else []
     cells = "".join(f"<td>{escape(str(cell))}</td>" for cell in first_row)
-    table = f"<table><tr>{header}</tr><tr>{cells}</tr></table>"
+    table = f"<div class='scroll'><table><tr>{header}</tr><tr>{cells}</tr></table></div>"
     return f'<div class="evidence"><b>{escape(item["id"])}</b>{table}</div>'
 
 
