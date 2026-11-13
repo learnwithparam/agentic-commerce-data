@@ -51,12 +51,12 @@ Expect: `Done. All 5 rules pass.`
 
 ## If you get stuck
 
-| What you see                                                    | Fix                                                                      |
-| --------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| `FAIL ... DELETE FROM orders comes back with a read-only error` | Use `sqlite3.connect(f"file:{path}?mode=ro", uri=True)`.                 |
-| `FAIL ... every kind of write gets a read-only error`           | Do not look for words like `DELETE` in the SQL. Open the file read-only. |
-| `FAIL sql_tool.py answers a SELECT`                             | Keep `uri=True`. Without it, SQLite makes a new empty file instead.      |
-| `FAIL your real data/olist.db still has every row`              | Run `bun run world reset`. Keep `database_path()` as it is.              |
+| What you see                                                    | Fix                                                                          |
+| --------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `FAIL ... DELETE FROM orders comes back with a read-only error` | Use `sqlite3.connect(f"file:{path}?mode=ro", uri=True)`.                     |
+| `FAIL ... every kind of write gets a read-only error`           | Do not look for words like `DELETE` in the SQL. Open the file read-only.     |
+| `FAIL sql_tool.py answers a SELECT`                             | Keep `uri=True`. On some computers SQLite makes a new empty file without it. |
+| `FAIL your real data/olist.db still has every row`              | Run `bun run world reset`. Keep `database_path()` as it is.                  |
 
 ## Words you will use
 

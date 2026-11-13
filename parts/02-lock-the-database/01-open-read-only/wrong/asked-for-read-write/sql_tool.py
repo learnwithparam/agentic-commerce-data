@@ -20,7 +20,7 @@ def database_path() -> str:
 
 
 def connect() -> sqlite3.Connection:
-    return sqlite3.connect(f"file:{database_path()}?mode=ro")
+    return sqlite3.connect(f"file:{database_path()}?mode=rw", uri=True)
 
 
 def run(sql: str) -> dict:
