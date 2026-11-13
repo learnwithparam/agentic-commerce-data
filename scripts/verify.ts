@@ -200,6 +200,9 @@ function listSteps(stepName: string | undefined): number {
 
 async function printProgress() {
   // Done is recomputed from the checks every time, never read from a saved flag.
+  // That takes about a minute, so say so: a silent terminal looks like it has stopped.
+  const stepCount = allSteps().length;
+  console.log(`Counting your progress on all ${stepCount} steps. This takes about a minute...`);
   const results = [];
   for (const step of allSteps()) results.push(await runCheck(step, learnerWork(step)));
   const passing = results.filter((result) => result.status === "pass").length;

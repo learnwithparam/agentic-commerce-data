@@ -81,13 +81,14 @@ Now ask both agents the seller-success lead's question.
 uv run ask-naive "How many sellers are based in Sao Paulo city?"
 ```
 
-Expect: `The answer is 694.` and nothing else: no assumption, no source.
+Expect: `The answer is 694.` and a small table with one number, `694`. There is no `Assumption:` line and no source.
 
 ```bash
 uv run ask-finished "How many sellers are based in Sao Paulo city?"
 ```
 
-Expect: `The answer is 704.` and an `Assumption:` line that lists the 9 stored spellings of the city.
+Expect: `The answer is 704.`, a small table with `704`, and an `Assumption:` line that lists the 9 stored spellings of the
+city.
 
 The `Assumption:` line looks like this. It names every way the city is written in the data:
 
