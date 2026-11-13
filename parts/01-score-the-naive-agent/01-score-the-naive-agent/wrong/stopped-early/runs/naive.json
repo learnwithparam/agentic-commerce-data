@@ -15,14 +15,8 @@
         }
       ],
       "rows_from": "q1",
-      "columns": [
-        "seller_count"
-      ],
-      "rows": [
-        [
-          694
-        ]
-      ],
+      "columns": ["seller_count"],
+      "rows": [[694]],
       "refused": false,
       "error": null,
       "match": false,
@@ -38,14 +32,8 @@
         }
       ],
       "rows_from": "q1",
-      "columns": [
-        "COUNT(*)"
-      ],
-      "rows": [
-        [
-          1849
-        ]
-      ],
+      "columns": ["COUNT(*)"],
+      "rows": [[1849]],
       "refused": false,
       "error": null,
       "match": true,
@@ -61,14 +49,8 @@
         }
       ],
       "rows_from": "q1",
-      "columns": [
-        "total_orders"
-      ],
-      "rows": [
-        [
-          99441
-        ]
-      ],
+      "columns": ["total_orders"],
+      "rows": [[99441]],
       "refused": false,
       "error": null,
       "match": true,
@@ -84,14 +66,8 @@
         }
       ],
       "rows_from": "q1",
-      "columns": [
-        "delivered_orders"
-      ],
-      "rows": [
-        [
-          96478
-        ]
-      ],
+      "columns": ["delivered_orders"],
+      "rows": [[96478]],
       "refused": false,
       "error": null,
       "match": true,
@@ -107,14 +83,8 @@
         }
       ],
       "rows_from": "q1",
-      "columns": [
-        "canceled_orders"
-      ],
-      "rows": [
-        [
-          265
-        ]
-      ],
+      "columns": ["canceled_orders"],
+      "rows": [[265]],
       "refused": false,
       "error": null,
       "match": true,
@@ -130,14 +100,8 @@
         }
       ],
       "rows_from": "q1",
-      "columns": [
-        "customers"
-      ],
-      "rows": [
-        [
-          99441
-        ]
-      ],
+      "columns": ["customers"],
+      "rows": [[99441]],
       "refused": false,
       "error": null,
       "match": false,
@@ -153,14 +117,8 @@
         }
       ],
       "rows_from": "q1",
-      "columns": [
-        "repeat_customers"
-      ],
-      "rows": [
-        [
-          0
-        ]
-      ],
+      "columns": ["repeat_customers"],
+      "rows": [[0]],
       "refused": false,
       "error": null,
       "match": false,
@@ -176,14 +134,8 @@
         }
       ],
       "rows_from": "q1",
-      "columns": [
-        "repeat_pct"
-      ],
-      "rows": [
-        [
-          0
-        ]
-      ],
+      "columns": ["repeat_pct"],
+      "rows": [[0]],
       "refused": false,
       "error": null,
       "match": false,
@@ -199,14 +151,8 @@
         }
       ],
       "rows_from": "q1",
-      "columns": [
-        "total_revenue"
-      ],
-      "rows": [
-        [
-          15843553.24
-        ]
-      ],
+      "columns": ["total_revenue"],
+      "rows": [[15843553.24]],
       "refused": false,
       "error": null,
       "match": false,
@@ -222,14 +168,8 @@
         }
       ],
       "rows_from": "q1",
-      "columns": [
-        "gmv_2018"
-      ],
-      "rows": [
-        [
-          7386050.8
-        ]
-      ],
+      "columns": ["gmv_2018"],
+      "rows": [[7386050.8]],
       "refused": false,
       "error": null,
       "match": false,

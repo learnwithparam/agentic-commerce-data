@@ -1,19 +1,38 @@
 # Build a marketplace data agent with agentic RAG
 
-Ship a data agent an operations team can trust: it answers from fixed metric definitions, runs only safe
-read-only SQL, cites the rows and reviews behind every number, asks a person before it acts, and a gate blocks
-any change that makes it wrong. You build it on the real, messy data of Olist, a Brazilian marketplace.
+In this course you build a data agent. A data agent is a program that reads a question in plain words, writes a
+database query, runs it, and answers. You build one that an operations team can trust.
 
-**For** backend and data engineers who have been asked for "a chat box on the data" and do not want to be the
-person who shipped the wrong number; analytics engineers who own the metric definitions; technical PMs who decide
-what an agent may do alone. You need Python, a `JOIN` and a `GROUP BY`. You do not need to have built an agent.
+Your agent does five things right:
 
-**You leave with** an agent that passes 30 hand-checked golden questions on rows, refuses every write, hands off
-what it does not own, and a scorecard that shows the before and after.
+- It uses fixed metric definitions, so "revenue" always means the same thing.
+- It runs only safe SQL that reads. It never changes the data.
+- It shows the rows and the customer reviews behind every number.
+- It asks a person before it does anything to a seller.
+- A gate blocks any change that makes it give a wrong answer.
+
+You build it on real, messy data from Olist, a Brazilian online marketplace.
+
+For example, a team lead asks: "How many sellers are based in Sao Paulo city?" The naive agent says 694. It is the
+simple agent you start from. The right answer is 704. The city is written in 9 different ways in the data, and the
+naive agent finds only one of them.
+Nothing looks wrong, so nobody checks. This course teaches you to catch mistakes like this one.
+
+**This course is for you** if you are a backend or data engineer and someone asked you for "a chat box on the
+data". It is also for analytics engineers who own metric definitions. It is also for technical product managers
+who decide what an agent may do alone.
+
+You need to know some Python, and how to write SQL with a `JOIN` and a `GROUP BY`. You do not need to have built
+an agent before.
+
+**At the end you have** an agent that gets the right rows on 30 test questions. Each question has an answer that a
+person checked by hand. The course calls these the golden questions. Your agent also refuses every
+request to change data. It passes questions it does not own to another agent. You also have a scorecard that shows
+your score before and after.
 
 ## Run the finished system first
 
-No model key needed: the agents answer from recorded replies until you set a provider in `.env`.
+You do not need a model key. The agents answer from recorded replies until you set a provider in `.env`.
 
 ```bash
 bun install && uv sync && bun run world
@@ -43,6 +62,9 @@ Expect: `Refused: This desk answers questions with read-only queries.` and the r
 
 ## The world and what you build
 
+The "world" is everything the course gives you: the database, the test questions and the recorded replies. The
+picture shows the world on the left and the parts you build on the right.
+
 ```mermaid
 flowchart LR
   subgraph World[The world: bun run world]
@@ -64,54 +86,74 @@ flowchart LR
   You --> SC
 ```
 
-The checks never read your code or the agent's prose. They run your agent through its contract
-(`uv run ask "<question>" --json`, defined in [desk/contract.py](desk/contract.py)), re-run the queries it says it
-ran, and compare rows with the reference queries. Any framework passes.
+The checks never read your code. They never read the words of the agent's answer either. Here is what they do
+instead:
+
+1. They run your agent with one fixed command: `uv run ask "<question>" --json`. The file
+   [desk/contract.py](desk/contract.py) defines it.
+2. They run again the queries your agent says it ran.
+3. They compare the rows with the rows of the reference queries.
+
+So you can use any framework you like.
 
 ## Parts
 
-Start in [00-orientation](00-orientation/README.md). Each step has one command: `bun run verify <step-name>`.
+Start in [00-orientation](00-orientation/README.md). Each step has one check command: `bun run verify <step-name>`.
 
-| Part | Minutes | Status |
-|---|---|---|
-| [orientation](00-orientation/README.md): meet the desk | 15 | ready |
-| [score-the-naive-agent](parts/01-score-the-naive-agent/README.md) | 35 | ready |
-| [lock-the-database](parts/02-lock-the-database/README.md) | 30 | planned |
-| [define-the-metrics](parts/03-define-the-metrics/README.md) | 35 | planned |
-| [retrieve-the-context](parts/04-retrieve-the-context/README.md) | 45 | planned |
-| [build-the-loop](parts/05-build-the-loop/README.md) | 45 | planned |
-| [answer-with-ui](parts/06-answer-with-ui/README.md) | 40 | planned |
-| [approve-the-write](parts/07-approve-the-write/README.md) | 25 | planned |
-| [delegate-over-a2a](parts/08-delegate-over-a2a/README.md) | 35 | planned |
-| [gate-every-change](parts/09-gate-every-change/README.md) | 25 | planned |
+| Part                                                              | Minutes | Status  |
+| ----------------------------------------------------------------- | ------- | ------- |
+| [orientation](00-orientation/README.md): meet the desk            | 15      | ready   |
+| [score-the-naive-agent](parts/01-score-the-naive-agent/README.md) | 35      | ready   |
+| [lock-the-database](parts/02-lock-the-database/README.md)         | 30      | planned |
+| [define-the-metrics](parts/03-define-the-metrics/README.md)       | 35      | planned |
+| [retrieve-the-context](parts/04-retrieve-the-context/README.md)   | 45      | planned |
+| [build-the-loop](parts/05-build-the-loop/README.md)               | 45      | planned |
+| [answer-with-ui](parts/06-answer-with-ui/README.md)               | 40      | planned |
+| [approve-the-write](parts/07-approve-the-write/README.md)         | 25      | planned |
+| [delegate-over-a2a](parts/08-delegate-over-a2a/README.md)         | 35      | planned |
+| [gate-every-change](parts/09-gate-every-change/README.md)         | 25      | planned |
 
-330 minutes of steps. [schedules.toml](schedules.toml) maps them onto one day, four evenings or six weekly sessions.
-[PARTS.md](PARTS.md) lists every step and what its check reads.
+The steps take 330 minutes in total. The file [schedules.toml](schedules.toml) splits them into sessions. You can
+do them in one long session, in four evenings, or in six sessions a week apart. The file [PARTS.md](PARTS.md) lists every
+step and what its check reads.
 
 ## The project
 
-A public repo of your own where the gate passes on the last commit, with a `SCORECARD.md`: the naive score and
-your score on the same 30 golden questions (median of 3 runs), attacks refused, mutants caught, and review
-citations that resolve. Add 5 golden questions from your own work, each hand-checked. Bring your own database if
-its licence lets you publish it: the contracts and checks stay the same.
+At the end you publish a repo of your own. The gate passes on its last commit. It has a file called
+`SCORECARD.md` that shows:
+
+- the naive score and your score on the same 30 golden questions, as the middle value of 3 runs;
+- the attacks your agent refused;
+- the broken copies of your agent that the gate caught;
+- the review quotes your agent cited, each one traced back to a real review.
+
+Add 5 golden questions from your own work, and check each answer by hand. You may bring your own database if its
+licence lets you publish it. The commands and the checks stay the same.
 
 ## Read before you start
 
-1. Anthropic, [How Anthropic enables self-service data analytics with Claude](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude). Accuracy did not exceed 21% without skills and metric definitions, stayed above 95% with them, and drifted from about 95% to about 65% in a month without upkeep.
-2. dbt Labs, [Semantic Layer vs. Text-to-SQL: 2026 Benchmark Update](https://docs.getdbt.com/blog/semantic-layer-vs-text-to-sql-2026). A vendor's benchmark on its own modeled project; read why a semantic layer fails loudly.
-3. Jin and others, [Pervasive Annotation Errors Break Text-to-SQL Benchmarks and Leaderboards](https://arxiv.org/abs/2601.08778), abstract and section 1. Why every golden answer here is hand-checked.
+1. Anthropic, [How Anthropic enables self-service data analytics with Claude](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude). Without written skills and metric definitions, accuracy was 21% at most. With them, it stayed above 95%. Without upkeep, it fell from about 95% to about 65% in a month.
+2. dbt Labs, [Semantic Layer vs. Text-to-SQL: 2026 Benchmark Update](https://docs.getdbt.com/blog/semantic-layer-vs-text-to-sql-2026). A company tests its own product here, so read it with care. Look for why a semantic layer fails with a clear error.
+3. Jin and others, [Pervasive Annotation Errors Break Text-to-SQL Benchmarks and Leaderboards](https://arxiv.org/abs/2601.08778). Read the abstract and section 1. It shows why every test answer in this course is checked by hand.
 
 ## The data and its licence
 
-The Brazilian E-Commerce Public Dataset by Olist ([Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)),
-licensed [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/). It is not stored in this repo;
-`bun run world` downloads a pinned copy and checks each file's SHA-256. Details in [world/README.md](world/README.md).
+The data is the Brazilian E-Commerce Public Dataset by Olist ([Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)).
+Its licence is [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/). The data is not stored in
+this repo. The command `bun run world` downloads a fixed copy. Then it checks each file's SHA-256, a fingerprint
+that changes if even one byte changes. You can read more in [world/README.md](world/README.md).
 
 ## Models
 
-Every model call goes through [config/models.py](config/models.py), which maps the roles `fast`, `smart` and
-`judge` to a provider. `LLM_PROVIDER` is `replay` by default. To use a live model, copy `.env.example` to `.env`,
-set `LLM_PROVIDER` to `anthropic`, `openrouter`, `openai` or `ollama`, fill in one key, and test it:
+Every call to a model goes through one file, [config/models.py](config/models.py). It gives each of the three
+roles, `fast`, `smart` and `judge`, a provider. By default `LLM_PROVIDER` is `replay`, which uses recorded replies.
+
+To use a live model:
+
+1. Copy `.env.example` to `.env`.
+2. Set `LLM_PROVIDER` to `anthropic`, `openrouter`, `openai` or `ollama`.
+3. Fill in one key.
+4. Test it with the command below.
 
 ```bash
 uv run models
@@ -119,4 +161,4 @@ uv run models
 
 Expect: one `PASS` line per role, for example `provider replay  role fast   PASS  64 recorded replies, no key, cost 0`.
 
-The rules every course repo follows, and the check behind each, are in [STANDARD.md](STANDARD.md).
+The rules that every course repo follows are in [STANDARD.md](STANDARD.md), with the check behind each rule.

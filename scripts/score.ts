@@ -1,11 +1,13 @@
 // bun run score [ask|naive|finished] [--for <step-name>] [--golden <file>]
-// Runs an agent on every golden question through its CLI contract (`uv run <agent> "<question>" --json`),
-// judges each answer by its rows against the reference query, and writes runs/<agent>.json.
-// --for <step-name> writes into that step's problem/ folder, where `bun run verify <step-name>` reads it.
+// Runs an agent on every golden question through its CLI contract
+// (`uv run <agent> "<question>" --json`), judges each answer by its rows against the
+// reference query, and writes runs/<agent>.json.
+// --for <step-name> writes into that step's problem/ folder,
+// where `bun run verify <step-name>` reads it.
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
-import { judge, goldenPathFor, loadGolden } from "../checks/lib/golden";
-import type { Run, RunResult } from "../checks/lib/runs";
+import { goldenPathFor, judge, loadGolden, type Question } from "../checks/lib/golden";
+import type { Run, RunResult, SqlRun } from "../checks/lib/runs";
 import { findStep, ROOT } from "./structure";
 
 const AGENTS: Record<string, string[]> = {
@@ -14,76 +16,154 @@ const AGENTS: Record<string, string[]> = {
   finished: ["uv", "run", "--quiet", "ask-finished"],
 };
 
-const args = process.argv.slice(2);
-const flag = (name: string) => {
-  const i = args.indexOf(name);
-  return i >= 0 ? args.splice(i, 2)[1] : undefined;
+// How many questions are asked at the same time.
+const WORKERS = 6;
+
+// The agents print, and the run file keeps, these two keys with underscores.
+const ROWS_FROM = "rows_from";
+const MATCHED_BY = "matched_by";
+
+// What an agent prints with --json. Any field may be missing.
+type AgentAnswer = Partial<Record<typeof ROWS_FROM, string | null>> & {
+  sql?: SqlRun[];
+  columns?: string[];
+  rows?: unknown;
+  refused?: boolean;
+  error?: string;
 };
-const forStep = flag("--for");
-const goldenArg = flag("--golden");
+
+const args = process.argv.slice(2);
+
+// Takes a flag and its value out of the arguments, so what is left is the agent name.
+function takeFlag(name: string): string | undefined {
+  const position = args.indexOf(name);
+  if (position < 0) return undefined;
+  return args.splice(position, 2)[1];
+}
+
+const forStep = takeFlag("--for");
+const goldenArg = takeFlag("--golden");
 const agent = args[0] ?? "ask";
 if (!AGENTS[agent]) {
-  console.log(`There is no agent called "${agent}". Use: bun run score ask, bun run score naive, bun run score finished.`);
+  console.log(
+    `There is no agent called "${agent}". ` +
+      "Use: bun run score ask, bun run score naive, bun run score finished.",
+  );
   process.exit(1);
 }
-let outDir = ROOT;
-if (forStep) {
-  const s = findStep(forStep);
-  if (!s) {
+
+function outputFolder(): string {
+  if (!forStep) return ROOT;
+  const step = findStep(forStep);
+  if (!step) {
     console.log(`There is no step called "${forStep}". Run bun run verify to list the steps.`);
     process.exit(1);
   }
-  outDir = join(s.dir, "problem");
+  return join(step.dir, "problem");
 }
+
+const outDir = outputFolder();
 const goldenPath = goldenArg ? join(ROOT, goldenArg) : goldenPathFor(outDir);
 const golden = loadGolden(goldenPath);
 
-async function ask(question: string): Promise<Record<string, any>> {
-  const proc = Bun.spawn([...AGENTS[agent], question, "--json"], { cwd: ROOT, stdout: "pipe", stderr: "pipe" });
-  const [out, err] = await Promise.all([new Response(proc.stdout).text(), new Response(proc.stderr).text()]);
-  await proc.exited;
-  const line = out.trim().split("\n").pop() ?? "";
-  try { return JSON.parse(line); } catch {
-    return { error: `the agent did not print one JSON object: ${(err || out).trim().split("\n").pop() ?? "no output"}` };
+function lastLine(text: string): string | undefined {
+  return text.trim().split("\n").pop();
+}
+
+async function ask(question: string): Promise<AgentAnswer> {
+  const agentProcess = Bun.spawn([...AGENTS[agent], question, "--json"], {
+    cwd: ROOT,
+    stdout: "pipe",
+    stderr: "pipe",
+  });
+  const [output, errorOutput] = await Promise.all([
+    new Response(agentProcess.stdout).text(),
+    new Response(agentProcess.stderr).text(),
+  ]);
+  await agentProcess.exited;
+  const line = lastLine(output) ?? "";
+  try {
+    return JSON.parse(line);
+  } catch {
+    const lastWords = lastLine(errorOutput || output) ?? "no output";
+    return { error: `the agent did not print one JSON object: ${lastWords}` };
   }
 }
 
-try { Bun.spawnSync(["uv", "--version"]); } catch {
-  console.log("uv: command not found. Install uv from https://docs.astral.sh/uv/ and open a new terminal.");
+try {
+  Bun.spawnSync(["uv", "--version"]);
+} catch {
+  console.log(
+    "uv: command not found. Install uv from https://docs.astral.sh/uv/ and open a new terminal.",
+  );
   process.exit(2);
 }
 
-console.log(`Scoring the ${agent} agent on ${golden.length} golden questions (${relative(ROOT, goldenPath)}).`);
+async function scoreQuestion(question: Question): Promise<RunResult> {
+  const answer = await ask(question.question);
+  const rows = Array.isArray(answer.rows) ? answer.rows : [];
+  // An error or a refusal is never a match, so there is nothing to judge.
+  let verdict = { match: false, matchedBy: null as string | null };
+  if (!(answer.error || answer.refused)) verdict = await judge(question, rows);
+  return {
+    id: question.id,
+    question: question.question,
+    sql: answer.sql ?? [],
+    [ROWS_FROM]: answer[ROWS_FROM] ?? null,
+    columns: answer.columns ?? [],
+    rows,
+    refused: Boolean(answer.refused),
+    error: answer.error ?? null,
+    match: verdict.match,
+    [MATCHED_BY]: verdict.matchedBy,
+  };
+}
+
+console.log(
+  `Scoring the ${agent} agent on ${golden.length} golden questions ` +
+    `(${relative(ROOT, goldenPath)}).`,
+);
 const results: RunResult[] = new Array(golden.length);
-let next = 0;
+let nextQuestion = 0;
+
+// Each worker takes the next unasked question until none are left.
 async function worker() {
-  while (next < golden.length) {
-    const i = next++;
-    const q = golden[i];
-    const a = await ask(q.question);
-    const rows = Array.isArray(a.rows) ? a.rows : [];
-    const verdict = a.error || a.refused ? { match: false, matchedBy: null } : await judge(q, rows);
-    results[i] = {
-      id: q.id, question: q.question, sql: a.sql ?? [], rows_from: a.rows_from ?? null, columns: a.columns ?? [], rows,
-      refused: Boolean(a.refused), error: a.error ?? null, match: verdict.match, matched_by: verdict.matchedBy,
-    };
+  while (nextQuestion < golden.length) {
+    const i = nextQuestion++;
+    results[i] = await scoreQuestion(golden[i]);
   }
 }
-await Promise.all(Array.from({ length: 6 }, worker));
+await Promise.all(Array.from({ length: WORKERS }, worker));
 
-for (const r of results) {
-  const why = r.error ? `error: ${r.error}` : r.refused ? "refused" : r.match ? (r.matched_by === "reference" ? "" : `(${r.matched_by})`) : "rows differ from the reference";
-  console.log(`  ${r.match ? "MATCH" : "MISS "}  ${r.id}  ${why}`.trimEnd());
+function explain(result: RunResult): string {
+  if (result.error) return `error: ${result.error}`;
+  if (result.refused) return "refused";
+  if (!result.match) return "rows differ from the reference";
+  if (result[MATCHED_BY] === "reference") return "";
+  return `(${result[MATCHED_BY]})`;
 }
-const matched = results.filter((r) => r.match).length;
+
+for (const result of results) {
+  const label = result.match ? "MATCH" : "MISS ";
+  console.log(`  ${label}  ${result.id}  ${explain(result)}`.trimEnd());
+}
+const matched = results.filter((result) => result.match).length;
 const run: Run = {
-  version: 1, agent, command: AGENTS[agent].filter((x) => x !== "--quiet").join(" "),
-  provider: process.env.LLM_PROVIDER || "replay", golden: relative(ROOT, goldenPath), results,
+  version: 1,
+  agent,
+  command: AGENTS[agent].filter((word) => word !== "--quiet").join(" "),
+  provider: process.env.LLM_PROVIDER || "replay",
+  golden: relative(ROOT, goldenPath),
+  results,
   score: { matched, total: results.length },
 };
 mkdirSync(join(outDir, "runs"), { recursive: true });
-const out = join(outDir, "runs", `${agent}.json`);
-writeFileSync(out, JSON.stringify(run, null, 2) + "\n");
+const runPath = join(outDir, "runs", `${agent}.json`);
+writeFileSync(runPath, `${JSON.stringify(run, null, 2)}\n`);
 console.log(`Score: ${matched} of ${results.length} match.`);
-console.log(`Wrote ${relative(ROOT, out)}`);
-if (results.some((r) => r.error)) console.log("Some questions ended in an error. Look them up in 00-orientation/troubleshooting.md.");
+console.log(`Wrote ${relative(ROOT, runPath)}`);
+if (results.some((result) => result.error)) {
+  console.log(
+    "Some questions ended in an error. Look them up in 00-orientation/troubleshooting.md.",
+  );
+}
