@@ -1,0 +1,13 @@
+{
+  "keys": [
+    {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "VmzioRL0IgwfSWLBd7WKgOLzyB0VmmFcAF2kMbxgLVM",
+      "y": "i-UL4IzZN6iOY1LLsn6wSD62gbAvhHBBElULCMsXMFw",
+      "kid": "logistics-team-key-1",
+      "alg": "ES256",
+      "use": "sig"
+    }
+  ]
+}

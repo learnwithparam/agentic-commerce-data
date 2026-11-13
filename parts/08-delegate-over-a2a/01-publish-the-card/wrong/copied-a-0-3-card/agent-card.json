@@ -1,0 +1,32 @@
+{
+  "name": "Ops desk agent",
+  "description": "Answers questions from the Olist operations desk with read-only SQL over the marketplace data, and cites the rows behind every number.",
+  "version": "1.0.0",
+  "protocolVersion": "0.3.0",
+  "url": "http://127.0.0.1:8810/a2a",
+  "preferredTransport": "JSONRPC",
+  "capabilities": {
+    "streaming": true
+  },
+  "defaultInputModes": ["text/plain"],
+  "defaultOutputModes": ["application/json", "text/plain"],
+  "skills": [
+    {
+      "id": "answer-marketplace-questions",
+      "name": "Answer marketplace questions",
+      "description": "Answers a question about orders, sellers, products and reviews with the rows that prove it.",
+      "tags": ["sql", "marketplace", "olist"],
+      "examples": [
+        "How many sellers are based in Sao Paulo city?",
+        "What share of delivered orders arrived late?"
+      ]
+    },
+    {
+      "id": "quote-reviews",
+      "name": "Quote customer reviews",
+      "description": "Finds the Portuguese reviews behind a number and quotes them with an English gloss.",
+      "tags": ["reviews", "portuguese"],
+      "examples": ["What do the one-star reviews of the late Sao Paulo sellers say?"]
+    }
+  ]
+}
