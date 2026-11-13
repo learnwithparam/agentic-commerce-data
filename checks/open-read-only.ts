@@ -53,7 +53,7 @@ export default [
       return READ_ONLY_ERROR.test(answer.error ?? "");
     },
     tryNext:
-      'open the database with sqlite3.connect(f"file:{path}?mode=ro", uri=True); ' +
+      'open the database with sqlite3.connect(f"file:{database_path()}?mode=ro", uri=True); ' +
       "undoing a write afterwards is not the same as refusing it",
   },
   {

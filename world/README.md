@@ -55,7 +55,7 @@ A trap is something in the data that makes a simple query give a wrong answer. E
 | Command                | What it does                                                                                   |
 | ---------------------- | ---------------------------------------------------------------------------------------------- |
 | `bun run world`        | Build `data/olist.db` if it is missing, then print the row counts and test the read-only open. |
-| `bun run world reset`  | Delete the database and the logs, and build them again from the cache.                         |
+| `bun run world reset`  | Delete the database, the logs and `data/memory.jsonl`, and build them again from the cache.    |
 | `bun run world status` | Print the row counts.                                                                          |
 
 ## Logs a check can read

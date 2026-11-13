@@ -37,8 +37,19 @@ five fields:
 - `expression`: the piece of SQL that defines it, for example `COUNT(DISTINCT o.order_id) > 1`;
 - `sql`: one full query that uses the expression on all the data.
 
-Use the table names `o` for `orders`, `i` for `order_items` and `c` for `customers`. The agent needs them in the
-next step.
+Here is what the three new metrics mean. Turn each meaning into SQL.
+
+| Metric               | What it means                                                                    |
+| -------------------- | -------------------------------------------------------------------------------- |
+| `late_delivery_rate` | The share of delivered orders that arrived on a later day than the estimate.     |
+| `active_seller`      | A seller with at least one item in an order. Group `order_items` by `seller_id`. |
+| `repeat_customer`    | A person, `customer_unique_id`, with more than one order.                        |
+
+An expression can have one of three shapes. `gmv` adds up a column. `late_delivery_rate` tests one order: is it
+late? `active_seller` and `repeat_customer` test a group, so their expression goes after `HAVING`.
+
+Give each table a short name, called an alias: `o` for `orders`, `i` for `order_items` and `c` for `customers`.
+For example, `FROM orders o`. The agent needs these aliases in the next step.
 
 Run one query by hand to see its number:
 

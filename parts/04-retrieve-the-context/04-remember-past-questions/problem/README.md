@@ -32,6 +32,9 @@ Fill in `why_not_store()` in `memory.py`. Return a reason, so the pair is refuse
 
 Return `None` when the pair is right. `add()` and `examples()` already work.
 
+Run the command below only after you fill in `why_not_store()`. The starter stores every pair, even a wrong one.
+If you ran it too early, delete `data/memory.jsonl`, or run `bun run world reset`.
+
 ```bash
 uv run python parts/04-retrieve-the-context/04-remember-past-questions/problem/memory.py add "How many sellers are based in Sao Paulo city?" "SELECT COUNT(*) FROM sellers WHERE seller_city = 'sao paulo'"
 ```

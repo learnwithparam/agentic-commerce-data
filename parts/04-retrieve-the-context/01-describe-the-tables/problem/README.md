@@ -30,7 +30,17 @@ headings:
 - `## Keys`: the columns it joins on, each in backticks;
 - `## Traps`: at least one bullet. Every table here has one.
 
-The traps are measured for you in `world/README.md`. List the columns of a table like this:
+The traps are measured for you in `world/README.md`. One table is not in that list: `order_reviews`. Find its
+traps yourself. For example, count how many reviews have a comment:
+
+```bash
+uv run python -c "import sqlite3; print(sqlite3.connect('data/olist.db').execute('SELECT COUNT(review_comment_message), COUNT(*) FROM order_reviews').fetchall())"
+```
+
+Expect: `[(40977, 99224)]`. So fewer than half of the reviews have words you can search. Also look for orders with
+more than one review.
+
+List the columns of a table like this:
 
 ```bash
 uv run python -c "import sqlite3; print([row[1] for row in sqlite3.connect('data/olist.db').execute('PRAGMA table_info(sellers)')])"

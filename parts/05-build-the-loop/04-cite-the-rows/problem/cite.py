@@ -18,6 +18,7 @@ import kit
 def cite_cells(template: str, results: dict) -> list[dict]:
     """One citation for every {q1:0:2} in the template: the value, its query and its row."""
     # TODO: use CELL_REFERENCE.finditer(template) to find each reference.
+    # Import it first, at the top of this file: from desk.finished.agent import CELL_REFERENCE
     return []
 
 

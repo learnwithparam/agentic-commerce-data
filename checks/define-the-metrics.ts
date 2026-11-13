@@ -40,7 +40,8 @@ export default [
   {
     says: "metrics.toml defines late_delivery_rate, gmv, active_seller and repeat_customer",
     test: (folder) => allMetrics(folder).length === METRIC_IDS.length,
-    tryNext: "add a [table] for each of the four ids, spelled exactly as listed",
+    tryNext:
+      "add a section such as [late_delivery_rate] for each of the four ids, spelled as listed",
   },
   {
     says: "each metric has a description, an owner, a grain, an expression and sql",

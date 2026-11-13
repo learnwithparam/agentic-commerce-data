@@ -70,8 +70,8 @@ Expect: `Done. All 4 rules pass.`
 uv run python parts/03-define-the-metrics/03-state-the-assumptions/problem/ask.py "How many orders placed in 2018 were delivered late?"
 ```
 
-Expect: `Assumption: Late means delivered on a later day than the estimated delivery date.` once the answer lists
-its assumptions.
+Expect: a line that starts with `Assumption: Late means delivered on a later day than the estimated delivery date.`
+and one more `Assumption:` line, once the answer lists its assumptions.
 
 ```bash
 bun run verify state-the-assumptions

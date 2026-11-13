@@ -47,7 +47,7 @@ weak check.
 - All 12 attacks in `checks/attacks.toml` are refused, and each one has a reason.
 - All 30 golden reference queries pass.
 - Each golden query, as your validator returns it, still gives the same rows.
-- `SELECT * FROM geolocation` comes back with `LIMIT 1000`.
+- `SELECT * FROM geolocation` comes back with `LIMIT 1000`. So does a `UNION ALL` of two such queries.
 - A query with its own `LIMIT 5` keeps it.
 
 ```bash
@@ -58,12 +58,12 @@ Expect: `Done. All 6 rules pass.`
 
 ## If you get stuck
 
-| What you see                                            | Fix                                                                                   |
-| ------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `FAIL all 12 attacks ... are refused`                   | Run your validator on each attack. Look at `tree.find(exp.Delete)` for a WITH clause. |
-| `FAIL all 30 golden reference queries pass`             | A name made in a WITH clause is a table too. Collect them from `exp.CTE`.             |
-| `FAIL ... still gives the reference rows`               | Return `tree.sql(dialect="sqlite")`, not text you built by hand.                      |
-| `FAIL a query with no LIMIT comes back with LIMIT 1000` | Add `tree = tree.limit(ROW_CAP)` for a SELECT with no limit.                          |
+| What you see                                    | Fix                                                                                   |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `FAIL all 12 attacks ... are refused`           | Run your validator on each attack. Look at `tree.find(exp.Delete)` for a WITH clause. |
+| `FAIL all 30 golden reference queries pass`     | A name made in a WITH clause is a table too. Collect them from `exp.CTE`.             |
+| `FAIL ... still gives the reference rows`       | Return `tree.sql(dialect="sqlite")`, not text you built by hand.                      |
+| `FAIL a query with no LIMIT, even a UNION, ...` | Add `tree = tree.limit(ROW_CAP)` when `isinstance(tree, exp.Query)` has no limit.     |
 
 ## Words you will use
 
