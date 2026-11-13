@@ -35,13 +35,14 @@ flowchart LR
 
 The other teams' agents come with this part. You do not change them:
 
-| File                     | What it is                                                                            |
-| ------------------------ | ------------------------------------------------------------------------------------- |
-| `logistics_agent.py`     | The logistics agent. It signs its card with the key in your allowlist.                |
-| `pricing_agent.py`       | A pricing agent with no signature on its card.                                        |
-| `impostor_agent.py`      | An impostor. It signs its card with its own key and calls itself the logistics agent. |
-| `team_server.py`         | The small A2A server the three share, in plain Python you can read.                   |
-| `agent-card.schema.json` | The A2A 1.0 Agent Card schema, written from the spec's `a2a.proto` at v1.0.1.         |
+| File                     | What it is                                                                                                 |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| `logistics_agent.py`     | The logistics agent. It signs its card with the key in your allowlist.                                     |
+| `pricing_agent.py`       | A pricing agent with no signature on its card.                                                             |
+| `impostor_agent.py`      | An impostor. It signs its card with its own key and calls itself the logistics agent.                      |
+| `team_server.py`         | The small A2A server the three share, in plain Python you can read.                                        |
+| `logistics-key.pem`      | The logistics agent's private key. It is a course test key, public on purpose. Never use it anywhere else. |
+| `agent-card.schema.json` | The A2A 1.0 Agent Card schema, written from the spec's `a2a.proto` at v1.0.1.                              |
 
 ## Steps
 
