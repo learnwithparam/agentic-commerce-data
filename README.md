@@ -100,18 +100,19 @@ So you can use any framework you like.
 
 Start in [00-orientation](00-orientation/README.md). Each step has one check command: `bun run verify <step-name>`.
 
-| Part                                                              | Minutes | Status |
-| ----------------------------------------------------------------- | ------- | ------ |
-| [orientation](00-orientation/README.md): meet the desk            | 15      | ready  |
-| [score-the-naive-agent](parts/01-score-the-naive-agent/README.md) | 35      | ready  |
-| [lock-the-database](parts/02-lock-the-database/README.md)         | 30      | ready  |
-| [define-the-metrics](parts/03-define-the-metrics/README.md)       | 35      | ready  |
-| [retrieve-the-context](parts/04-retrieve-the-context/README.md)   | 45      | ready  |
-| [build-the-loop](parts/05-build-the-loop/README.md)               | 45      | ready  |
-| [answer-with-ui](parts/06-answer-with-ui/README.md)               | 40      | ready  |
-| [approve-the-write](parts/07-approve-the-write/README.md)         | 25      | ready  |
-| [delegate-over-a2a](parts/08-delegate-over-a2a/README.md)         | 35      | ready  |
-| [gate-every-change](parts/09-gate-every-change/README.md)         | 25      | ready  |
+| Part                                                                                | Minutes | Status   |
+| ----------------------------------------------------------------------------------- | ------- | -------- |
+| [orientation](00-orientation/README.md): meet the desk                              | 15      | ready    |
+| [score-the-naive-agent](parts/01-score-the-naive-agent/README.md)                   | 35      | ready    |
+| [lock-the-database](parts/02-lock-the-database/README.md)                           | 30      | ready    |
+| [define-the-metrics](parts/03-define-the-metrics/README.md)                         | 35      | ready    |
+| [retrieve-the-context](parts/04-retrieve-the-context/README.md)                     | 45      | ready    |
+| [build-the-loop](parts/05-build-the-loop/README.md)                                 | 45      | ready    |
+| [answer-with-ui](parts/06-answer-with-ui/README.md)                                 | 40      | ready    |
+| [approve-the-write](parts/07-approve-the-write/README.md)                           | 25      | ready    |
+| [delegate-over-a2a](parts/08-delegate-over-a2a/README.md)                           | 35      | ready    |
+| [gate-every-change](parts/09-gate-every-change/README.md)                           | 25      | ready    |
+| [do-it-with-the-tools-teams-run](parts/10-do-it-with-the-tools-teams-run/README.md) | 15      | optional |
 
 The steps take 330 minutes in total. The file [schedules.toml](schedules.toml) splits them into sessions. You can
 do them in one long session, in four evenings, or in six sessions a week apart. The file [PARTS.md](PARTS.md) lists every
