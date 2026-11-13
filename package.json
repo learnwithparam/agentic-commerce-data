@@ -4,17 +4,19 @@
   "type": "module",
   "packageManager": "bun@1.4.4",
   "scripts": {
-    "check": "bun scripts/readable.ts && bun scripts/plain-english.ts && bun scripts/check.ts && bun scripts/verify.ts --all",
+    "check": "bun scripts/readable.ts && bun scripts/plain-english.ts && bun scripts/check.ts && bun scripts/verify.ts --all && bun run audit",
     "readable": "bun scripts/readable.ts",
     "format": "biome check --write .",
     "verify": "bun scripts/verify.ts",
     "world": "bun world/build.ts",
     "score": "bun scripts/score.ts",
     "shots": "bun scripts/shots.ts",
-    "plain-english": "bun scripts/plain-english.ts"
+    "plain-english": "bun scripts/plain-english.ts",
+    "audit": "playwright test -c e2e --trace off"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.5",
+    "@playwright/test": "1.65.0",
     "@types/bun": "1.4.4",
     "playwright": "1.65.0"
   }

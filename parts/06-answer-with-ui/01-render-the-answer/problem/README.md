@@ -69,11 +69,11 @@ Expect: `Done. All 5 rules pass.`
 
 ## If you get stuck
 
-| What you see                                    | Fix                                                                   |
-| ----------------------------------------------- | --------------------------------------------------------------------- |
-| `FAIL a Table points into the data model ...`   | Send every row. The path must start with `/` and match a key you set. |
-| `FAIL the Sao Paulo answer shows its chart ...` | Make one point per row, keyed by column name. Set `x` and `y` too.    |
-| The page shows `missing component`              | Every id in `root`'s `children` needs its own component.              |
+| What you see                                      | Fix                                                                   |
+| ------------------------------------------------- | --------------------------------------------------------------------- |
+| `FAIL a Table points into the data model ...`     | Send every row. The path must start with `/` and match a key you set. |
+| `FAIL the Sao Paulo answer shows its chart ...`   | Make one point per row, keyed by column name. Set `x` and `y` too.    |
+| The page says a part of the answer did not arrive | Every id in `root`'s `children` needs its own component.              |
 
 ## Words you will use
 

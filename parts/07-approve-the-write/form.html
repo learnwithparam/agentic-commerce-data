@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <title>Approval needed</title>
     <style>
-      body { margin: 0; font: 14px/1.5 system-ui, sans-serif; color: #1f2937; background: #f3f4f6; }
+      body { margin: 0; overflow-wrap: anywhere; font: 14px/1.5 system-ui, sans-serif; color: #1f2937; background: #f3f4f6; }
       main { max-width: 640px; margin: 24px auto; background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 20px 24px; }
       h1 { font-size: 17px; margin: 0 0 4px; }
       .who { color: #6b7280; font-size: 13px; margin-bottom: 14px; }
@@ -12,6 +12,8 @@
       dt { color: #6b7280; }
       dd { margin: 0; }
       .evidence { margin: 8px 0; font-size: 13px; }
+      .scroll { overflow-x: auto; }
+      .seller-id { color: #6b7280; font-size: 12px; }
       table { border-collapse: collapse; margin-top: 4px; width: 100%; }
       th, td { text-align: left; padding: 4px 8px; border-bottom: 1px solid #e5e7eb; }
       th { color: #6b7280; font-weight: 600; }
@@ -22,11 +24,11 @@
   </head>
   <body>
     <main>
-      <h1>Approval needed: {{action}}</h1>
+      <h1>Approval needed: {{action_label}}</h1>
       <div class="who">Nothing changes until a person decides. Signed in as {{user}}.</div>
       <dl>
         <dt>Seller</dt>
-        <dd>{{seller_id}}</dd>
+        <dd>{{seller_city}}, {{seller_state}}<div class="seller-id">{{seller_id}}</div></dd>
         <dt>Reason</dt>
         <dd>{{reason}}</dd>
       </dl>
@@ -34,7 +36,7 @@
       {{evidence}}
       <div class="buttons">
         <button type="button" class="approve">Approve pause</button>
-        <button type="button">Reject</button>
+        <button type="button">Reject pause</button>
       </div>
     </main>
   </body>
