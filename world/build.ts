@@ -1,6 +1,7 @@
 // bun run world          build data/olist.db from the pinned Olist download
 //                        (skips work already done)
-// bun run world reset    throw away the database and the logs, then build them again from the cache
+// bun run world reset    throw away the database, the logs and the memory,
+//                        then build them again from the cache
 // bun run world status   print the row count of every table
 import { Database } from "bun:sqlite";
 import { createHash } from "node:crypto";
@@ -12,6 +13,7 @@ export const ROOT = join(import.meta.dir, "..");
 export const DB_PATH = join(ROOT, "data", "olist.db");
 export const LOG_DIR = join(ROOT, "data", "logs");
 const WORLD_JSON = join(ROOT, "data", "world.json");
+const MEMORY_FILE = join(ROOT, "data", "memory.jsonl");
 const DOWNLOAD_CACHE = join(import.meta.dir, ".cache");
 
 // One CSV file in source.toml. `rows` is the row count the table must have once it is loaded.
@@ -154,6 +156,8 @@ function reset(): void {
   rmSync(DB_PATH, { force: true });
   rmSync(LOG_DIR, { recursive: true, force: true });
   rmSync(WORLD_JSON, { force: true });
+  // The store of past questions can hold a wrong pair from a starter; a reset clears it too.
+  rmSync(MEMORY_FILE, { force: true });
   console.log("Removed the database and the logs.");
 }
 

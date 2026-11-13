@@ -61,6 +61,9 @@ export default [
           return answer !== undefined && !answer.error && !answer.refused;
         }),
       ),
-    tryNext: "run uv run python ask.py on one question and read the error it prints",
+    tryNext:
+      "from the repo root, run uv run python " +
+      "parts/03-define-the-metrics/02-query-through-metrics/problem/ask.py " +
+      '"What was GMV in 2018?" and read the error it prints',
   },
 ] satisfies Rule[];

@@ -27,6 +27,15 @@ LATE_SIGNS = (
 # Words that say the order came on time. A review with one of these is not about lateness.
 ON_TIME_SIGNS = ("no prazo", "antes do prazo", "dentro do prazo")
 
+# But "não chegou no prazo" means "did not arrive on time". The "no prazo" is negated: it is late.
+NOT_ON_TIME_SIGNS = (
+    "nao chegou no prazo",
+    "nao recebi no prazo",
+    "nao veio no prazo",
+    "nao foi entregue no prazo",
+    "fora do prazo",
+)
+
 
 def without_accents(text: str) -> str:
     """Lower case with no accents, so "não" and "nao" look the same."""
@@ -37,6 +46,8 @@ def without_accents(text: str) -> str:
 def is_relevant(question: str, review: dict) -> bool:
     """True when the review talks about what the question asks: deliveries that came late."""
     text = without_accents(review["quote"])
+    if any(sign in text for sign in NOT_ON_TIME_SIGNS):
+        return True
     if any(sign in text for sign in ON_TIME_SIGNS):
         return False
     return any(sign in text for sign in LATE_SIGNS)

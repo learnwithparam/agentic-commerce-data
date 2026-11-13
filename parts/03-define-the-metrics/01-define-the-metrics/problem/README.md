@@ -37,8 +37,18 @@ five fields:
 - `expression`: the piece of SQL that defines it, for example `COUNT(DISTINCT o.order_id) > 1`;
 - `sql`: one full query that uses the expression on all the data.
 
-Use the table names `o` for `orders`, `i` for `order_items` and `c` for `customers`. The agent needs them in the
-next step.
+What the three new metrics mean:
+
+| Metric               | What it means                                                                    |
+| -------------------- | -------------------------------------------------------------------------------- |
+| `late_delivery_rate` | The share of delivered orders that came on a later day than the estimate.        |
+| `active_seller`      | A seller with at least one item in an order. Group `order_items` by `seller_id`. |
+| `repeat_customer`    | A person, `customer_unique_id`, with more than one order.                        |
+
+For `active_seller` and `repeat_customer`, the expression tests a group, so it goes after `HAVING`.
+
+Give each table a short name, called an alias: `o` for `orders`, `i` for `order_items` and `c` for `customers`,
+as in `FROM orders o`. The agent needs these aliases in the next step.
 
 Run one query by hand to see its number:
 
@@ -51,7 +61,6 @@ Expect: `[(3095,)]`
 ## Done when
 
 - `metrics.toml` defines `late_delivery_rate`, `gmv`, `active_seller` and `repeat_customer`.
-- Each one has a description, an owner, a grain, an expression and sql.
 - Each `sql` contains its own `expression`.
 - Each `sql` passes the validator and returns rows.
 - `repeat_customer` counts people by `customer_unique_id`: 2,997.
@@ -77,4 +86,3 @@ Expect: `Done. All 7 rules pass.`
 - **Metric**: a business number with one written meaning, such as GMV.
 - **Owner**: the person or role who decides what a metric means and answers questions about it.
 - **Grain**: what one row stands for when you count. For repeat customers it is one person.
-- **Expression**: a piece of SQL, not a full query. The agent puts it into every query that needs the metric.

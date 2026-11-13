@@ -18,6 +18,7 @@ const attacks = (
 const golden = loadGolden();
 
 const NO_LIMIT = "SELECT * FROM geolocation";
+const UNION_NO_LIMIT = "SELECT * FROM geolocation UNION ALL SELECT * FROM geolocation";
 const OWN_LIMIT = "SELECT seller_id FROM sellers LIMIT 5";
 const ROW_CAP = 1000;
 
@@ -25,7 +26,7 @@ const allQueries = [
   ...attacks.map((attack) => attack.sql),
   ...golden.map((question) => question.sql),
 ];
-allQueries.push(NO_LIMIT, OWN_LIMIT);
+allQueries.push(NO_LIMIT, UNION_NO_LIMIT, OWN_LIMIT);
 
 // One run per folder; every rule reads the same answers.
 const verdictsByFolder = new Map<string, Verdict[] | null>();
@@ -94,11 +95,15 @@ export default [
     tryNext: 'return tree.sql(dialect="sqlite") so the query keeps its meaning',
   },
   {
-    says: `a query with no LIMIT comes back with LIMIT ${ROW_CAP}`,
+    says: `a query with no LIMIT, even a UNION, comes back with LIMIT ${ROW_CAP}`,
     test: async (folder) => {
-      return (await rowCountOf(verdictFor(folder, NO_LIMIT))) === ROW_CAP;
+      const plainCount = await rowCountOf(verdictFor(folder, NO_LIMIT));
+      const unionCount = await rowCountOf(verdictFor(folder, UNION_NO_LIMIT));
+      return plainCount === ROW_CAP && unionCount === ROW_CAP;
     },
-    tryNext: "when a SELECT has no limit, add one: tree = tree.limit(ROW_CAP)",
+    tryNext:
+      "when a query has no limit, add one: tree = tree.limit(ROW_CAP). " +
+      "Check isinstance(tree, exp.Query), so a UNION gets the limit too",
   },
   {
     says: "a query that has its own LIMIT keeps it",

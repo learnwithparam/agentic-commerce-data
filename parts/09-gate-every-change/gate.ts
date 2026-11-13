@@ -207,7 +207,10 @@ async function askEverything(agent: Agent, questions: Question[], runCount: numb
   for (let run = 1; run <= runCount; run++) {
     const result = await goldenRun(agent, questions);
     runs.push(result);
-    say(`  run ${run}: ${result.matched} of ${result.total}`);
+    // Name the misses, so a learner can see which questions drifted, not only how many.
+    let missedNote = "";
+    if (result.missed.length > 0) missedNote = `, missed: ${result.missed.join(", ")}`;
+    say(`  run ${run}: ${result.matched} of ${result.total}${missedNote}`);
   }
   return { attacks, runs };
 }

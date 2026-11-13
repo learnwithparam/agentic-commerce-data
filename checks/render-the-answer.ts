@@ -28,7 +28,7 @@ type Answer = {
   question: string;
   columns: string[];
   rows: unknown[][];
-  chart?: { columns: string[]; rows: unknown[][] };
+  chart?: { columns: string[]; rows: unknown[][]; x?: string; y?: string };
   reviews: Record<"review_id" | "quote", string>[];
   ui?: Message[];
 };
@@ -72,7 +72,20 @@ function chartHoldsItsPoints(answer: Answer): boolean {
   const chartRows = answer.chart?.rows ?? [];
   return componentsNamed(surface, "LineChart").some((chart) => {
     const points = resolve(surface, chart.points);
-    return Array.isArray(points) && points.length === chartRows.length && chartRows.length > 0;
+    if (!Array.isArray(points)) return false;
+    if (points.length !== chartRows.length || chartRows.length === 0) return false;
+    // A renderer reads point[x] and point[y], so a plain list of cells draws an empty chart.
+    const xColumn = answer.chart?.x;
+    const yColumn = answer.chart?.y;
+    if (chart.x !== xColumn || chart.y !== yColumn) return false;
+    return points.every(
+      (point) =>
+        typeof point === "object" &&
+        point !== null &&
+        !Array.isArray(point) &&
+        String(xColumn) in point &&
+        String(yColumn) in point,
+    );
   });
 }
 
@@ -124,7 +137,8 @@ export default [
       return chartHoldsItsPoints(saoPaulo) && quotesHoldTheReviews(saoPaulo);
     },
     tryNext:
-      'when answer["chart"] is set, add a LineChart bound to its points; ' +
+      'when answer["chart"] is set, add a LineChart with x and y, bound to its points: ' +
+      "one {column name: value} object per row; " +
       "add one ReviewQuote per review, bound to its review_id and quote",
   },
 ] satisfies Rule[];

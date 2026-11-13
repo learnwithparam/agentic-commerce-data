@@ -27,13 +27,23 @@ For example, the plan for the Sao Paulo question has the text `{q1:0:1} of {q1:0
 {"claim": "795", "query": "q1", "row_ids": [0]}
 ```
 
+A row citation puts the cells of one row in its claim, joined with a comma and a space:
+
+```json
+{ "claim": "ea8482cd71df3c1969d7b9473ff13abc, 71, 795, 8.9", "query": "q1", "row_ids": [0] }
+```
+
 A review citation looks like `{"claim": "Demora muito", "review_id": "d1e912b41af2db628c756a6365dad36f"}`.
+
+`CELL_REFERENCE` is the pattern that finds `{q1:0:1}` in the text. Import it at the top of `cite.py` with
+`from desk.finished.agent import CELL_REFERENCE`.
 
 ```bash
 uv run python parts/05-build-the-loop/kit.py cite-the-rows "Which Sao Paulo sellers had the most late deliveries in 2018?"
 ```
 
-Expect: the answer, then `Sources:` with 17 numbered lines. Line `[2]` is `71  <- query q1, rows [0]`.
+Expect: the answer, then `Sources:` with 17 numbered lines. Line `[2]` is `71  <- query q1, rows [0]`. Each line
+shows only the first 60 characters of its claim, so a long review quote stops in the middle of a word.
 
 ## Done when
 

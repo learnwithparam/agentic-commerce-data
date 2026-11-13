@@ -47,13 +47,15 @@ class QueryRefusedError(Exception):
 def check(sql: str) -> str:
     """Return the query to run, with a LIMIT added when it has none, or raise QueryRefusedError.
 
-    TODO(validate-the-query): today every query passes. Parse it with sqlglot.parse(sql,
-    read="sqlite") and raise QueryRefusedError("...") when:
+    TODO(validate-the-query): today every query passes. Add `import sqlglot` at the top of the
+    file. Then parse the query with sqlglot.parse(sql, read="sqlite") and raise
+    QueryRefusedError("...") when:
       - there is not exactly one statement;
       - the statement is not a SELECT, or a WRITING_PARTS piece appears anywhere in it;
       - a table is not in KNOWN_TABLES (a name made in a WITH clause is fine);
       - a table comes from another database, as in other.orders.
-    Then add LIMIT ROW_CAP to a SELECT that has no LIMIT: tree.limit(ROW_CAP).
+    Then add LIMIT ROW_CAP to a query that has no LIMIT: tree.limit(ROW_CAP).
+    A UNION of two SELECTs is one query too, so check isinstance(tree, exp.Query).
     """
     return sql
 

@@ -42,6 +42,8 @@ bun parts/09-gate-every-change/gate.ts --rules parts/09-gate-every-change/02-cat
 Expect: `The gate passes.` and runs of `28 of 30`. Change only one of the two files, and it prints
 `BLOCK  metric late_delivery_rate: metrics.toml and golden.toml disagree on ...`.
 
+Each run line names its misses: `run 1: 28 of 30, missed: late-share-delivered, late-orders-2018`.
+
 Why 28 and not 30? Two recorded plans write the late rule inline instead of using the metric. They still count the
 old way, so they miss. That is the drift a gate exists to show. The fix is to make the agent use the metric,
 the job of query-through-metrics.

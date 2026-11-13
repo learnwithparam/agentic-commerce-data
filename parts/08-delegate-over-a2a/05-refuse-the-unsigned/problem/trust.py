@@ -55,6 +55,7 @@ def verify_card(card: dict, allowlist: dict) -> tuple[bool, str]:
     """Return (True, "") for a card signed by an allowed key, or (False, the reason).
 
     TODO(you):
+    0. Add "import json" at the top of the file.
     1. No signatures on the card: return False and say so.
     2. For each signature, read its header: json.loads(from_base64url(signature["protected"])).
     3. Find the key with the header's "kid" in the allowlist (key_with_id). Skip it if none.

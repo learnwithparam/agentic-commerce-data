@@ -44,6 +44,9 @@ def signed_card(card: dict, private_key: ec.EllipticCurvePrivateKey, key_id: str
     """Return the card with one signature over everything except the signatures field.
 
     TODO(you):
+    0. Add two imports at the top of the file:
+       from cryptography.hazmat.primitives import hashes, serialization
+       from cryptography.hazmat.primitives.asymmetric.utils import decode_dss_signature
     1. Copy the card without its "signatures" field.
     2. protected = base64url(canonical_json({"alg": "ES256", "typ": "JOSE", "kid": key_id}))
     3. payload = base64url(canonical_json(the card copy))

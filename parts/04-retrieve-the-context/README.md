@@ -122,7 +122,7 @@ search.
 **Extension, not graded.** Measure the golden score with and without the table cards. Record the difference in
 your write-up.
 
-## FINISHED
+## Finished
 
 You now have every kind of context the agent needs:
 

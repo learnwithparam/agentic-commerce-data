@@ -35,6 +35,18 @@ A component points into the data model with a path. For example, the table for t
 
 The data model then holds `"table": {"columns": ["seller_id", "late_orders", ...], "rows": [[...], ...]}`.
 
+To see every key of the answer, run the command below without `--html`. It prints the answer as JSON. For example,
+`answer["chart"]` holds `"x": "month"`, `"y": "late_orders"`, `"series": "seller"`, the `columns` and the `rows`.
+
+A chart needs points, not rows. A point is one row with its column names as keys. So the row
+`["2018-01", "8b321bb669392f5163d04c59e235e066", 3]` becomes this point:
+
+```json
+{ "month": "2018-01", "seller": "8b321bb669392f5163d04c59e235e066", "late_orders": 3 }
+```
+
+The `LineChart` then names its columns: `"x": "month"`, `"y": "late_orders"` and `"series": "seller"`.
+
 ```bash
 uv run python parts/06-answer-with-ui/kit.py render-the-answer "Which Sao Paulo sellers had the most late deliveries in 2018?" --html answer.html
 ```
@@ -60,7 +72,7 @@ Expect: `Done. All 5 rules pass.`
 | What you see                                    | Fix                                                                   |
 | ----------------------------------------------- | --------------------------------------------------------------------- |
 | `FAIL a Table points into the data model ...`   | Send every row. The path must start with `/` and match a key you set. |
-| `FAIL the Sao Paulo answer shows its chart ...` | `answer["chart"]` has `columns` and `rows`; make one point per row.   |
+| `FAIL the Sao Paulo answer shows its chart ...` | Make one point per row, keyed by column name. Set `x` and `y` too.    |
 | The page shows `missing component`              | Every id in `root`'s `children` needs its own component.              |
 
 ## Words you will use

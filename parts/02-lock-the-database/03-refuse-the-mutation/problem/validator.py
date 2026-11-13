@@ -80,7 +80,8 @@ def check(sql: str) -> str:
     tree = only_statement(sql)
     refuse_writes(tree)
     refuse_unknown_tables(tree)
-    if isinstance(tree, exp.Select) and not tree.args.get("limit"):
+    # exp.Query covers a plain SELECT and a UNION, so a UNION cannot skip the cap.
+    if isinstance(tree, exp.Query) and not tree.args.get("limit"):
         tree = tree.limit(ROW_CAP)
     return tree.sql(dialect="sqlite")
 

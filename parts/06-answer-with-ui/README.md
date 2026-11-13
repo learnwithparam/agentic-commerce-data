@@ -96,7 +96,10 @@ check rejects it.
 ## Finished
 
 Your agent's answer is now a screen. The rows are a table, the trend is a chart, and every quote is a card with
-its review id. Every surface is checked before it is sent, and the events arrive while the agent works.
+its review id. You have a check that catches a broken surface, and the events arrive while the agent works.
+
+The stream in stream-the-events does not call your check yet. In production you would run `problems_in()` on
+each surface in `server.py`, and send an error event instead of a broken surface.
 
 Next, in approve-the-write, the screen shows a new kind of surface: an approval form. When someone asks to pause
 a seller, the run ends with a question to a person, and nothing changes until that person says yes.

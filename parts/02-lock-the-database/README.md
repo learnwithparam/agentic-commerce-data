@@ -114,7 +114,7 @@ in `ask.py`.
 **Extension, not graded.** Write 3 new attack strings that the course list misses. Add them to a copy of
 `checks/attacks.toml` and show your validator refuses them.
 
-## FINISHED
+## Finished
 
 You now have an agent that cannot change the database. SQLite refuses writes, your validator refuses bad queries
 before they run, and the agent says no with a reason. Every refusal is in the query log.

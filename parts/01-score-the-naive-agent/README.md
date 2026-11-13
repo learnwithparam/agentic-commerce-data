@@ -83,6 +83,33 @@ bun run verify part score-the-naive-agent
 
 Expect: `Part score-the-naive-agent is done: 3/3 steps pass.`
 
+## Assignment
+
+**The problem.** Nobody knows how often the chatbot is wrong, or why.
+
+**What you hand in.** A commit with your scored run `runs/naive.json`, your `notes/failures.md` and your
+`golden.toml` with the two `accept` lists.
+
+**How it is graded.** Each line is yes or no.
+
+| Question                                                                   | How it is checked                      |
+| -------------------------------------------------------------------------- | -------------------------------------- |
+| Is every one of the 30 answers judged by its rows, and is the score right? | `bun run verify score-the-naive-agent` |
+| Does every miss have a line that names its trap?                           | `bun run verify read-the-failures`     |
+| Do revenue and GMV accept both fair answers, and does a wrong total fail?  | `bun run verify accept-many-answers`   |
+
+**Extension, not graded.** Add 5 golden questions from your own work to a copy of `world/golden.toml`. Check each
+answer by hand, and write in the `note` how you checked it. Then score the naive agent on them.
+
+## Finished
+
+You now have a score you can trust: 14 of 30 for the naive agent, judged by rows and not by words. You know the
+trap behind each of the 16 misses. And the golden set no longer marks a fair answer wrong.
+
+The agent still runs any SQL the model writes, on a connection that can change the data. For example, a reply of
+`DELETE FROM orders` would delete every order. In [lock-the-database](../02-lock-the-database/README.md) you make
+that impossible before you fix anything else.
+
 ## Read before or after
 
 - Jin and others, [Pervasive Annotation Errors Break Text-to-SQL Benchmarks and Leaderboards](https://arxiv.org/abs/2601.08778). It shows why you check every golden answer by hand.

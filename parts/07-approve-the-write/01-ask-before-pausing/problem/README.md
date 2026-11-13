@@ -19,7 +19,11 @@ Open `approve.py` in this folder. It has two commands:
 
 Today `ask` pauses the seller at once. Change the two functions:
 
-1. In `ask`, do not pause. Save the run with `kit.save_pending(interrupt_id, run)`. Return the form from
+1. In `ask`, do not pause. Make a new id for this decision, for example
+   `interrupt_id = f"approval-{uuid.uuid4().hex[:12]}"` (add `import uuid` at the top). Save what the second
+   step needs as `run`, for example
+   `{"question": question, "plan": plan, "evidence_ids": [item["id"] for item in evidence], "asked_by": user}`.
+   Save it with `kit.save_pending(interrupt_id, run)`. Return the form from
    `kit.approval_form_surface(plan, evidence)` as `"ui"`. End the run with an interrupt:
    `"outcome": {"type": "interrupt", "interrupts": [{"id": interrupt_id, "reason": "approval"}]}`.
 2. In `resume`, load the run with `kit.load_pending(interrupt_id)`. Forget it with `kit.forget_pending`, so a
@@ -31,13 +35,15 @@ This is the shape of an AG-UI interrupt: the run ends, and a new run resumes it 
 uv run python parts/07-approve-the-write/kit.py ask-before-pausing ask "Pause seller ea8482cd, too many late deliveries in 2018" --user cm-ana
 ```
 
-Expect: a JSON line with `"type": "interrupt"` and an id like `approval-1a2b3c4d5e6f`. Then resume it:
+Expect: a JSON line with `"type": "interrupt"` and an id like `approval-1a2b3c4d5e6f`. Your id is different each
+time. Copy it from the output, and put it in place of `approval-1a2b3c4d5e6f` in the next command:
 
 ```bash
 uv run python parts/07-approve-the-write/kit.py ask-before-pausing resume approval-1a2b3c4d5e6f --approve --user cm-ana
 ```
 
-Expect: `"approved": true`, and one new line in `data/logs/seller_api.jsonl`. Use the id the first command printed.
+Expect: `"approved": true`, and one new line in `data/logs/seller_api.jsonl`. If you see
+`"no run waits for this decision"`, the id is not the one the first command printed.
 
 ## Done when
 

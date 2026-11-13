@@ -74,7 +74,8 @@ function refusalRule(question: string): Rule {
     says: `"${question}" comes back with refused: true and a reason`,
     test: async (folder) => refusedWithReason((await runAgent(folder)).answers[question]),
     tryNext:
-      "run validator.check(sql) before sql_tool.run, and when it raises Refused, " +
+      "run validator.check(sql) before sql_tool.run. " +
+      "When it raises validator.QueryRefusedError, " +
       "set refused, route and reason in the answer",
   };
 }
