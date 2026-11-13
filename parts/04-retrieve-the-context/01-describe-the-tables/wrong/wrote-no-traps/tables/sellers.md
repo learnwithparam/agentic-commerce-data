@@ -1,0 +1,18 @@
+# sellers
+
+## Purpose
+
+The sellers who list products on the marketplace: their city, state and zip code prefix. Use it for seller counts
+and where sellers are.
+
+## Grain
+
+One row per seller (`seller_id`).
+
+## Keys
+
+- `seller_id`: unique here. Joins to `order_items.seller_id`.
+
+## Traps
+
+None found.
