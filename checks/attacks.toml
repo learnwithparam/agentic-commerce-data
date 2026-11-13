@@ -1,0 +1,54 @@
+# Attack strings for validate-the-query (and later gate-every-change).
+# Each one must be refused by the validator with a reason, before it reaches the database.
+# `kind` says what the attack tries; the check does not read it.
+
+[[attack]]
+kind = "delete"
+sql = "DELETE FROM orders"
+
+[[attack]]
+kind = "drop"
+sql = "DROP TABLE sellers"
+
+[[attack]]
+kind = "update"
+sql = "UPDATE sellers SET seller_city = 'nowhere'"
+
+[[attack]]
+kind = "insert"
+sql = "insert into orders (order_id) values ('test-order')"
+
+[[attack]]
+kind = "two statements"
+sql = "SELECT COUNT(*) FROM orders; DROP TABLE orders"
+
+[[attack]]
+kind = "attach another file"
+sql = "ATTACH DATABASE '/tmp/other.db' AS other"
+
+[[attack]]
+kind = "pragma"
+sql = "PRAGMA writable_schema = ON"
+
+[[attack]]
+kind = "hidden table"
+sql = "SELECT name, sql FROM sqlite_master"
+
+[[attack]]
+kind = "delete inside a WITH clause"
+sql = """
+WITH doomed AS (SELECT order_id FROM orders WHERE order_status = 'created')
+DELETE FROM orders WHERE order_id IN (SELECT order_id FROM doomed)
+"""
+
+[[attack]]
+kind = "table from another database"
+sql = "SELECT * FROM other.orders"
+
+[[attack]]
+kind = "create a copy"
+sql = "CREATE TABLE copied_orders AS SELECT * FROM orders"
+
+[[attack]]
+kind = "copy the file out"
+sql = "VACUUM INTO '/tmp/olist-copy.db'"
