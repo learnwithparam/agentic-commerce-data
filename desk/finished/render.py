@@ -35,7 +35,8 @@ def short(value) -> str:
 def table(columns: list[str], rows: list[list]) -> str:
     head = "".join(f"<th>{escape(column.replace('_', ' '))}</th>" for column in columns)
     body = "".join(table_row(row) for row in rows[:TABLE_ROWS_SHOWN])
-    return f"<div class='scroll'><table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>"
+    table_html = f"<table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>"
+    return f"<div class='scroll'>{table_html}</div>"
 
 
 def table_row(row: list) -> str:

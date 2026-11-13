@@ -35,7 +35,8 @@ const page = (name: string) => join(PAGES, `${name}.html`);
 
 // The provided renderer: waiting for a question, and drawing a finished answer.
 const python = (code: string) => run(["uv", "run", "--quiet", "python", "-c", code]);
-const part6 = `import sys; sys.path.insert(0, "parts/06-answer-with-ui"); import kit, json, pathlib`;
+const part6 =
+  'import sys; sys.path.insert(0, "parts/06-answer-with-ui"); import kit, json, pathlib';
 python(`${part6}; pathlib.Path("${page("renderer-waiting")}").write_text(kit.renderer_page())`);
 kit(
   "06-answer-with-ui",
