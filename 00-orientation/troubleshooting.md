@@ -33,3 +33,16 @@ For example, you type `bun run verify meet-the-desks` with an extra "s". The scr
 | `the agent did not print one JSON object`                              | The agent printed other text next to its JSON.                                       | Run the agent with `--json` yourself and remove extra prints.           |
 | `Some questions ended in an error.`                                    | At least one golden question failed to run.                                          | Read the `MISS ... error:` lines above it.                              |
 | `FAIL ...` then `Try next: ...` from `bun run verify`                  | One rule of the step is not met yet.                                                 | Do what the `Try next` line says, then run the check again.             |
+
+## Track changed facts with Graphiti
+
+| What you see                                                                             | What it means                                         | Fix                                                                              |
+| ---------------------------------------------------------------------------------------- | ----------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `FAIL as_of gives 694 on 2026-03-15 and 704 on 2026-07-01 for Sao Paulo city sellers`    | One rule of the track-the-change step is not met yet. | `as_of` must check the start and the end date of each edge.                      |
+| `FAIL every fact has exactly one current edge, with no invalid_at`                       | One rule of the track-the-change step is not met yet. | The older edge is still open. Close it in `add`.                                 |
+| `FAIL each closed edge ends exactly when a same-fact edge starts, and it is kept`        | One rule of the track-the-change step is not met yet. | Set the old edge's `invalid_at` to the new edge's `valid_at`. Keep the old edge. |
+| `FAIL the Sao Paulo state edge stays open, with no invalid_at`                           | One rule of the track-the-change step is not met yet. | Close an edge only when a newer edge of the same fact arrives.                   |
+| `FAIL as_of returns nothing for a date before the first edge of the fact`                | One rule of the track-the-change step is not met yet. | Return `None` when no edge of the fact is true on the date asked.                |
+| `FAIL repeat_customer is customer_id on 2026-03-15 and customer_unique_id on 2026-07-01` | One rule of the track-the-change step is not met yet. | Compare both dates in `as_of`. The value must change when `valid_at` passes.     |
+| `FAIL every printed edge has the full EntityEdge fields`                                 | One rule of the track-the-change step is not met yet. | Build each edge with `EntityEdge(**item)` and print it with `model_dump`.        |
+| `FAIL reversed input gives the same answers as the original order`                       | One rule of the track-the-change step is not met yet. | Sort the edges of a fact by `valid_at` before you close them.                    |
