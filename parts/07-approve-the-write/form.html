@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Approval needed</title>
+    <style>
+      body { margin: 0; font: 14px/1.5 system-ui, sans-serif; color: #1f2937; background: #f3f4f6; }
+      main { max-width: 640px; margin: 24px auto; background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 20px 24px; }
+      h1 { font-size: 17px; margin: 0 0 4px; }
+      .who { color: #6b7280; font-size: 13px; margin-bottom: 14px; }
+      dl { display: grid; grid-template-columns: 110px 1fr; gap: 6px 12px; margin: 0 0 14px; }
+      dt { color: #6b7280; }
+      dd { margin: 0; }
+      .evidence { margin: 8px 0; font-size: 13px; }
+      table { border-collapse: collapse; margin-top: 4px; width: 100%; }
+      th, td { text-align: left; padding: 4px 8px; border-bottom: 1px solid #e5e7eb; }
+      th { color: #6b7280; font-weight: 600; }
+      .buttons { display: flex; gap: 10px; margin-top: 16px; }
+      button { padding: 8px 16px; border-radius: 6px; border: 1px solid #d1d5db; background: #fff; font: inherit; }
+      button.approve { background: #b91c1c; color: #fff; border-color: #b91c1c; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Approval needed: {{action}}</h1>
+      <div class="who">Nothing changes until a person decides. Signed in as {{user}}.</div>
+      <dl>
+        <dt>Seller</dt>
+        <dd>{{seller_id}}</dd>
+        <dt>Reason</dt>
+        <dd>{{reason}}</dd>
+      </dl>
+      <div>Evidence</div>
+      {{evidence}}
+      <div class="buttons">
+        <button type="button" class="approve">Approve pause</button>
+        <button type="button">Reject</button>
+      </div>
+    </main>
+  </body>
+</html>
