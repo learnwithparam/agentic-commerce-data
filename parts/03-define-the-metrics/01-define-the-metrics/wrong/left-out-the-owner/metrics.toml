@@ -1,0 +1,50 @@
+# The desk's metric file: what each business number means, written down once.
+# The agent puts `expression` into every query that needs the metric.
+# `sql` is one full query that uses the expression on all the data; the check runs it.
+
+[late_delivery_rate]
+description = "Share of delivered orders that reached the customer on a later day than the estimated delivery date."
+owner = "logistics operations lead"
+grain = "order"
+expression = "date(o.order_delivered_customer_date) > date(o.order_estimated_delivery_date)"
+sql = """
+SELECT ROUND(100.0 * SUM(date(o.order_delivered_customer_date) > date(o.order_estimated_delivery_date)) / COUNT(*), 2) AS late_pct
+FROM orders o
+WHERE o.order_status = 'delivered' AND o.order_delivered_customer_date IS NOT NULL
+"""
+
+[gmv]
+description = "Gross merchandise value: item price plus freight for every order placed, before cancellations."
+owner = "finance business partner"
+grain = "order item"
+expression = "SUM(i.price + i.freight_value)"
+sql = """
+SELECT ROUND(SUM(i.price + i.freight_value), 2) AS gmv
+FROM order_items i
+"""
+
+[active_seller]
+description = "A seller with at least one item in an order placed in the period."
+owner = "seller success lead"
+grain = "seller"
+expression = "COUNT(DISTINCT i.order_id) >= 1"
+sql = """
+SELECT COUNT(*) AS active_sellers FROM (
+  SELECT i.seller_id FROM order_items i
+  GROUP BY i.seller_id
+  HAVING COUNT(DISTINCT i.order_id) >= 1
+)
+"""
+
+[repeat_customer]
+description = "A person (customer_unique_id) with more than one distinct order in the period."
+grain = "customer_unique_id"
+expression = "COUNT(DISTINCT o.order_id) > 1"
+sql = """
+SELECT COUNT(*) AS repeat_customers FROM (
+  SELECT c.customer_unique_id
+  FROM orders o JOIN customers c ON c.customer_id = o.customer_id
+  GROUP BY c.customer_unique_id
+  HAVING COUNT(DISTINCT o.order_id) > 1
+)
+"""

@@ -1,0 +1,16 @@
+# The desk's metric file: what each business number means, written down once.
+# The agent puts `expression` into every query that needs the metric.
+# `sql` is one full query that uses the expression on all the data; the check runs it.
+
+[gmv]
+description = "Gross merchandise value: item price plus freight for every order placed, before cancellations."
+owner = "finance business partner"
+grain = "order item"
+expression = "SUM(i.price + i.freight_value)"
+sql = """
+SELECT ROUND(SUM(i.price + i.freight_value), 2) AS gmv
+FROM order_items i
+"""
+
+# TODO(define-the-metrics): add late_delivery_rate, active_seller and repeat_customer here.
+# Give each one: description, owner, grain, expression and sql, like gmv above.
