@@ -1,5 +1,33 @@
-[one-day]
-sessions = [{ parts = ["meet-the-world"], minutes = 60 }]
+# Parts mapped onto formats. This is the only file that holds time. Every format covers all 330 minutes of steps.
+# Part minutes: orientation 15, score-the-naive-agent 35, lock-the-database 30, define-the-metrics 35,
+# retrieve-the-context 45, build-the-loop 45, answer-with-ui 40, approve-the-write 25, delegate-over-a2a 35,
+# gate-every-change 25.
 
+# One day: four blocks, 330 minutes of steps, plus breaks of 15, 45 and 15 minutes (405 on the clock, 09:30 to 16:15).
+[one-day]
+sessions = [
+  { label = "09:30", parts = ["orientation", "score-the-naive-agent", "lock-the-database"], minutes = 80 },
+  { label = "11:05 after a 15 minute break", parts = ["define-the-metrics", "retrieve-the-context"], minutes = 80 },
+  { label = "13:10 after a 45 minute lunch", parts = ["build-the-loop", "answer-with-ui"], minutes = 85 },
+  { label = "14:50 after a 15 minute break", parts = ["approve-the-write", "delegate-over-a2a", "gate-every-change"], minutes = 85 },
+]
+
+# Four evenings. Each ends on a green `bun run verify part <name>`, so the next starts from a known state.
 [four-evenings]
-sessions = [{ parts = ["meet-the-world"], minutes = 60 }]
+sessions = [
+  { label = "evening 1", parts = ["orientation", "score-the-naive-agent", "lock-the-database"], minutes = 80 },
+  { label = "evening 2", parts = ["define-the-metrics", "retrieve-the-context"], minutes = 80 },
+  { label = "evening 3", parts = ["build-the-loop", "answer-with-ui"], minutes = 85 },
+  { label = "evening 4", parts = ["approve-the-write", "delegate-over-a2a", "gate-every-change"], minutes = 85 },
+]
+
+# Six weekly sessions, each with a take-home extension that is not graded in the core flow.
+[six-weekly-sessions]
+sessions = [
+  { label = "week 1: add 5 golden questions from your own work", parts = ["orientation", "score-the-naive-agent"], minutes = 50 },
+  { label = "week 2: write two more metrics with an owner each", parts = ["lock-the-database", "define-the-metrics"], minutes = 65 },
+  { label = "week 3: add the Marketing Funnel tables and their cards", parts = ["retrieve-the-context"], minutes = 45 },
+  { label = "week 4: an adversarial reviewer pass with a token cost check", parts = ["build-the-loop"], minutes = 45 },
+  { label = "week 5: add one component to the renderer catalog", parts = ["answer-with-ui", "approve-the-write"], minutes = 65 },
+  { label = "week 6: move to Postgres with a read-only role", parts = ["delegate-over-a2a", "gate-every-change"], minutes = 60 },
+]

@@ -1,0 +1,342 @@
+# The golden set: 30 questions the operations desk asks, each with a reference query.
+#
+# A question passes when the agent's result rows match the rows of the reference query, run at check time on
+# data/olist.db. Rows are compared as multisets: column names are ignored, numbers are rounded to 2 places, text
+# is trimmed. `order_matters = true` also checks the row order. `accept = [...]` lists other queries whose rows
+# also count as right (you add these in the step accept-many-answers).
+#
+# `traps` names what makes the question hard in this data. The labels are the ones read-the-failures uses:
+#   spelling          one city written in several ways
+#   customer-id       customer_id is one per order; a person is customer_unique_id
+#   fan-out           a join repeats rows, so a SUM or COUNT is too large
+#   undefined-metric  the question names a business number with more than one fair definition
+#   date-text         timestamps are text; the estimated date has no time of day
+#   status-filter     the answer depends on which order statuses count
+#   translation       category names are Portuguese; the English names are in another table
+#
+# Every reference answer was checked by hand against the data. The note says how.
+
+[[question]]
+id = "sellers-in-sao-paulo"
+question = "How many sellers are based in Sao Paulo city?"
+traps = ["spelling"]
+note = "Nine spellings of the city name in seller_city: 694 + 10 = 704. One is 'são paulo' written with a combining accent (char 771), so a typed 'são paulo' does not equal it. 'sp' alone is the state code and is not counted."
+sql = """
+SELECT COUNT(*) AS sellers
+FROM sellers
+WHERE seller_city IN ('sao paulo', 'sa' || char(771) || 'o paulo', 'sao  paulo', 'sao paluo', 'sao pauo', 'sao paulop',
+                      'sao paulo sp', 'sao paulo - sp', 'sao paulo / sao paulo')
+"""
+
+[[question]]
+id = "sellers-in-sp-state"
+question = "How many sellers are in the state of Sao Paulo?"
+traps = []
+note = "seller_state is a clean two-letter code."
+sql = "SELECT COUNT(*) AS sellers FROM sellers WHERE seller_state = 'SP'"
+
+[[question]]
+id = "orders-total"
+question = "How many orders are in the data?"
+traps = []
+note = "order_id is unique in orders."
+sql = "SELECT COUNT(*) AS orders FROM orders"
+
+[[question]]
+id = "orders-delivered"
+question = "How many orders were delivered?"
+traps = []
+note = "Status 'delivered'."
+sql = "SELECT COUNT(*) AS orders FROM orders WHERE order_status = 'delivered'"
+
+[[question]]
+id = "orders-canceled-2017"
+question = "How many orders placed in 2017 were canceled?"
+traps = ["status-filter"]
+note = "Status 'canceled' only; 'unavailable' is a different status."
+sql = """
+SELECT COUNT(*) AS orders FROM orders
+WHERE order_status = 'canceled' AND substr(order_purchase_timestamp, 1, 4) = '2017'
+"""
+
+[[question]]
+id = "distinct-customers"
+question = "How many distinct customers have ordered from us?"
+traps = ["customer-id"]
+note = "customers has one row per order; 96,096 distinct customer_unique_id values."
+sql = "SELECT COUNT(DISTINCT customer_unique_id) AS customers FROM customers"
+
+[[question]]
+id = "repeat-customers-2017"
+question = "How many customers placed more than one order in 2017?"
+traps = ["customer-id"]
+note = "Grouped by customer_unique_id. Grouping by customer_id gives 0, because each order has its own customer_id."
+sql = """
+SELECT COUNT(*) AS repeat_customers FROM (
+  SELECT c.customer_unique_id
+  FROM orders o JOIN customers c ON c.customer_id = o.customer_id
+  WHERE substr(o.order_purchase_timestamp, 1, 4) = '2017'
+  GROUP BY c.customer_unique_id
+  HAVING COUNT(DISTINCT o.order_id) > 1
+)
+"""
+
+[[question]]
+id = "repeat-customer-share"
+question = "What percentage of customers have ordered more than once?"
+traps = ["customer-id"]
+note = "Share of distinct customer_unique_id values with more than one order."
+sql = """
+SELECT ROUND(100.0 * SUM(n > 1) / COUNT(*), 2) AS repeat_pct FROM (
+  SELECT c.customer_unique_id, COUNT(DISTINCT o.order_id) AS n
+  FROM orders o JOIN customers c ON c.customer_id = o.customer_id
+  GROUP BY c.customer_unique_id
+)
+"""
+
+[[question]]
+id = "revenue-total"
+question = "What is our total revenue?"
+traps = ["undefined-metric"]
+note = "Payments received: 16,008,872.12. Items plus freight is 15,843,553.24, also defensible until revenue is defined."
+sql = "SELECT ROUND(SUM(payment_value), 2) AS revenue FROM order_payments"
+accept = ["SELECT ROUND(SUM(price + freight_value), 2) FROM order_items", "SELECT ROUND(SUM(p.payment_value), 2) FROM order_payments p JOIN order_items i ON i.order_id = p.order_id"]
+
+[[question]]
+id = "gmv-2018"
+question = "What was GMV in 2018?"
+traps = ["undefined-metric"]
+note = "Item price plus freight for every order placed in 2018, any status. Price alone is also defensible until GMV is defined."
+sql = """
+SELECT ROUND(SUM(i.price + i.freight_value), 2) AS gmv
+FROM order_items i JOIN orders o ON o.order_id = i.order_id
+WHERE substr(o.order_purchase_timestamp, 1, 4) = '2018'
+"""
+accept = ["SELECT ROUND(SUM(i.price), 2) FROM order_items i JOIN orders o ON o.order_id = i.order_id WHERE substr(o.order_purchase_timestamp, 1, 4) = '2018'"]
+
+[[question]]
+id = "late-share-delivered"
+question = "What percentage of delivered orders arrived late?"
+traps = ["date-text", "undefined-metric"]
+note = "Late means the delivery date is after the estimated date. The estimate has no time of day, so compare dates, not text timestamps (6.77, not 8.11)."
+sql = """
+SELECT ROUND(100.0 * SUM(date(order_delivered_customer_date) > date(order_estimated_delivery_date)) / COUNT(*), 2) AS late_pct
+FROM orders
+WHERE order_status = 'delivered' AND order_delivered_customer_date IS NOT NULL
+"""
+
+[[question]]
+id = "late-orders-2018"
+question = "How many orders placed in 2018 were delivered late?"
+traps = ["date-text"]
+note = "Delivered after the estimated date, compared as dates."
+sql = """
+SELECT COUNT(*) AS late_orders FROM orders
+WHERE substr(order_purchase_timestamp, 1, 4) = '2018'
+  AND order_delivered_customer_date IS NOT NULL
+  AND date(order_delivered_customer_date) > date(order_estimated_delivery_date)
+"""
+
+[[question]]
+id = "late-share-bed-bath-by-month"
+question = "What share of delivered orders in cama_mesa_banho arrived late, by month of purchase in 2018?"
+traps = ["fan-out", "date-text"]
+order_matters = true
+note = "An order with three bed-and-bath items must count once, so orders are made distinct before the rate."
+sql = """
+SELECT substr(o.order_purchase_timestamp, 1, 7) AS month,
+       ROUND(100.0 * SUM(date(o.order_delivered_customer_date) > date(o.order_estimated_delivery_date)) / COUNT(*), 2) AS late_pct
+FROM orders o
+WHERE o.order_status = 'delivered' AND o.order_delivered_customer_date IS NOT NULL
+  AND substr(o.order_purchase_timestamp, 1, 4) = '2018'
+  AND o.order_id IN (SELECT i.order_id FROM order_items i JOIN products p ON p.product_id = i.product_id
+                     WHERE p.product_category_name = 'cama_mesa_banho')
+GROUP BY month ORDER BY month
+"""
+
+[[question]]
+id = "late-sellers-sao-paulo-2018q2"
+question = "Which sellers in Sao Paulo city had 5 or more late deliveries in 2018 Q2?"
+traps = ["spelling", "date-text", "fan-out"]
+note = "Orders placed April to June 2018, counted once per seller, late compared as dates, all nine spellings of the city."
+
+sql = """
+SELECT i.seller_id, COUNT(DISTINCT o.order_id) AS late_orders
+FROM orders o
+JOIN order_items i ON i.order_id = o.order_id
+JOIN sellers s ON s.seller_id = i.seller_id
+WHERE s.seller_city IN ('sao paulo', 'sa' || char(771) || 'o paulo', 'sao  paulo', 'sao paluo', 'sao pauo', 'sao paulop',
+                        'sao paulo sp', 'sao paulo - sp', 'sao paulo / sao paulo')
+  AND o.order_purchase_timestamp >= '2018-04-01' AND o.order_purchase_timestamp < '2018-07-01'
+  AND o.order_delivered_customer_date IS NOT NULL
+  AND date(o.order_delivered_customer_date) > date(o.order_estimated_delivery_date)
+GROUP BY i.seller_id
+HAVING COUNT(DISTINCT o.order_id) >= 5
+ORDER BY late_orders DESC
+"""
+
+[[question]]
+id = "top-categories-gmv-2018"
+question = "What were the top 10 product categories by GMV in 2018, with English names?"
+traps = ["translation", "undefined-metric"]
+order_matters = true
+note = "GMV is price plus freight. English names come from product_category_name_translation."
+sql = """
+SELECT t.product_category_name_english AS category, ROUND(SUM(i.price + i.freight_value), 2) AS gmv
+FROM order_items i
+JOIN orders o ON o.order_id = i.order_id
+JOIN products p ON p.product_id = i.product_id
+JOIN product_category_name_translation t ON t.product_category_name = p.product_category_name
+WHERE substr(o.order_purchase_timestamp, 1, 4) = '2018'
+GROUP BY category ORDER BY gmv DESC LIMIT 10
+"""
+
+[[question]]
+id = "categories-without-translation"
+question = "Which product categories have no English translation?"
+traps = ["translation"]
+note = "Two categories in products are missing from the translation table."
+sql = """
+SELECT DISTINCT product_category_name FROM products
+WHERE product_category_name IS NOT NULL
+  AND product_category_name NOT IN (SELECT product_category_name FROM product_category_name_translation)
+"""
+
+[[question]]
+id = "products-without-category"
+question = "How many products have no category?"
+traps = []
+note = "product_category_name is empty for these."
+sql = "SELECT COUNT(*) AS products FROM products WHERE product_category_name IS NULL"
+
+[[question]]
+id = "average-review-score"
+question = "What is the average review score?"
+traps = []
+note = "Average over every review row."
+sql = "SELECT ROUND(AVG(review_score), 2) AS avg_score FROM order_reviews"
+
+[[question]]
+id = "one-star-share-2018"
+question = "What percentage of reviews created in 2018 gave one star?"
+traps = []
+note = "By review_creation_date."
+sql = """
+SELECT ROUND(100.0 * SUM(review_score = 1) / COUNT(*), 2) AS one_star_pct
+FROM order_reviews WHERE substr(review_creation_date, 1, 4) = '2018'
+"""
+
+[[question]]
+id = "reviews-with-comments"
+question = "How many reviews have a written comment?"
+traps = []
+note = "review_comment_message is not empty."
+sql = "SELECT COUNT(*) AS reviews FROM order_reviews WHERE review_comment_message IS NOT NULL"
+
+[[question]]
+id = "top-customer-states"
+question = "Which 5 customer states placed the most orders?"
+traps = []
+order_matters = true
+note = "One customers row per order, so counting orders by customer_state is safe."
+sql = """
+SELECT c.customer_state, COUNT(*) AS orders
+FROM orders o JOIN customers c ON c.customer_id = o.customer_id
+GROUP BY c.customer_state ORDER BY orders DESC LIMIT 5
+"""
+
+[[question]]
+id = "average-delivery-days"
+question = "On average, how many days does a delivered order take from purchase to the customer?"
+traps = []
+note = "Days between purchase and delivery for delivered orders that have a delivery date."
+sql = """
+SELECT ROUND(AVG(julianday(order_delivered_customer_date) - julianday(order_purchase_timestamp)), 2) AS avg_days
+FROM orders WHERE order_status = 'delivered' AND order_delivered_customer_date IS NOT NULL
+"""
+
+[[question]]
+id = "delivered-without-date"
+question = "How many delivered orders have no delivery date?"
+traps = []
+note = "Status says delivered but the customer delivery date is empty."
+sql = "SELECT COUNT(*) AS orders FROM orders WHERE order_status = 'delivered' AND order_delivered_customer_date IS NULL"
+
+[[question]]
+id = "active-sellers-2018"
+question = "How many sellers sold at least one item in 2018?"
+traps = []
+note = "Distinct seller_id on items of orders placed in 2018."
+sql = """
+SELECT COUNT(DISTINCT i.seller_id) AS sellers
+FROM order_items i JOIN orders o ON o.order_id = i.order_id
+WHERE substr(o.order_purchase_timestamp, 1, 4) = '2018'
+"""
+
+[[question]]
+id = "multi-seller-orders"
+question = "How many orders contain items from more than one seller?"
+traps = []
+note = "1,278 orders."
+sql = """
+SELECT COUNT(*) AS orders FROM (
+  SELECT order_id FROM order_items GROUP BY order_id HAVING COUNT(DISTINCT seller_id) > 1
+)
+"""
+
+[[question]]
+id = "payment-type-share"
+question = "What share of payment value came from each payment type?"
+traps = []
+note = "Percentage of total payment_value per payment_type."
+sql = """
+SELECT payment_type, ROUND(100.0 * SUM(payment_value) / (SELECT SUM(payment_value) FROM order_payments), 2) AS pct
+FROM order_payments GROUP BY payment_type
+"""
+
+[[question]]
+id = "average-order-value-2017"
+question = "What was the average order value in 2017, based on payments?"
+traps = ["fan-out"]
+note = "Total payments per order, then the average across orders placed in 2017. Joining items to payments repeats each payment once per item."
+sql = """
+SELECT ROUND(AVG(paid), 2) AS avg_order_value FROM (
+  SELECT o.order_id, SUM(p.payment_value) AS paid
+  FROM orders o JOIN order_payments p ON p.order_id = o.order_id
+  WHERE substr(o.order_purchase_timestamp, 1, 4) = '2017'
+  GROUP BY o.order_id
+)
+"""
+
+[[question]]
+id = "payments-health-beauty-2018"
+question = "What was the total payment value of 2018 orders that included a beleza_saude product?"
+traps = ["fan-out"]
+note = "Each order's payments counted once, however many beauty items it holds."
+sql = """
+SELECT ROUND(SUM(p.payment_value), 2) AS paid
+FROM order_payments p JOIN orders o ON o.order_id = p.order_id
+WHERE substr(o.order_purchase_timestamp, 1, 4) = '2018'
+  AND o.order_id IN (SELECT i.order_id FROM order_items i JOIN products pr ON pr.product_id = i.product_id
+                     WHERE pr.product_category_name = 'beleza_saude')
+"""
+
+[[question]]
+id = "top-sellers-gmv-2018"
+question = "Which 5 sellers had the highest GMV in 2018?"
+traps = ["undefined-metric"]
+order_matters = true
+note = "GMV is price plus freight on items of orders placed in 2018."
+sql = """
+SELECT i.seller_id, ROUND(SUM(i.price + i.freight_value), 2) AS gmv
+FROM order_items i JOIN orders o ON o.order_id = i.order_id
+WHERE substr(o.order_purchase_timestamp, 1, 4) = '2018'
+GROUP BY i.seller_id ORDER BY gmv DESC LIMIT 5
+"""
+
+[[question]]
+id = "customers-in-sao-paulo"
+question = "How many distinct customers in Sao Paulo city have ordered from us?"
+traps = ["customer-id"]
+note = "customer_city is clean ('sao paulo'); count distinct customer_unique_id."
+sql = "SELECT COUNT(DISTINCT customer_unique_id) AS customers FROM customers WHERE customer_city = 'sao paulo'"

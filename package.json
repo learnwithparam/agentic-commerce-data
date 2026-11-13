@@ -1,10 +1,21 @@
 {
-  "name": "workshop-template",
+  "name": "agentic-commerce-data",
   "private": true,
   "type": "module",
   "packageManager": "bun@1.4.4",
   "scripts": {
-    "check": "bun scripts/check.ts && bun scripts/verify.ts --all",
-    "verify": "bun scripts/verify.ts"
+    "check": "bun scripts/readable.ts && bun scripts/plain-english.ts && bun scripts/check.ts && bun scripts/verify.ts --all",
+    "readable": "bun scripts/readable.ts",
+    "format": "biome check --write .",
+    "verify": "bun scripts/verify.ts",
+    "world": "bun world/build.ts",
+    "score": "bun scripts/score.ts",
+    "shots": "bun scripts/shots.ts",
+    "plain-english": "bun scripts/plain-english.ts"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.6.5",
+    "@types/bun": "1.4.4",
+    "playwright": "1.65.0"
   }
 }
