@@ -1,0 +1,30 @@
+# The finished agent's metric definitions. A placeholder like {{late_delivery_rate}} in the model's SQL is
+# replaced by `expression`, so every answer uses the same definition. define-the-metrics teaches you to write these.
+
+[late_delivery_rate]
+description = "Share of delivered orders that reached the customer more than 2 days after the estimated delivery date."
+owner = "logistics operations lead"
+grain = "order"
+expression = "julianday(date(o.order_delivered_customer_date)) - julianday(date(o.order_estimated_delivery_date)) > 2"
+assumption = "Late means delivered more than 2 days after the estimated date. The estimate has no time of day, so dates are compared, not timestamps. Orders with no delivery date are left out."
+
+[gmv]
+description = "Gross merchandise value: item price plus freight for every order placed, before cancellations."
+owner = "finance business partner"
+grain = "order item"
+expression = "SUM(i.price + i.freight_value)"
+assumption = "GMV is item price plus freight, for every order placed in the period, whatever its status."
+
+[repeat_customer]
+description = "A person (customer_unique_id) with more than one distinct order in the period."
+owner = "seller success lead"
+grain = "customer_unique_id"
+expression = "COUNT(DISTINCT o.order_id) > 1"
+assumption = "A customer is a person (customer_unique_id). customer_id is one per order, so it never repeats."
+
+[active_seller]
+description = "A seller with at least one item in an order placed in the period."
+owner = "seller success lead"
+grain = "seller"
+expression = "COUNT(DISTINCT i.order_id) >= 1"
+assumption = "A seller is active in a period when at least one of their items is in an order placed in it."

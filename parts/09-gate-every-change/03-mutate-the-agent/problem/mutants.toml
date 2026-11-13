@@ -1,0 +1,15 @@
+# Mutants: ways to break the agent on purpose. The gate must block every one.
+# Each mutant replaces every copy of `find` with `replace` in one file, in a throwaway copy.
+
+[[mutant]]
+name = "no-value-index"
+why = "The value index finds all 9 spellings of Sao Paulo. Without it, no spelling is found at all."
+file = "desk/finished/values.py"
+find = "    groups = index()[column]"
+replace = "    groups = {}"
+
+# TODO(you): add a mutant named customer-id. Make the model's plans count customer_id instead of
+# customer_unique_id. The plans are in world/replay/finished.jsonl.
+
+# TODO(you): add a mutant named no-validator. Make guard.check in desk/finished/guard.py return
+# the SQL without checking it.

@@ -1,0 +1,23 @@
+# Mutants: ways to break the agent on purpose. The gate must block every one.
+# Each mutant replaces every copy of `find` with `replace` in one file, in a throwaway copy.
+
+[[mutant]]
+name = "no-value-index"
+why = "The value index finds all 9 spellings of Sao Paulo. Without it, no spelling is found at all."
+file = "desk/finished/values.py"
+find = "    groups = index()[column]"
+replace = "    groups = {}"
+
+[[mutant]]
+name = "customer-id"
+why = "A model that forgets the trap counts customer_id, one per order, instead of the person."
+file = "world/replay/finished.jsonl"
+find = "customer_unique_id"
+replace = "customer_id"
+
+[[mutant]]
+name = "no-validator"
+why = "Without the guard, every query the model writes reaches the database."
+file = "desk/finished/guard.py"
+find = "Return the query to run (with a LIMIT added if it has none), or refuse with a reason."
+replace = "Return the query to run."
