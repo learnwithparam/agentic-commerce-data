@@ -28,7 +28,8 @@ Write two functions in `card_signing.py`. The server already calls them.
    header, a dot, and the base64url canonical card.
 
 One trap: the `cryptography` package returns a DER signature. JWS wants the two numbers `r` and `s` side by
-side, 32 bytes each. `decode_dss_signature` gives you `r` and `s`.
+side, 32 bytes each. `decode_dss_signature` gives you `r` and `s`. Import it from
+`cryptography.hazmat.primitives.asymmetric.utils`.
 
 For example, the protected header of your card decodes to:
 

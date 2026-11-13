@@ -16,6 +16,7 @@ from pathlib import Path
 def problems_in(messages: list[dict]) -> list[dict]:
     """Every problem in a list of A2UI messages. An empty list means the surface may be sent."""
     # TODO 1: check every message against the A2UI v1.0 schema: kit.schema_problems(index, message).
+    # Add "import kit" at the top of the file first. kit.py is in the part folder.
     # TODO 2: the schema cannot see two rules, so check them yourself:
     #   - one component has the id "root";
     #   - every child id that a Column names is a component of the surface.

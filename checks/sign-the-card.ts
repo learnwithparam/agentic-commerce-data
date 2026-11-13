@@ -71,7 +71,9 @@ export default [
       const kid = headerOf(signature).kid;
       return (keys.keys ?? []).some((key) => key.kid === kid);
     },
-    tryNext: "serve public_jwk(private_key, KEY_ID) in the keys list of jwks.json",
+    tryNext:
+      "the starter already serves jwks.json, so first make the card carry a signature; " +
+      "then check that its kid is KEY_ID, the kid public_jwk(private_key, KEY_ID) serves",
   },
   {
     says: "the signature verifies over the card's canonical JSON with that public key",

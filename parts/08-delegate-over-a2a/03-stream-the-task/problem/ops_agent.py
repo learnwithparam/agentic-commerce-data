@@ -40,6 +40,10 @@ class Events:
         if self.show:
             print(json.dumps({"type": event_type, **fields}), flush=True)
 
+    def task_update(self, update: dict) -> None:
+        """Print one A2A task update as an event. Pass this method to stream_task."""
+        self.emit("CUSTOM", name="a2a.task_update", value=update)
+
 
 def route(question: str) -> str:
     """Carrier questions about named orders go to the logistics team. Everything else stays."""
