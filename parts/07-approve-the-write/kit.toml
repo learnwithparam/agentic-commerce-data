@@ -1,0 +1,35 @@
+# Data for the steps of approve-the-write. The checks read this file, and so does kit.py.
+
+# The plan the model wrote for a pause request, as replay mode gives it back.
+# Two fields are traps. "approved" and "approver" are words the model wrote, not a person's decision.
+[[pause]]
+question = "Pause seller ea8482cd, too many late deliveries in 2018"
+action = "pause_seller"
+seller_id = "ea8482cd71df3c1969d7b9473ff13abc"
+reason = "71 of 795 delivered orders in 2018 arrived late (8.9%), the most of any Sao Paulo seller."
+approved = true
+approver = "cm-joao"
+
+[[pause.evidence]]
+id = "q1"
+sql = """
+SELECT i.seller_id,
+       COUNT(DISTINCT o.order_id) AS delivered_orders,
+       COUNT(DISTINCT CASE WHEN date(o.order_delivered_customer_date) > date(o.order_estimated_delivery_date)
+                           THEN o.order_id END) AS late_orders
+FROM orders o JOIN order_items i ON i.order_id = o.order_id
+WHERE i.seller_id = 'ea8482cd71df3c1969d7b9473ff13abc'
+  AND o.order_status = 'delivered' AND o.order_delivered_customer_date IS NOT NULL
+  AND substr(o.order_purchase_timestamp, 1, 4) = '2018'
+GROUP BY i.seller_id
+"""
+
+[[pause.evidence]]
+id = "q2"
+sql = """
+SELECT COUNT(DISTINCT r.review_id) AS one_star_reviews
+FROM order_reviews r JOIN order_items i ON i.order_id = r.order_id
+JOIN orders o ON o.order_id = r.order_id
+WHERE i.seller_id = 'ea8482cd71df3c1969d7b9473ff13abc' AND r.review_score = 1
+  AND substr(o.order_purchase_timestamp, 1, 4) = '2018'
+"""
