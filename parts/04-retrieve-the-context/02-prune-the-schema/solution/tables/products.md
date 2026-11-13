@@ -3,7 +3,7 @@
 ## Purpose
 
 The products sold: the category name in Portuguese, the weight, the size and the number of photos. Use it for
-product counts and product categories.
+product counts and product categories, such as cama_mesa_banho.
 
 ## Grain
 

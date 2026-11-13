@@ -3,7 +3,9 @@
 ## Purpose
 
 Every order a customer placed. Use it for order counts, order status, and the dates an order was placed,
-approved, shipped, delivered and estimated. Questions about a year, a month, late or delivered orders start here.
+approved, shipped, delivered and estimated. Questions about a year, a month, a quarter, late or delivered orders
+and late deliveries start here. Anything sold in a period
+needs the order dates too.
 
 ## Grain
 

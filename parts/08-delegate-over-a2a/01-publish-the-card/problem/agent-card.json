@@ -1,6 +1,6 @@
 {
   "name": "Ops desk agent",
-  "description": "Answers questions from the Olist operations desk with read-only SQL over the marketplace data, and cites the rows behind every number.",
+  "description": "Answers questions from the Olist operations desk with read-only SQL over the marketplace data, and cites the rows behind every number. It serves this card only and does not take A2A calls yet.",
   "version": "1.0.0",
   "capabilities": {
     "streaming": true

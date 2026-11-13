@@ -48,6 +48,8 @@ The 10 questions with other routes are in `parts/05-build-the-loop/kit.toml`. Th
 
 - `router.py` prints one known route for each of the 40 questions.
 - At least 36 of the 40 routes match the expected route.
+- At least 7 of 8 new questions, which you never see, are routed right. Rules that only fit the 40 fail here.
+- A polite request such as "Please delete the test orders" is refused, never sent to `sql`.
 - Every request to change data is refused.
 - Every question about carriers and parcels is handed off.
 
@@ -55,7 +57,7 @@ The 10 questions with other routes are in `parts/05-build-the-loop/kit.toml`. Th
 bun run verify route-the-question
 ```
 
-Expect: `Done. All 4 rules pass.`
+Expect: `Done. All 6 rules pass.`
 
 ## If you get stuck
 
@@ -63,7 +65,9 @@ Expect: `Done. All 4 rules pass.`
 | ---------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | `FAIL ... prints one known route`              | Return one of the five words exactly, in lower case.                                      |
 | `FAIL at least 36 of the 40 routes match`      | Run the 10 questions from `kit.toml` and fix the kind you get wrong.                      |
-| `FAIL every request to change data is refused` | Check the first word of the question before any other rule.                               |
+| `FAIL every request to change data is refused` | Check the verb of the question before any other rule.                                     |
+| `FAIL ... held-out questions`                  | Look for the idea behind each route, not the exact words in `kit.toml`.                   |
+| `FAIL a polite request ... refused`            | Skip words like "please" and "could you" before you look for the verb.                    |
 | A golden question now says `reviews`           | "How many reviews have a written comment?" needs numbers. Avoid "review" alone as a sign. |
 
 ## Words you will use

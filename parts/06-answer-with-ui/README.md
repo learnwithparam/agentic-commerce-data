@@ -37,11 +37,11 @@ sample solution instead.
 
 40 minutes in 3 steps.
 
-| Step                                                              | Minutes | You produce                                                                        | The check reads                                                                              |
-| ----------------------------------------------------------------- | ------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| [render-the-answer](01-render-the-answer/problem/README.md)       | 15      | `render.py`: A2UI v1.0 messages with Table, LineChart, AssumptionCard, ReviewQuote | for 5 golden questions and the Sao Paulo question, the rows the table points to equal `rows` |
-| [validate-the-surface](02-validate-the-surface/problem/README.md) | 10      | `validate.py`: a check against the pinned A2UI v1.0 schemas, plus two tree rules   | 5 broken surfaces rejected with the failing JSON path; 6 golden surfaces valid               |
-| [stream-the-events](03-stream-the-events/problem/README.md)       | 15      | `server.py`: `POST /ask` streams AG-UI events                                      | the event order in the stream, and that the first event arrives within 2 seconds             |
+| Step                                                              | Minutes | You produce                                                                        | The check reads                                                                                            |
+| ----------------------------------------------------------------- | ------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| [render-the-answer](01-render-the-answer/problem/README.md)       | 15      | `render.py`: A2UI v1.0 messages with Table, LineChart, AssumptionCard, ReviewQuote | for 5 golden questions and the Sao Paulo question, the rows the table points to equal `rows`               |
+| [validate-the-surface](02-validate-the-surface/problem/README.md) | 10      | `validate.py`: a check against the pinned A2UI v1.0 schemas, plus two tree rules   | 5 broken surfaces rejected with the failing JSON path; 6 golden surfaces valid                             |
+| [stream-the-events](03-stream-the-events/problem/README.md)       | 15      | `server.py`: `POST /ask` streams AG-UI events                                      | the event order, that the tool call ends after the work, and that the first event arrives within 2 seconds |
 
 ## Walkthrough
 
@@ -69,7 +69,7 @@ Expect: `Done. All 4 rules pass.`
 bun run verify stream-the-events
 ```
 
-Expect: `Done. All 5 rules pass.`
+Expect: `Done. All 6 rules pass.`
 
 ```bash
 bun run verify part answer-with-ui

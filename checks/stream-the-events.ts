@@ -8,10 +8,17 @@ import type { Rule } from "../scripts/verify";
 const QUESTION = "Which 5 customer states placed the most orders?";
 const SLOW_SECONDS = "3";
 const FIRST_EVENT_LIMIT_MS = 2000;
+// The database takes 3 seconds, so a call that ends after the work ends well after the start.
+const CALL_END_AFTER_MS = 2000;
 const START_WAIT_MS = 15000;
 
 type Event = Record<string, unknown> & { type: string };
-type Stream = { contentType: string; events: Event[]; firstEventMs: number };
+type Stream = {
+  contentType: string;
+  events: Event[];
+  firstEventMs: number;
+  arrivals: number[];
+};
 
 const sleep = (milliseconds: number) => new Promise((done) => setTimeout(done, milliseconds));
 
@@ -49,15 +56,19 @@ async function readStream(port: number): Promise<Stream> {
   });
   let firstEventMs = Number.POSITIVE_INFINITY;
   let text = "";
+  const arrivals: number[] = [];
   const decoder = new TextDecoder();
   for await (const chunk of response.body ?? []) {
     text += decoder.decode(chunk, { stream: true });
+    // Note when each new event arrives.
+    const seen = eventsIn(text.slice(0, text.lastIndexOf("\n\n") + 2)).length;
+    while (arrivals.length < seen) arrivals.push(performance.now() - startedAt);
     if (text.includes("data:") && firstEventMs === Number.POSITIVE_INFINITY) {
       firstEventMs = performance.now() - startedAt;
     }
   }
   const contentType = response.headers.get("content-type") ?? "";
-  return { contentType, events: eventsIn(text), firstEventMs };
+  return { contentType, events: eventsIn(text), firstEventMs, arrivals };
 }
 
 async function askTheServer(folder: string): Promise<Stream> {
@@ -136,7 +147,20 @@ export default [
   {
     says: "one tool call is sent in order: start, arguments, end, then its result",
     test: async (folder) => toolCallsInOrder((await streamFor(folder)).events),
-    tryNext: "send TOOL_CALL_START, TOOL_CALL_ARGS and TOOL_CALL_END before the slow work",
+    tryNext: "send TOOL_CALL_START, ARGS, END and RESULT in that order, all for one call",
+  },
+  {
+    says: "the tool call ends only after the work is done",
+    test: async (folder) => {
+      const { events, arrivals } = await streamFor(folder);
+      const startAt = events.findIndex((event) => event.type === "TOOL_CALL_START");
+      const endAt = events.findIndex((event) => event.type === "TOOL_CALL_END");
+      if (startAt < 0 || endAt < 0) return false;
+      return arrivals[endAt] - arrivals[startAt] >= CALL_END_AFTER_MS;
+    },
+    tryNext:
+      "send TOOL_CALL_START and TOOL_CALL_ARGS before kit.finished_answer, " +
+      "and TOOL_CALL_END after it, so the call stays open while the work runs",
   },
   {
     says: "the A2UI surface arrives in an a2ui-surface activity before RUN_FINISHED",

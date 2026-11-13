@@ -1,6 +1,8 @@
 """A small web server for your Agent Card and your public keys.
 
 You do not need to change this file.
+
+It serves the card and nothing else. A call to /a2a gets a 501, so the card says streaming is false.
 """
 
 from __future__ import annotations
@@ -44,6 +46,11 @@ def make_handler(card: dict, private_key):
                 self.send_json(200, {"keys": [card_signing.public_jwk(private_key, KEY_ID)]})
             else:
                 self.send_json(404, {"error": f"nothing at {self.path}"})
+
+        def do_POST(self) -> None:  # noqa: N802 - the standard library names it
+            """The ops agent only serves its card. It does not take A2A calls yet."""
+            message = "this agent serves its card only; it does not take A2A calls"
+            self.send_json(501, {"error": message})
 
     return CardHandler
 

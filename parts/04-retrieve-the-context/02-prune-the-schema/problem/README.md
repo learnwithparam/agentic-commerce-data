@@ -44,22 +44,24 @@ Expect: `["order_reviews"]` once your scoring works. Today it prints all nine ta
 
 - `prune.py --batch` prints a list of tables for every golden question.
 - Every pick is a real table name.
-- No question gets more than 4 tables.
+- No question gets more than 4 tables, and the average is 3 or fewer.
+- The picks change with the question. Sending the same tables every time fails.
 - For at least 27 of the 30 golden questions, the picks hold every table the reference SQL reads.
 
 ```bash
 bun run verify prune-the-schema
 ```
 
-Expect: `Done. All 4 rules pass.`
+Expect: `Done. All 6 rules pass.`
 
 ## If you get stuck
 
-| What you see                               | Fix                                                                      |
-| ------------------------------------------ | ------------------------------------------------------------------------ |
-| `FAIL no question gets more than 4 tables` | Return `matching[:MOST_TABLES]`, not every table.                        |
-| `FAIL the picks cover ... for 27 of 30`    | Take the plural s off words, so "sellers" matches "seller".              |
-| Every question picks `customers`           | Many cards say "order". Give a word in the table's own name more weight. |
+| What you see                                | Fix                                                                      |
+| ------------------------------------------- | ------------------------------------------------------------------------ |
+| `FAIL no question gets more than 4 tables`  | Return `matching[:MOST_TABLES]`, not every table.                        |
+| `FAIL the picks cover ... for 27 of 30`     | Take the plural s off words, so "sellers" matches "seller".              |
+| `FAIL ... 3 tables or fewer ... on average` | Keep a table only if its score is close to the best score.               |
+| Every question picks `customers`            | Many cards say "order". Give a word in the table's own name more weight. |
 
 ## Words you will use
 

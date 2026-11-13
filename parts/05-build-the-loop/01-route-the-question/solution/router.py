@@ -15,6 +15,9 @@ ROUTES = ("sql", "reviews", "both", "refuse", "handoff")
 # A question that starts with one of these asks the desk to change data.
 WRITE_VERBS = ("delete", "remove", "drop", "update", "insert", "set", "pause", "change")
 
+# People are polite. These words come before the verb, so the router skips them.
+POLITE_WORDS = ("please", "kindly", "can", "could", "would", "you", "just")
+
 # Carriers, parcels and pick-ups are data the logistics team owns.
 LOGISTICS_WORDS = ("carrier", "logistics", "package", "parcel", "tracking", "pick up")
 
@@ -29,10 +32,16 @@ def mentions_any(question: str, words: tuple[str, ...]) -> bool:
     return any(word in question for word in words)
 
 
+def first_real_word(text: str) -> str:
+    """The first word that is not a polite word: 'Please delete it' -> 'delete'."""
+    words = [word.strip(",.?!") for word in text.split()]
+    words = [word for word in words if word not in POLITE_WORDS]
+    return words[0] if words else ""
+
+
 def route(question: str) -> str:
     text = question.lower()
-    first_word = text.split()[0] if text.split() else ""
-    if first_word in WRITE_VERBS:
+    if first_real_word(text) in WRITE_VERBS:
         return "refuse"
     if mentions_any(text, LOGISTICS_WORDS):
         return "handoff"
