@@ -1,0 +1,11 @@
+{
+  "name": "Ops desk agent",
+  "description": "Answers questions from the Olist operations desk with read-only SQL over the marketplace data, and cites the rows behind every number.",
+  "version": "1.0.0",
+  "capabilities": {
+    "streaming": true
+  },
+  "defaultInputModes": ["text/plain"],
+  "defaultOutputModes": ["application/json", "text/plain"],
+  "skills": []
+}

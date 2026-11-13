@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agent-card.schema.json",
+  "title": "A2A 1.0 AgentCard",
+  "description": "Written by hand from specification/a2a.proto in a2aproject/A2A at v1.0.1 (commit d18aa92c911c1b49f0d584c1ca0e9d8718391014), in ProtoJSON field names. The A2A repo does not commit its generated JSON Schema, so this file pins the AgentCard part of it. Unknown top-level fields are rejected, as a strict ProtoJSON parser does, so a card in the old 0.3 shape fails.",
+  "type": "object",
+  "required": [
+    "name",
+    "description",
+    "supportedInterfaces",
+    "version",
+    "capabilities",
+    "defaultInputModes",
+    "defaultOutputModes",
+    "skills"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "name": { "type": "string", "minLength": 1 },
+    "description": { "type": "string", "minLength": 1 },
+    "supportedInterfaces": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/AgentInterface" }
+    },
+    "provider": {
+      "type": "object",
+      "required": ["url", "organization"],
+      "additionalProperties": false,
+      "properties": {
+        "url": { "type": "string" },
+        "organization": { "type": "string" }
+      }
+    },
+    "version": { "type": "string", "minLength": 1 },
+    "documentationUrl": { "type": "string" },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "streaming": { "type": "boolean" },
+        "pushNotifications": { "type": "boolean" },
+        "extensions": { "type": "array", "items": { "type": "object" } },
+        "extendedAgentCard": { "type": "boolean" }
+      }
+    },
+    "securitySchemes": { "type": "object" },
+    "securityRequirements": { "type": "array", "items": { "type": "object" } },
+    "defaultInputModes": { "type": "array", "items": { "type": "string" } },
+    "defaultOutputModes": { "type": "array", "items": { "type": "string" } },
+    "skills": { "type": "array", "items": { "$ref": "#/$defs/AgentSkill" } },
+    "signatures": { "type": "array", "items": { "$ref": "#/$defs/AgentCardSignature" } },
+    "iconUrl": { "type": "string" }
+  },
+  "$defs": {
+    "AgentInterface": {
+      "type": "object",
+      "required": ["url", "protocolBinding", "protocolVersion"],
+      "additionalProperties": false,
+      "properties": {
+        "url": { "type": "string" },
+        "protocolBinding": { "type": "string", "minLength": 1 },
+        "tenant": { "type": "string" },
+        "protocolVersion": { "type": "string", "minLength": 1 }
+      }
+    },
+    "AgentSkill": {
+      "type": "object",
+      "required": ["id", "name", "description", "tags"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "examples": { "type": "array", "items": { "type": "string" } },
+        "inputModes": { "type": "array", "items": { "type": "string" } },
+        "outputModes": { "type": "array", "items": { "type": "string" } },
+        "securityRequirements": { "type": "array", "items": { "type": "object" } }
+      }
+    },
+    "AgentCardSignature": {
+      "type": "object",
+      "required": ["protected", "signature"],
+      "additionalProperties": false,
+      "properties": {
+        "protected": { "type": "string", "minLength": 1 },
+        "signature": { "type": "string", "minLength": 1 },
+        "header": { "type": "object" }
+      }
+    }
+  }
+}
