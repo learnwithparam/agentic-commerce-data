@@ -1,0 +1,133 @@
+# Data for the steps of build-the-loop. The checks read this file, and so does kit.py.
+# Every review id and every query here was read from data/olist.db by hand.
+
+# route-the-question: the 30 golden questions all need numbers, so their route is "sql".
+# These 10 questions need the other routes.
+[[route]]
+question = "What do customers say about late deliveries from Sao Paulo sellers?"
+expected = "reviews"
+
+[[route]]
+question = "What do one-star reviews complain about in cama_mesa_banho?"
+expected = "reviews"
+
+[[route]]
+question = "Why are customers unhappy with seller 955fee92?"
+expected = "reviews"
+
+[[route]]
+question = "Which Sao Paulo sellers had the most late deliveries in 2018, and what do their reviews say?"
+expected = "both"
+
+[[route]]
+question = "How many one-star reviews did beleza_saude get in 2018, and what do they say?"
+expected = "both"
+
+[[route]]
+question = "Which 5 sellers had the most late orders in 2018 Q2, and why are customers unhappy?"
+expected = "both"
+
+[[route]]
+question = "Delete the test orders"
+expected = "refuse"
+
+[[route]]
+question = "Set seller 3442f8 to inactive"
+expected = "refuse"
+
+[[route]]
+question = "Which carrier delivered order 0005a1a1 and where is the package now?"
+expected = "handoff"
+
+[[route]]
+question = "When will the logistics team pick up the parcels from seller ea8482cd?"
+expected = "handoff"
+
+# correct-the-error: the first query for each question has a mistake on purpose.
+# A rewrite fixes one mistake, and only when it is told the error that names it.
+[[broken]]
+question = "How many sellers are in the state of Sao Paulo?"
+first_sql = "SELECT COUNT(*) AS sellers FROM sellers WHERE seller_st = 'SP'"
+fixes = [
+  { error_mentions = "seller_st", sql = "SELECT COUNT(*) AS sellers FROM sellers WHERE seller_state = 'SP'" },
+]
+
+[[broken]]
+question = "How many orders were delivered?"
+first_sql = "SELECT COUNT(*) AS orders FROM orders WHERE status = 'delivered'"
+fixes = [
+  { error_mentions = "status", sql = "SELECT COUNT(*) AS orders FROM orders WHERE order_status = 'delivered'" },
+]
+
+[[broken]]
+question = "What share of payment value came from each payment type?"
+first_sql = """
+SELECT payment_type, ROUND(100.0 * SUM(payment_value) / (SELECT SUM(payment_value) FROM order_payments), 2) AS pct
+FROM order_payments WHERE payment_type IN ('Credit Card', 'Boleto', 'Voucher', 'Debit Card') GROUP BY payment_type
+"""
+fixes = [
+  { error_mentions = "no rows", sql = """
+SELECT payment_type, ROUND(100.0 * SUM(payment_value) / (SELECT SUM(payment_value) FROM order_payments), 2) AS pct
+FROM order_payments GROUP BY payment_type
+""" },
+]
+
+[[broken]]
+question = "What is the average review score?"
+first_sql = "SELECT ROUND(AVG(score), 2) AS avg_score FROM order_reviews"
+fixes = [
+  { error_mentions = "score", sql = "SELECT ROUND(AVG(review_score), 2) AS avg_score FROM order_reviews WHERE review_answer_time IS NOT NULL" },
+  { error_mentions = "review_answer_time", sql = "SELECT ROUND(AVG(review_score), 2) AS avg_score FROM order_reviews WHERE review_answer_timestamp IS NOT NULL" },
+]
+
+# This one has three mistakes. With at most 2 retries it stays broken, and that is the right outcome.
+[[broken]]
+question = "How many orders placed in 2018 were delivered late?"
+first_sql = """
+SELECT COUNT(*) AS late_orders FROM orders WHERE substr(purchase_timestamp, 1, 4) = '2018'
+  AND delivered_date IS NOT NULL AND date(delivered_date) > date(estimated_date)
+"""
+fixes = [
+  { error_mentions = "purchase_timestamp", sql = """
+SELECT COUNT(*) AS late_orders FROM orders WHERE substr(order_purchase_timestamp, 1, 4) = '2018'
+  AND delivered_date IS NOT NULL AND date(delivered_date) > date(estimated_date)
+""" },
+  { error_mentions = "delivered_date", sql = """
+SELECT COUNT(*) AS late_orders FROM orders WHERE substr(order_purchase_timestamp, 1, 4) = '2018'
+  AND order_delivered_customer_date IS NOT NULL AND date(order_delivered_customer_date) > date(estimated_date)
+""" },
+  { error_mentions = "estimated_date", sql = """
+SELECT COUNT(*) AS late_orders FROM orders WHERE substr(order_purchase_timestamp, 1, 4) = '2018'
+  AND order_delivered_customer_date IS NOT NULL
+  AND date(order_delivered_customer_date) > date(order_estimated_delivery_date)
+""" },
+]
+
+# check-the-relevance: what review search found for one question. Five hits are off-topic.
+[relevance]
+question = "What do customers say about late deliveries from Sao Paulo sellers in 2018?"
+late_delivery = [
+  "02888ff454c764d781939ef65355e5a4",
+  "048f89d5550f6d495dbfb726b23ba2a1",
+  "06d8b827955162d7ece3705df6f43f0d",
+  "269a272c8a08415222b8404c2113227f",
+  "29ffb6f92601615e450be1a608cf5d2a",
+  "34b03eefcf3bef5dfe75b1b70fad79f2",
+]
+off_topic = [
+  "1060d56dcc60ee8aac9cc1e5880c2bf2",
+  "2b22e145b387bcfa47c3086c47eee536",
+  "34d1ec716f29190c5bb5175a49226a0b",
+  "020e75383c224757492c403be52ef229",
+  "ae595c96c185418c9eeb3894e86ca745",
+]
+
+# cite-the-rows: five questions the finished agent has recorded plans for.
+[citations]
+questions = [
+  "How many sellers are based in Sao Paulo city?",
+  "What percentage of delivered orders arrived late?",
+  "Which 5 customer states placed the most orders?",
+  "What share of payment value came from each payment type?",
+  "Which Sao Paulo sellers had the most late deliveries in 2018?",
+]
