@@ -1,0 +1,69 @@
+{
+  "question": "What share of delivered orders in cama_mesa_banho arrived late, by month of purchase in 2018?",
+  "messages": [
+    {
+      "version": "1.0",
+      "createSurface": {
+        "surfaceId": "answer",
+        "catalogId": "learnwithparam.com:ops-desk-v1",
+        "dataModel": {
+          "summary": "The rows below answer it.",
+          "table": {
+            "columns": ["month", "late_pct"],
+            "rows": [
+              ["2018-01", 4.64],
+              ["2018-02", 19.39],
+              ["2018-03", 21.47],
+              ["2018-04", 5.5],
+              ["2018-05", 5.67],
+              ["2018-06", 1.08],
+              ["2018-07", 1.57],
+              ["2018-08", 5.05]
+            ]
+          },
+          "assumptions": [
+            "Late means delivered on a later day than the estimated date. The estimate has no time of day, so dates are compared, not timestamps. Orders with no delivery date are left out."
+          ],
+          "reviews": []
+        }
+      }
+    },
+    {
+      "version": "1.0",
+      "updateComponents": {
+        "surfaceId": "answer",
+        "components": [
+          {
+            "id": "root",
+            "component": "Column",
+            "children": ["summary", "table", "assumptions"]
+          },
+          {
+            "id": "summary",
+            "component": "Text",
+            "text": {
+              "@path": "/summary"
+            }
+          },
+          {
+            "id": "table",
+            "component": "Table",
+            "columns": {
+              "@path": "/table/columns"
+            },
+            "rows": {
+              "@path": "/table/rows"
+            }
+          },
+          {
+            "id": "assumptions",
+            "component": "AssumptionCard",
+            "items": {
+              "@path": "/assumptions"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

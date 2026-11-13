@@ -1,0 +1,66 @@
+{
+  "question": "Which 5 sellers had the highest GMV in 2018?",
+  "messages": [
+    {
+      "version": "1.0",
+      "createSurface": {
+        "surfaceId": "answer",
+        "catalogId": "learnwithparam.com:ops-desk-v1",
+        "dataModel": {
+          "summary": "The rows below answer it.",
+          "table": {
+            "columns": ["seller_id", "gmv"],
+            "rows": [
+              ["4869f7a5dfa277a7dca6462dcf3b52b2", 151292.81],
+              ["955fee9216a65b617aa5c0531780ce60", 138989.02],
+              ["1025f0e2d44d7041d6cf58b6550e0bfa", 130593.12],
+              ["7d13fca15225358621be4086e1eb0964", 122261.02],
+              ["7c67e1448b00f6e969d365cea6b010ab", 120504.38]
+            ]
+          },
+          "assumptions": [
+            "GMV is item price plus freight, for every order placed in the period, whatever its status."
+          ],
+          "reviews": []
+        }
+      }
+    },
+    {
+      "version": "1.0",
+      "updateComponents": {
+        "surfaceId": "answer",
+        "components": [
+          {
+            "id": "root",
+            "component": "Column",
+            "children": ["summary", "table", "assumptions"]
+          },
+          {
+            "id": "summary",
+            "component": "Text",
+            "text": {
+              "@path": "/summary"
+            }
+          },
+          {
+            "id": "table",
+            "component": "Table",
+            "columns": {
+              "@path": "/table/columns"
+            },
+            "rows": {
+              "@path": "/table/rows"
+            }
+          },
+          {
+            "id": "assumptions",
+            "component": "AssumptionCard",
+            "items": {
+              "@path": "/assumptions"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

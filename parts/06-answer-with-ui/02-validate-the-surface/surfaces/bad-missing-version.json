@@ -1,0 +1,265 @@
+{
+  "broken": "the first message has no version",
+  "expected_path": "/0",
+  "messages": [
+    {
+      "createSurface": {
+        "surfaceId": "answer",
+        "catalogId": "learnwithparam.com:ops-desk-v1",
+        "dataModel": {
+          "summary": "Seller ea8482cd71df3c1969d7b9473ff13abc had the most late deliveries in 2018: 71 of 795 delivered orders (8.9%).",
+          "table": {
+            "columns": ["seller_id", "late_orders", "delivered_orders", "late_pct"],
+            "rows": [
+              ["ea8482cd71df3c1969d7b9473ff13abc", 71, 795, 8.9],
+              ["955fee9216a65b617aa5c0531780ce60", 70, 1082, 6.5],
+              ["8b321bb669392f5163d04c59e235e066", 66, 774, 8.5],
+              ["6560211a19b47992c3666cc44a7e94c0", 55, 983, 5.6],
+              ["1025f0e2d44d7041d6cf58b6550e0bfa", 41, 677, 6.1],
+              ["7a67c85e85bb2ce8582c35f2203ad736", 34, 361, 9.4],
+              ["4c2b230173bb36f9b240f2b8ac11786e", 14, 107, 13.1],
+              ["92eb0f42c21942b6552362b9b114707d", 13, 164, 7.9],
+              ["9f505651f4a6abe901a56cdc21508025", 13, 343, 3.8],
+              ["2e90cb1677d35cfe24eef47d441b7c87", 12, 84, 14.3]
+            ]
+          },
+          "assumptions": [
+            "Late means delivered on a later day than the estimated date. The estimate has no time of day, so dates are compared, not timestamps. Orders with no delivery date are left out.",
+            "Sao Paulo (seller_city) covers 9 stored spellings: 'sao  paulo', 'sao paluo', 'sao paulo', 'sao paulo - sp', 'sao paulo / sao paulo', 'sao paulo sp', 'sao paulop', 'sao pauo', 'são paulo'."
+          ],
+          "reviews": [
+            {
+              "review_id": "d1e912b41af2db628c756a6365dad36f",
+              "order_id": "c1d47bf45869556f656d75e071338018",
+              "score": 2,
+              "quote": "Demora muito",
+              "gloss_en": "It takes far too long."
+            },
+            {
+              "review_id": "b4643bfbb8051487da92b280640ca2ba",
+              "order_id": "5f2f36a9d5be0e9e97a5b412f4519ba6",
+              "score": 1,
+              "quote": "Até agora meu produto não chegou. Está em transito ainda. Infelizmente. Espero q chegue logo",
+              "gloss_en": "My product still has not arrived. It is still in transit. Sadly. I hope it arrives soon."
+            },
+            {
+              "review_id": "7a9001dd985ebaca7669da76ce81e047",
+              "order_id": "370ea9c16345a128a6c6b8b76a475d74",
+              "score": 2,
+              "quote": "Infelizmente ainda não recebi a mercadoria",
+              "gloss_en": "Sadly I still have not received the goods."
+            }
+          ],
+          "chart": {
+            "points": [
+              {
+                "month": "2018-01",
+                "seller": "8b321bb669392f5163d04c59e235e066",
+                "late_orders": 3
+              },
+              {
+                "month": "2018-01",
+                "seller": "955fee9216a65b617aa5c0531780ce60",
+                "late_orders": 4
+              },
+              {
+                "month": "2018-01",
+                "seller": "ea8482cd71df3c1969d7b9473ff13abc",
+                "late_orders": 15
+              },
+              {
+                "month": "2018-02",
+                "seller": "8b321bb669392f5163d04c59e235e066",
+                "late_orders": 31
+              },
+              {
+                "month": "2018-02",
+                "seller": "955fee9216a65b617aa5c0531780ce60",
+                "late_orders": 16
+              },
+              {
+                "month": "2018-02",
+                "seller": "ea8482cd71df3c1969d7b9473ff13abc",
+                "late_orders": 13
+              },
+              {
+                "month": "2018-03",
+                "seller": "8b321bb669392f5163d04c59e235e066",
+                "late_orders": 24
+              },
+              {
+                "month": "2018-03",
+                "seller": "955fee9216a65b617aa5c0531780ce60",
+                "late_orders": 25
+              },
+              {
+                "month": "2018-03",
+                "seller": "ea8482cd71df3c1969d7b9473ff13abc",
+                "late_orders": 33
+              },
+              {
+                "month": "2018-04",
+                "seller": "8b321bb669392f5163d04c59e235e066",
+                "late_orders": 6
+              },
+              {
+                "month": "2018-04",
+                "seller": "955fee9216a65b617aa5c0531780ce60",
+                "late_orders": 6
+              },
+              {
+                "month": "2018-04",
+                "seller": "ea8482cd71df3c1969d7b9473ff13abc",
+                "late_orders": 2
+              },
+              {
+                "month": "2018-05",
+                "seller": "8b321bb669392f5163d04c59e235e066",
+                "late_orders": 1
+              },
+              {
+                "month": "2018-05",
+                "seller": "955fee9216a65b617aa5c0531780ce60",
+                "late_orders": 13
+              },
+              {
+                "month": "2018-05",
+                "seller": "ea8482cd71df3c1969d7b9473ff13abc",
+                "late_orders": 1
+              },
+              {
+                "month": "2018-06",
+                "seller": "955fee9216a65b617aa5c0531780ce60",
+                "late_orders": 2
+              },
+              {
+                "month": "2018-06",
+                "seller": "ea8482cd71df3c1969d7b9473ff13abc",
+                "late_orders": 1
+              },
+              {
+                "month": "2018-07",
+                "seller": "8b321bb669392f5163d04c59e235e066",
+                "late_orders": 1
+              },
+              {
+                "month": "2018-07",
+                "seller": "955fee9216a65b617aa5c0531780ce60",
+                "late_orders": 1
+              },
+              {
+                "month": "2018-07",
+                "seller": "ea8482cd71df3c1969d7b9473ff13abc",
+                "late_orders": 3
+              },
+              {
+                "month": "2018-08",
+                "seller": "955fee9216a65b617aa5c0531780ce60",
+                "late_orders": 3
+              },
+              {
+                "month": "2018-08",
+                "seller": "ea8482cd71df3c1969d7b9473ff13abc",
+                "late_orders": 3
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "version": "1.0",
+      "updateComponents": {
+        "surfaceId": "answer",
+        "components": [
+          {
+            "id": "root",
+            "component": "Column",
+            "children": [
+              "summary",
+              "table",
+              "chart",
+              "assumptions",
+              "review-0",
+              "review-1",
+              "review-2"
+            ]
+          },
+          {
+            "id": "summary",
+            "component": "Text",
+            "text": {
+              "@path": "/summary"
+            }
+          },
+          {
+            "id": "table",
+            "component": "Table",
+            "columns": {
+              "@path": "/table/columns"
+            },
+            "rows": {
+              "@path": "/table/rows"
+            }
+          },
+          {
+            "id": "chart",
+            "component": "LineChart",
+            "points": {
+              "@path": "/chart/points"
+            },
+            "x": "month",
+            "y": "late_orders",
+            "series": "seller"
+          },
+          {
+            "id": "assumptions",
+            "component": "AssumptionCard",
+            "items": {
+              "@path": "/assumptions"
+            }
+          },
+          {
+            "id": "review-0",
+            "component": "ReviewQuote",
+            "reviewId": {
+              "@path": "/reviews/0/review_id"
+            },
+            "quote": {
+              "@path": "/reviews/0/quote"
+            },
+            "gloss": {
+              "@path": "/reviews/0/gloss_en"
+            }
+          },
+          {
+            "id": "review-1",
+            "component": "ReviewQuote",
+            "reviewId": {
+              "@path": "/reviews/1/review_id"
+            },
+            "quote": {
+              "@path": "/reviews/1/quote"
+            },
+            "gloss": {
+              "@path": "/reviews/1/gloss_en"
+            }
+          },
+          {
+            "id": "review-2",
+            "component": "ReviewQuote",
+            "reviewId": {
+              "@path": "/reviews/2/review_id"
+            },
+            "quote": {
+              "@path": "/reviews/2/quote"
+            },
+            "gloss": {
+              "@path": "/reviews/2/gloss_en"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
