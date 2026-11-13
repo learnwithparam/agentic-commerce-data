@@ -109,3 +109,11 @@ and no step folders, and `bun run check` skips them until their steps exist.
 - `answer-with-ui`: `desk/finished/render.py` renders a static page with the same content the A2UI surface must hold.
 - `gate-every-change`: the gate cannot be a GitHub workflow written by a session that may not touch `.github/`;
   make it a command (`bun run verify gate-the-change`) and leave the workflow file to the course owner.
+
+### do-it-with-the-tools-teams-run (`parts/10-do-it-with-the-tools-teams-run/`), 15 minutes
+
+Optional in the live session, expected as homework. It redoes one hand-built thing with the tool teams run.
+
+| Step                 | Minutes | The learner produces                            | What the check reads                                                                                              |
+| -------------------- | ------- | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `serve-with-the-sdk` | 15      | the logistics agent served with `a2a-sdk` 1.3.0 | the card against the A2A 1.0 schema; 3 answers equal to the hand-built logistics agent's (`checks/assignment.py`) |

@@ -10,6 +10,7 @@ sessions = [
   { label = "11:05 after a 15 minute break", parts = ["define-the-metrics", "retrieve-the-context"], minutes = 80 },
   { label = "13:10 after a 45 minute lunch", parts = ["build-the-loop", "answer-with-ui"], minutes = 85 },
   { label = "14:50 after a 15 minute break", parts = ["approve-the-write", "delegate-over-a2a", "gate-every-change"], minutes = 85 },
+  { label = "homework, optional in the live session", parts = ["do-it-with-the-tools-teams-run"], minutes = 15 },
 ]
 
 # Four evenings. Each ends on a green `bun run verify part <name>`, so the next starts from a known state.
@@ -19,6 +20,7 @@ sessions = [
   { label = "evening 2", parts = ["define-the-metrics", "retrieve-the-context"], minutes = 80 },
   { label = "evening 3", parts = ["build-the-loop", "answer-with-ui"], minutes = 85 },
   { label = "evening 4", parts = ["approve-the-write", "delegate-over-a2a", "gate-every-change"], minutes = 85 },
+  { label = "homework, optional in the live session", parts = ["do-it-with-the-tools-teams-run"], minutes = 15 },
 ]
 
 # Six weekly sessions, each with a take-home extension that is not graded in the core flow.
@@ -30,4 +32,5 @@ sessions = [
   { label = "week 4: an adversarial reviewer pass with a token cost check", parts = ["build-the-loop"], minutes = 45 },
   { label = "week 5: add one component to the renderer catalog", parts = ["answer-with-ui", "approve-the-write"], minutes = 65 },
   { label = "week 6: move to Postgres with a read-only role", parts = ["delegate-over-a2a", "gate-every-change"], minutes = 60 },
+  { label = "homework, optional in the live session", parts = ["do-it-with-the-tools-teams-run"], minutes = 15 },
 ]
