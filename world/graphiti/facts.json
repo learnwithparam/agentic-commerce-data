@@ -1,0 +1,78 @@
+{
+  "note": "Examples only. The dates are ISO example dates, not Olist events. The Sao Paulo city counts are the desk's numbers from the course story. The state count is an example value.",
+  "edges": [
+    {
+      "uuid": "edge-sp-city-694",
+      "group_id": "olist-desk",
+      "source_node_uuid": "desk",
+      "target_node_uuid": "sao-paulo-city",
+      "created_at": "2026-03-01T09:00:00Z",
+      "name": "sao_paulo_city_sellers",
+      "fact": "Sao Paulo city has 694 sellers.",
+      "valid_at": "2026-03-01T00:00:00Z",
+      "invalid_at": null,
+      "expired_at": null,
+      "attributes": { "value": "694" }
+    },
+    {
+      "uuid": "edge-sp-state-1850",
+      "group_id": "olist-desk",
+      "source_node_uuid": "desk",
+      "target_node_uuid": "sao-paulo-state",
+      "created_at": "2026-02-01T09:00:00Z",
+      "name": "sao_paulo_state_sellers",
+      "fact": "Sao Paulo state has 1850 sellers.",
+      "valid_at": "2026-02-01T00:00:00Z",
+      "invalid_at": null,
+      "expired_at": null,
+      "attributes": { "value": "1850" }
+    },
+    {
+      "uuid": "edge-repeat-customer-id",
+      "group_id": "olist-desk",
+      "source_node_uuid": "desk",
+      "target_node_uuid": "repeat-customer",
+      "created_at": "2026-02-01T09:00:00Z",
+      "name": "repeat_customer",
+      "fact": "repeat_customer counts customers by customer_id.",
+      "valid_at": "2026-02-01T00:00:00Z",
+      "invalid_at": null,
+      "expired_at": null,
+      "attributes": { "value": "customer_id" }
+    },
+    {
+      "uuid": "edge-sp-city-704",
+      "group_id": "olist-desk",
+      "source_node_uuid": "desk",
+      "target_node_uuid": "sao-paulo-city",
+      "created_at": "2026-06-15T09:00:00Z",
+      "name": "sao_paulo_city_sellers",
+      "fact": "Sao Paulo city has 704 sellers after the city-spelling fix.",
+      "valid_at": "2026-06-15T00:00:00Z",
+      "invalid_at": null,
+      "expired_at": null,
+      "attributes": { "value": "704" }
+    },
+    {
+      "uuid": "edge-repeat-customer-unique",
+      "group_id": "olist-desk",
+      "source_node_uuid": "desk",
+      "target_node_uuid": "repeat-customer",
+      "created_at": "2026-05-10T09:00:00Z",
+      "name": "repeat_customer",
+      "fact": "repeat_customer counts customers by customer_unique_id.",
+      "valid_at": "2026-05-10T00:00:00Z",
+      "invalid_at": null,
+      "expired_at": null,
+      "attributes": { "value": "customer_unique_id" }
+    }
+  ],
+  "questions": [
+    { "fact_key": "sao_paulo_city_sellers", "date": "2026-01-01T00:00:00Z" },
+    { "fact_key": "sao_paulo_city_sellers", "date": "2026-03-15T00:00:00Z" },
+    { "fact_key": "sao_paulo_city_sellers", "date": "2026-07-01T00:00:00Z" },
+    { "fact_key": "repeat_customer", "date": "2026-03-15T00:00:00Z" },
+    { "fact_key": "repeat_customer", "date": "2026-07-01T00:00:00Z" },
+    { "fact_key": "sao_paulo_state_sellers", "date": "2026-07-01T00:00:00Z" }
+  ]
+}

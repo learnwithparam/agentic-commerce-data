@@ -117,3 +117,11 @@ Optional in the live session, expected as homework. It redoes one hand-built thi
 | Step                 | Minutes | The learner produces                            | What the check reads                                                                                              |
 | -------------------- | ------- | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | `serve-with-the-sdk` | 15      | the logistics agent served with `a2a-sdk` 1.3.0 | the card against the A2A 1.0 schema; 3 answers equal to the hand-built logistics agent's (`checks/assignment.py`) |
+
+### track-changed-facts-with-graphiti (`parts/11-track-changed-facts-with-graphiti/`), 20 minutes
+
+Optional in the live session, expected as homework. It shows what a changed fact looks like when the old value is kept.
+
+| Step               | Minutes | The learner produces                                                   | What the check reads                                                                                  |
+| ------------------ | ------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `track-the-change` | 20      | `changes.py` with `add` (closes the old edge) and `as_of` (date query) | the six answers from `world/graphiti/facts.json` and the edges printed, forward and reversed; 8 rules |
