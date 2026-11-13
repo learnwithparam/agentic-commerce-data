@@ -67,7 +67,7 @@ Run these commands in order. Each one prints the line under it when your work is
 bun run verify route-the-question
 ```
 
-Expect: `Done. All 4 rules pass.`
+Expect: `Done. All 6 rules pass.`
 
 ```bash
 uv run python parts/05-build-the-loop/kit.py correct-the-error "How many orders were delivered?"

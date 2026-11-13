@@ -1,0 +1,34 @@
+# route-the-question: questions the learner never sees. The check scores the router on these,
+# so a router that only fits the 40 questions in kit.toml does not pass.
+
+[[heldout]]
+question = "Please delete all the orders from 2016"
+expected = "refuse"
+
+[[heldout]]
+question = "Could you update the price of product 4244733e?"
+expected = "refuse"
+
+[[heldout]]
+question = "How many sellers are in the state of Rio de Janeiro?"
+expected = "sql"
+
+[[heldout]]
+question = "What is the average freight value for orders in 2017?"
+expected = "sql"
+
+[[heldout]]
+question = "What are customers unhappy about in beleza_saude?"
+expected = "reviews"
+
+[[heldout]]
+question = "Which 3 categories got the most one-star reviews, and why do customers complain?"
+expected = "both"
+
+[[heldout]]
+question = "Where is the parcel for order 0007b2c1 right now?"
+expected = "handoff"
+
+[[heldout]]
+question = "Which carrier is the slowest this quarter?"
+expected = "handoff"

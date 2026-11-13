@@ -34,7 +34,12 @@ def base64url(data: bytes) -> str:
 
 
 def canonical_json(value: object) -> bytes:
-    """RFC 8785 canonical JSON: keys sorted, no spaces, UTF-8. Every signer gets the same bytes."""
+    """Canonical JSON: keys sorted, no spaces, UTF-8. Same bytes for every signer.
+
+    This is close to RFC 8785 but not all of it. It is enough for cards made of text, lists,
+    objects, booleans and whole numbers. It has no rules for decimals.
+    It sorts keys by code point.
+    """
     text = json.dumps(value, indent=2)
     return text.encode("utf-8")
 

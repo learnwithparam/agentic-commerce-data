@@ -49,7 +49,7 @@ def base64url(data: bytes) -> str:
 
 
 def canonical_json(value: object) -> bytes:
-    """RFC 8785 canonical JSON for cards made of text, lists, objects, booleans and integers."""
+    """Canonical JSON, close to RFC 8785: for text, lists, objects, booleans and whole numbers."""
     text = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
     return text.encode("utf-8")
 

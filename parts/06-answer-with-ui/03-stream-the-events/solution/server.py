@@ -25,9 +25,10 @@ def events_for(question: str):
     yield {"type": "TOOL_CALL_START", "toolCallId": call_id, "toolCallName": "ask_the_desk"}
     arguments = json.dumps({"question": question})
     yield {"type": "TOOL_CALL_ARGS", "toolCallId": call_id, "delta": arguments}
-    yield {"type": "TOOL_CALL_END", "toolCallId": call_id}
     # The slow part comes after the first events, so the screen already shows progress.
     answer = kit.finished_answer(question)
+    # The call ends only now, when the work is done.
+    yield {"type": "TOOL_CALL_END", "toolCallId": call_id}
     if answer["error"]:
         yield {"type": "RUN_ERROR", "message": answer["error"]}
         return

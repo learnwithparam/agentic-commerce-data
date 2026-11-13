@@ -24,16 +24,14 @@ FROM order_items i
 """
 
 [active_seller]
-description = "A seller with at least one item in an order placed in the period."
+description = "A seller with at least one item in an order placed in 2018."
 owner = "seller success lead"
 grain = "seller"
-expression = "COUNT(DISTINCT i.order_id) >= 1"
+expression = "substr(o.order_purchase_timestamp, 1, 4) = '2018'"
 sql = """
-SELECT COUNT(*) AS active_sellers FROM (
-  SELECT i.seller_id FROM order_items i
-  GROUP BY i.seller_id
-  HAVING COUNT(DISTINCT i.order_id) >= 1
-)
+SELECT COUNT(DISTINCT i.seller_id) AS active_sellers
+FROM order_items i JOIN orders o ON o.order_id = i.order_id
+WHERE substr(o.order_purchase_timestamp, 1, 4) = '2018'
 """
 
 [repeat_customer]

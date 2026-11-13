@@ -64,7 +64,7 @@ Expect: `["order_reviews"]` once `select_tables()` scores the cards.
 bun run verify prune-the-schema
 ```
 
-Expect: `Done. All 4 rules pass.`
+Expect: `Done. All 6 rules pass.`
 
 ```bash
 uv run python parts/04-retrieve-the-context/03-index-the-values/problem/value_index.py seller_city "Sao Paulo"

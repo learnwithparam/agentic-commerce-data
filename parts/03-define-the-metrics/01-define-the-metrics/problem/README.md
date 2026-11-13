@@ -7,12 +7,12 @@ written down what they mean, so the model guesses each time.
 
 For example, ask "How many repeat customers did we have?" The model groups by `customer_id` and answers 0. But
 `customer_id` is new on every order. The people are in `customer_unique_id`, and 2,997 of them ordered more than
-once. Both queries run. Only one is right.
+once. Only one is right.
 
 "Late" has the same problem. Compare the dates as text and 8.11% of delivered orders are late. Compare them as
-dates and it is 6.77%. The estimated date has no time of day, so the text compare calls an on-time order late.
+dates and it is 6.77%.
 
-So you write each metric down once, with a person who owns its meaning.
+So you write each metric down once, with an owner.
 
 ```mermaid
 flowchart LR
@@ -32,25 +32,26 @@ Open `metrics.toml` in this folder. `gmv` is done, as an example. Add the other 
 five fields:
 
 - `description`: what the number means, in one plain sentence;
-- `owner`: the role who decides what it means, for example "logistics operations lead";
+- `owner`: the role who decides what it means, such as "logistics operations lead";
 - `grain`: what one row counts, for example `order`, `seller` or `customer_unique_id`;
 - `expression`: the piece of SQL that defines it, for example `COUNT(DISTINCT o.order_id) > 1`;
 - `sql`: one full query that uses the expression on all the data.
 
 What the three new metrics mean:
 
-| Metric               | What it means                                                                    |
-| -------------------- | -------------------------------------------------------------------------------- |
-| `late_delivery_rate` | The share of delivered orders that came on a later day than the estimate.        |
-| `active_seller`      | A seller with at least one item in an order. Group `order_items` by `seller_id`. |
-| `repeat_customer`    | A person, `customer_unique_id`, with more than one order.                        |
+| Metric               | What it means                                                                 |
+| -------------------- | ----------------------------------------------------------------------------- |
+| `late_delivery_rate` | The share of delivered orders that came on a later day than the estimate.     |
+| `active_seller`      | A seller with at least one item in an order placed in one year, such as 2018. |
+| `repeat_customer`    | A person, `customer_unique_id`, with more than one order.                     |
 
-For `active_seller` and `repeat_customer`, the expression tests a group, so it goes after `HAVING`.
+For `active_seller`, the expression is the period test, so it goes after `WHERE`. For `repeat_customer`, it
+tests a group, so it goes after `HAVING`.
 
-Give each table a short name, called an alias: `o` for `orders`, `i` for `order_items` and `c` for `customers`,
-as in `FROM orders o`. The agent needs these aliases in the next step.
+Give each table a short name, called an alias: `o` for `orders`, `i` for `order_items` and `c` for
+`customers`. The agent needs them next.
 
-Run one query by hand to see its number:
+Run one query by hand:
 
 ```bash
 uv run python -c "import sqlite3; print(sqlite3.connect('data/olist.db').execute('SELECT COUNT(*) FROM sellers').fetchall())"
@@ -64,19 +65,21 @@ Expect: `[(3095,)]`
 - Each `sql` contains its own `expression`.
 - Each `sql` passes the validator and returns rows.
 - `repeat_customer` counts people by `customer_unique_id`: 2,997.
+- `active_seller` has a period, such as 2018.
 - `late_delivery_rate` compares dates: 6.77% of delivered orders.
 
 ```bash
 bun run verify define-the-metrics
 ```
 
-Expect: `Done. All 7 rules pass.`
+Expect: `Done. All 8 rules pass.`
 
 ## If you get stuck
 
 | What you see                             | Fix                                                                   |
 | ---------------------------------------- | --------------------------------------------------------------------- |
 | `FAIL repeat_customer counts people`     | Join `customers c` and group by `c.customer_unique_id`.               |
+| `FAIL active_seller has a period`        | Keep only orders placed in one year, then count the sellers left.     |
 | `FAIL late_delivery_rate compares dates` | Wrap both columns in `date(...)`. Count delivered orders with a date. |
 | `FAIL ... uses its own expression`       | Paste the expression into the sql exactly as it is.                   |
 | A TOML error                             | Put `"""` around sql that spans lines.                                |

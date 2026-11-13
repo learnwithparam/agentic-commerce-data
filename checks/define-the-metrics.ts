@@ -88,6 +88,18 @@ export default [
       "group by customers.customer_unique_id and set the grain to it",
   },
   {
+    says: "active_seller has a period, so some sellers are left out",
+    test: async (folder) => {
+      const active = metric(folder, "active_seller");
+      const inPeriod = await firstNumber(active.sql);
+      const allSellers = await firstNumber("SELECT COUNT(DISTINCT seller_id) FROM order_items");
+      return inPeriod !== null && allSellers !== null && inPeriod > 0 && inPeriod < allSellers;
+    },
+    tryNext:
+      "a filter that is always true counts everyone; " +
+      "keep only orders placed in one year, such as 2018, and count the sellers left",
+  },
+  {
     says: `late_delivery_rate compares dates, not text (${LATE_PERCENT}% of delivered orders)`,
     test: async (folder) =>
       isLatePercent(await firstNumber(metric(folder, "late_delivery_rate").sql)),

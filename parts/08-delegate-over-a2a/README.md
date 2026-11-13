@@ -185,6 +185,7 @@ card must pass the golden set and the attacks before it can merge.
 - [What's new in A2A v1](https://github.com/a2aproject/A2A/blob/main/docs/whats-new-v1.md): `supportedInterfaces`,
   signed Agent Cards and the well-known card address.
 - [A2A specification, section 8.4, Agent Card Signing](https://github.com/a2aproject/A2A/blob/main/docs/specification.md):
-  canonical JSON (RFC 8785) and the JWS format you build in sign-the-card.
+  the canonical JSON (RFC 8785) and the JWS format. You build the JWS format in sign-the-card. Your canonical
+  JSON is a simpler version of RFC 8785 that is enough for cards.
 - [a2a-python `samples/agent_card_signing.py`](https://github.com/a2aproject/a2a-python/blob/main/samples/agent_card_signing.py):
   the same signing and checking, with the official Python SDK.

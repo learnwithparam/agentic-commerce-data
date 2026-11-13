@@ -61,7 +61,9 @@ def select_tables(question: str, words_by_table: dict[str, set[str]]) -> list[st
     """The tables whose card shares the most words with the question, at most MOST_TABLES."""
     question_words = word_roots(question)
     scores = {table: score(question_words, table, words) for table, words in words_by_table.items()}
-    matching = [table for table, score in scores.items() if score > 0]
+    best = max(scores.values())
+    # Keep a table only if it scores at least a third as well as the best one.
+    matching = [table for table, score in scores.items() if score > 0 and score * 5 >= best]
     matching.sort(key=lambda table: (-scores[table], table))
     return matching[:MOST_TABLES]
 

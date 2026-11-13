@@ -52,7 +52,7 @@ Run these commands in order. Each one prints the line under it when your work is
 bun run verify define-the-metrics
 ```
 
-Expect: `Done. All 7 rules pass.` once `metrics.toml` holds all four metrics.
+Expect: `Done. All 8 rules pass.` once `metrics.toml` holds all four metrics.
 
 ```bash
 uv run python parts/03-define-the-metrics/02-query-through-metrics/problem/ask.py "What was GMV in 2018?"

@@ -1,6 +1,7 @@
 // prune-the-schema: for each golden question, the learner's prune.py picks the table cards the
 // SQL writer needs. The picks must cover every table of the reference SQL for at least 27 of the
-// 30 questions, with no more than 4 tables each. Any way of choosing passes; only the picks count.
+// 30 questions. No question gets more than 4 tables, the average is 3 or fewer, and the picks must
+// change with the question. Any way of choosing passes; only the picks count.
 import { join } from "node:path";
 import { jsonOutput, runPython } from "../parts/04-retrieve-the-context/check-helpers";
 import type { Rule } from "../scripts/verify";
@@ -10,6 +11,7 @@ import { loadGolden, type Question } from "./lib/golden";
 const TABLES: string[] = SOURCE.file.map((file: { table: string }) => file.table);
 const MOST_TABLES = 4;
 const NEEDED_MATCHES = 27;
+const MOST_ON_AVERAGE = 3;
 const golden = loadGolden();
 
 // The tables a reference query reads: every name after FROM or JOIN.
@@ -60,6 +62,20 @@ export default [
     says: `no question gets more than ${MOST_TABLES} tables`,
     test: (folder) => picks(folder).every((tables) => tables.length <= MOST_TABLES),
     tryNext: "send only the best few cards; sending all nine is what you are fixing",
+  },
+  {
+    says: `the picks hold ${MOST_ON_AVERAGE} tables or fewer per question on average`,
+    test: (folder) => {
+      const all = picks(folder);
+      const total = all.reduce((sum, tables) => sum + tables.length, 0);
+      return total / all.length <= MOST_ON_AVERAGE;
+    },
+    tryNext: "keep a table only if its score is close to the best score",
+  },
+  {
+    says: "the picks change from question to question",
+    test: (folder) => new Set(picks(folder).map((tables) => [...tables].sort().join(","))).size > 1,
+    tryNext: "choose from the question's own words, not from a fixed list",
   },
   {
     says: `the picks cover every table of the reference SQL for ${NEEDED_MATCHES} of 30 questions`,

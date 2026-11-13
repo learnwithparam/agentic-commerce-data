@@ -150,7 +150,8 @@ export function once<T>(key: string, work: () => Promise<T>): Promise<T> {
   return savedWork.get(key) as Promise<T>;
 }
 
-// RFC 8785 canonical JSON for cards: keys sorted at every level, no spaces.
+// Canonical JSON for cards, close to RFC 8785: keys sorted at every level, no spaces.
+// It matches card_signing.py for text, lists, objects, booleans and whole numbers.
 export function canonicalJson(value: unknown): string {
   if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
   if (value !== null && typeof value === "object") {
