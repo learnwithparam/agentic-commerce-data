@@ -12,7 +12,7 @@
     "score": "bun scripts/score.ts",
     "shots": "bun scripts/shots.ts",
     "plain-english": "bun scripts/plain-english.ts",
-    "audit": "playwright test -c e2e --trace off"
+    "audit": "bun scripts/audit.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.5",
