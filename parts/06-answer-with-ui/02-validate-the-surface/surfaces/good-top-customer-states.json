@@ -1,0 +1,51 @@
+{
+  "question": "Which 5 customer states placed the most orders?",
+  "messages": [
+    {
+      "version": "1.0",
+      "createSurface": {
+        "surfaceId": "answer",
+        "catalogId": "learnwithparam.com:ops-desk-v1",
+        "dataModel": {
+          "summary": "The rows below answer it.",
+          "table": {
+            "columns": ["customer_state", "orders"],
+            "rows": [["SP", 41746], ["RJ", 12852], ["MG", 11635], ["RS", 5466], ["PR", 5045]]
+          },
+          "assumptions": [],
+          "reviews": []
+        }
+      }
+    },
+    {
+      "version": "1.0",
+      "updateComponents": {
+        "surfaceId": "answer",
+        "components": [
+          {
+            "id": "root",
+            "component": "Column",
+            "children": ["summary", "table"]
+          },
+          {
+            "id": "summary",
+            "component": "Text",
+            "text": {
+              "@path": "/summary"
+            }
+          },
+          {
+            "id": "table",
+            "component": "Table",
+            "columns": {
+              "@path": "/table/columns"
+            },
+            "rows": {
+              "@path": "/table/rows"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://a2ui.org/specification/v1_0/catalog.json",
+  "protocolVersion": "1.0",
+  "title": "Ops desk catalog",
+  "description": "The components the ops desk renderer trusts. The agent may only pick from these.",
+  "catalogId": "learnwithparam.com:ops-desk-v1",
+  "components": {
+    "Column": {
+      "type": "object",
+      "description": "Shows its children one under the other.",
+      "properties": {
+        "component": { "const": "Column" },
+        "children": { "$ref": "common_types.json#/$defs/ChildList" }
+      },
+      "required": ["component", "children"]
+    },
+    "Text": {
+      "type": "object",
+      "description": "One line or paragraph of plain text.",
+      "properties": {
+        "component": { "const": "Text" },
+        "text": { "$ref": "common_types.json#/$defs/DynamicString" }
+      },
+      "required": ["component", "text"]
+    },
+    "Table": {
+      "type": "object",
+      "description": "A table. Its column names and rows come from the data model.",
+      "properties": {
+        "component": { "const": "Table" },
+        "columns": { "$ref": "common_types.json#/$defs/DataBinding" },
+        "rows": { "$ref": "common_types.json#/$defs/DataBinding" }
+      },
+      "required": ["component", "columns", "rows"]
+    },
+    "LineChart": {
+      "type": "object",
+      "description": "A line chart. Its points come from the data model; x, y and series name columns.",
+      "properties": {
+        "component": { "const": "LineChart" },
+        "points": { "$ref": "common_types.json#/$defs/DataBinding" },
+        "x": { "type": "string" },
+        "y": { "type": "string" },
+        "series": { "type": "string" }
+      },
+      "required": ["component", "points", "x", "y"]
+    },
+    "AssumptionCard": {
+      "type": "object",
+      "description": "The assumptions behind an answer, as a list of sentences.",
+      "properties": {
+        "component": { "const": "AssumptionCard" },
+        "items": { "$ref": "common_types.json#/$defs/DynamicStringList" }
+      },
+      "required": ["component", "items"]
+    },
+    "ReviewQuote": {
+      "type": "object",
+      "description": "A customer's own words, the review they come from, and an English gloss.",
+      "properties": {
+        "component": { "const": "ReviewQuote" },
+        "reviewId": { "$ref": "common_types.json#/$defs/DynamicString" },
+        "quote": { "$ref": "common_types.json#/$defs/DynamicString" },
+        "gloss": { "$ref": "common_types.json#/$defs/DynamicString" }
+      },
+      "required": ["component", "reviewId", "quote"]
+    }
+  },
+  "functions": {},
+  "$defs": {
+    "anyComponent": {
+      "oneOf": [
+        { "$ref": "#/components/Column" },
+        { "$ref": "#/components/Text" },
+        { "$ref": "#/components/Table" },
+        { "$ref": "#/components/LineChart" },
+        { "$ref": "#/components/AssumptionCard" },
+        { "$ref": "#/components/ReviewQuote" }
+      ],
+      "discriminator": { "propertyName": "component" }
+    },
+    "anyFunction": { "not": {} }
+  }
+}
