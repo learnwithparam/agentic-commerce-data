@@ -1,0 +1,14 @@
+# Tell the desk about your own database. Fill in every line, then run the check.
+# The path may be relative to this file. It must be a SQLite file that is not the course database.
+path = ""
+
+# One block per table in your database: its name, and its grain in a few words.
+# The grain is what one row stands for, such as "one sale of one item".
+# [[table]]
+# name = "sales"
+# grain = "one sale of one item in one shop"
+
+# Three questions you really ask of this data, each with a query that answers it.
+# [[question]]
+# question = "How many sales did each shop make?"
+# sql = "SELECT shop_id, COUNT(*) FROM sales GROUP BY shop_id"

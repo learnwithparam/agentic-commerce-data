@@ -48,6 +48,7 @@ flowchart LR
 | [score-the-naive-agent](01-score-the-naive-agent/problem/README.md) | 10      | `runs/naive.json`: 30 answers, each judged by rows               | the run file; it re-runs every query the agent ran and judges every answer itself |
 | [read-the-failures](02-read-the-failures/problem/README.md)         | 10      | `notes/failures.md`: one line per miss with its trap             | your lines, the run, and the traps in `world/golden.toml`                         |
 | [accept-many-answers](03-accept-many-answers/problem/README.md)     | 15      | `golden.toml` where revenue and GMV accept both fair definitions | every accepted query, run on the database, against the fair definitions           |
+| [point-at-your-database](04-point-at-your-database/problem/README.md) | 12 | `my-database.toml`: your own SQLite file, its tables and three questions | opens your file read-only and runs your three queries on it |
 
 ## Walkthrough
 
@@ -77,11 +78,19 @@ bun run score naive --for accept-many-answers
 
 Expect: `Score: 16 of 30 match.` once both questions accept their second definition.
 
+Point the desk at your own database:
+
+```bash
+bun run verify point-at-your-database
+```
+
+Expect: `Done. All 4 rules pass.`
+
 ```bash
 bun run verify part score-the-naive-agent
 ```
 
-Expect: `Part score-the-naive-agent is done: 3/3 steps pass.`
+Expect: `Part score-the-naive-agent is done: 4/4 steps pass.`
 
 ## Assignment
 
@@ -97,6 +106,7 @@ Expect: `Part score-the-naive-agent is done: 3/3 steps pass.`
 | Is every one of the 30 answers judged by its rows, and is the score right? | `bun run verify score-the-naive-agent` |
 | Does every miss have a line that names its trap?                           | `bun run verify read-the-failures`     |
 | Do revenue and GMV accept both fair answers, and does a wrong total fail?  | `bun run verify accept-many-answers`   |
+| Does your own database open, with every table described and three questions that return rows? | `bun run verify point-at-your-database` |
 
 **Extension, not graded.** Add 5 golden questions from your own work to a copy of `world/golden.toml`. Check each
 answer by hand, and write in the `note` how you checked it. Then score the naive agent on them.
