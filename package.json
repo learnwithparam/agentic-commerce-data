@@ -4,7 +4,7 @@
   "type": "module",
   "packageManager": "bun@1.4.4",
   "scripts": {
-    "check": "bun scripts/readable.ts && bun scripts/plain-english.ts && bun scripts/check.ts && bun scripts/verify.ts --all && bun run audit",
+    "check": "bun scripts/readable.ts && bun scripts/plain-english.ts && bun scripts/check.ts && bun scripts/verify.ts --all && bun run text-audit",
     "readable": "bun scripts/readable.ts",
     "format": "biome check --write .",
     "verify": "bun scripts/verify.ts",
@@ -12,7 +12,8 @@
     "score": "bun scripts/score.ts",
     "shots": "bun scripts/shots.ts",
     "plain-english": "bun scripts/plain-english.ts",
-    "audit": "bun scripts/audit.ts"
+    "audit": "bun scripts/audit.ts",
+    "text-audit": "bun scripts/audit.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.5",
