@@ -1,6 +1,6 @@
 // Reads the repo layout once. Every other script asks this file where things are.
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { basename, join } from "node:path";
 
 export const ROOT = join(import.meta.dir, "..");
 
@@ -26,7 +26,6 @@ function subfolders(folder: string): string[] {
 export const bareName = (folder: string) => folder.replace(/^\d+-/, "");
 
 // The orientation is the first part: 00-orientation/ holds its step folders next to its README.
-const ORIENTATION = join(ROOT, "00-orientation");
 
 // A planned part has a README marked TODO(part session) and no step folders yet.
 // A later session builds its steps; until then the standard does not count it.
@@ -66,7 +65,7 @@ function readStep(partName: string, partDir: string, folder: string): Step {
 function isStepFolder(partDir: string, folder: string): boolean {
   // Only the orientation mixes step folders with other folders,
   // so only there must a step.toml prove that a folder is a step.
-  return partDir !== ORIENTATION || existsSync(join(partDir, folder, "step.toml"));
+  return basename(partDir) !== "00-orientation" || existsSync(join(partDir, folder, "step.toml"));
 }
 
 function readPart(name: string, dir: string): Part {
@@ -75,23 +74,23 @@ function readPart(name: string, dir: string): Part {
   return { name, dir, steps };
 }
 
-export function parts(): Part[] {
-  const partsFolder = join(ROOT, "parts");
+export function parts(root: string = ROOT): Part[] {
+  const orientation = join(root, "00-orientation");
+  const partsFolder = join(root, "parts");
   const found = subfolders(partsFolder)
     .map((folder) => ({ name: bareName(folder), dir: join(partsFolder, folder) }))
     .filter((part) => !isPlanned(part.dir));
-  const orientationFolders = subfolders(ORIENTATION);
-  const orientationHasSteps = orientationFolders.some((folder) =>
-    existsSync(join(ORIENTATION, folder, "step.toml")),
+  const orientationHasSteps = subfolders(orientation).some((folder) =>
+    existsSync(join(orientation, folder, "step.toml")),
   );
-  if (orientationHasSteps) found.unshift({ name: "orientation", dir: ORIENTATION });
+  if (orientationHasSteps) found.unshift({ name: "orientation", dir: orientation });
   return found.map(({ name, dir }) => readPart(name, dir));
 }
 
-export const allSteps = () => parts().flatMap((part) => part.steps);
+export const allSteps = (root: string = ROOT) => parts(root).flatMap((part) => part.steps);
 
-export function findStep(name: string): Step | undefined {
-  return allSteps().find((step) => step.name === name);
+export function findStep(name: string, root: string = ROOT): Step | undefined {
+  return allSteps(root).find((step) => step.name === name);
 }
 // Shape rules (standard sections 1 to 3). Pure functions, so the fixtures can test them.
 export const STEP_SECTIONS = [

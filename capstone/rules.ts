@@ -5,7 +5,7 @@
 import { Database } from "bun:sqlite";
 import { existsSync, readFileSync, realpathSync } from "node:fs";
 import { join, resolve } from "node:path";
-import type { CapstoneRule } from "../checks/lib/capstone";
+import type { CapstoneRule } from "../checks/capstone";
 
 type Question = { id?: string; question?: string; sql?: string };
 type Card = { id?: string; rows?: number; passed?: boolean };
