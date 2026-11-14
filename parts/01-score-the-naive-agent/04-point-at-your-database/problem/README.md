@@ -39,11 +39,11 @@ flowchart LR
 
 ## If you get stuck
 
-| What you see                       | Fix                                                                  |
-| ---------------------------------- | -------------------------------------------------------------------- |
-| `FAIL path names a SQLite file`    | The path is read from the folder that holds `my-database.toml`.      |
-| `FAIL every table in the file`     | A table you forgot has no block. Add one for each.                   |
-| `FAIL at least three questions`    | One query returns no rows or has a `;` inside. Run it by hand first. |
+| What you see                    | Fix                                                                  |
+| ------------------------------- | -------------------------------------------------------------------- |
+| `FAIL path names a SQLite file` | The path is read from the folder that holds `my-database.toml`.      |
+| `FAIL every table in the file`  | A table you forgot has no block. Add one for each.                   |
+| `FAIL at least three questions` | One query returns no rows or has a `;` inside. Run it by hand first. |
 
 ## Words you will use
 

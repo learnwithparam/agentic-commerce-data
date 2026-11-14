@@ -1,7 +1,7 @@
-// do-it-on-yours: the capstone. The learner hands in their own folder: a database of their own,
-// their questions, a scorecard, traces, a refusal and two honest notes. The check reads only that folder.
-// It proves the shape and that the evidence is real: it re-runs every query on the learner's database
-// and compares the row counts on the scorecard. It never reads the course world.
+// do-it-on-yours: the capstone. The learner hands in their own folder: a database,
+// questions, a scorecard, traces, a refusal and two honest notes. The check reads only that folder.
+// It proves the shape and that the evidence is real: it re-runs every query on the learner's
+// database and compares the row counts on the scorecard. It never reads the course world.
 import { Database } from "bun:sqlite";
 import { existsSync, readFileSync, realpathSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -81,7 +81,7 @@ export default [
     tryNext: "set path to your own .db file and owner to who reads the answers",
   },
   {
-    says: "at least five questions with different ids, each one SELECT that returns rows on your file",
+    says: "five questions with different ids, each one SELECT that returns rows on your file",
     test: (folder) => {
       const counts = rowCounts(folder);
       const found = questions(folder);

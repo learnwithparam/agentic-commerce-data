@@ -1,1 +1,7 @@
-[{"id": "sales-per-shop", "rows": 10, "passed": true}, {"id": "first-day-takings", "rows": 8, "passed": true}, {"id": "cake-by-city", "rows": 9, "passed": true}, {"id": "items-sold", "rows": 10, "passed": true}, {"id": "busiest-day", "rows": 8, "passed": true}]
+[
+  { "id": "sales-per-shop", "rows": 10, "passed": true },
+  { "id": "first-day-takings", "rows": 8, "passed": true },
+  { "id": "cake-by-city", "rows": 9, "passed": true },
+  { "id": "items-sold", "rows": 10, "passed": true },
+  { "id": "busiest-day", "rows": 8, "passed": true }
+]

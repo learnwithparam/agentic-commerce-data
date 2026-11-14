@@ -1,7 +1,8 @@
 """Who may read what. Run it by hand:
 
   uv run python access.py check partner "SELECT * FROM customers"
-  echo '{"columns": ["customer_unique_id"], "rows": [["abc"]]}' | uv run python access.py mask analyst
+  echo '{"columns": ["customer_unique_id"], "rows": [["abc"]]}' \
+    | uv run python access.py mask analyst
 
 `check` prints {"ok": true, "sql": ...} or {"ok": false, "reason": ...}.
 `mask` reads {"columns": [...], "rows": [[...]]} on stdin and prints {"rows": [[...]]}.
@@ -28,9 +29,9 @@ class AccessDeniedError(Exception):
 def check(role: str, sql: str) -> str:
     """Return the query when the role may run it, or raise AccessDeniedError.
 
-    TODO(mask-the-private-columns): today every role may read every table. Use sqlglot to find every
-    table the query reads, including tables inside joins and WITH clauses. Raise when the role may not
-    read one of them, and raise for a role that is not in TABLES_BY_ROLE.
+    TODO(mask-the-private-columns): today every role may read every table. Use sqlglot to find
+    every table the query reads, including tables inside joins and WITH clauses. Raise when the
+    role may not read one of them, and raise for a role that is not in TABLES_BY_ROLE.
     """
     return sql
 

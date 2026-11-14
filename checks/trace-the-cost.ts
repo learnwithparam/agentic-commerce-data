@@ -1,5 +1,6 @@
-// trace-the-cost: every question leaves a trace with its time, tokens and cost, and a report reads them.
-// The check runs the learner's trace.py with questions it makes up, and reads the JSON and the log file.
+// biome-ignore-all lint/style/useNamingConvention: the trace JSON keys are snake_case
+// trace-the-cost: every question leaves a trace with its time, tokens and cost.
+// The check runs the learner's trace.py on made-up questions, and reads the JSON and the log file.
 import { existsSync, mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -35,7 +36,8 @@ function trace(folder: string, question: string, steps: Step[], log: string): Tr
   return (jsonOutput(run) ?? {}) as Trace;
 }
 
-const near = (a: number | undefined, b: number) => typeof a === "number" && Math.abs(a - b) < 1e-5;
+const near = (found: number | undefined, wanted: number) =>
+  typeof found === "number" && Math.abs(found - wanted) < 1e-5;
 
 // Eight questions with 1 to 8 seconds, so the 95th percentile by nearest rank is 8.
 function eightQuestions(folder: string, log: string) {

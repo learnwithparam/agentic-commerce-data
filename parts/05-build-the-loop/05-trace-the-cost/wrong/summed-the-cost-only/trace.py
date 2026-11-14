@@ -1,6 +1,7 @@
 """Trace one question: how long each step took, how many tokens it used, and what it cost.
 
-  echo '{"question": "How many orders?", "steps": [{"name": "route", "seconds": 0.4, "tokens_in": 300, "tokens_out": 20}]}' \
+  echo '{"question": "How many orders?", "steps": [
+      {"name": "route", "seconds": 0.4, "tokens_in": 300, "tokens_out": 20}]}' \
     | uv run python trace.py trace --log traces.jsonl
   uv run python trace.py report --log traces.jsonl
 
@@ -38,17 +39,13 @@ def build_trace(question: str, steps: list[dict]) -> dict:
 
 
 def append_to_log(trace: dict, path: str) -> None:
-    """Add the trace to the log as one JSON line.
-
-    """
+    """Add the trace to the log as one JSON line."""
     with open(path, "a", encoding="utf-8") as log_file:
         log_file.write(json.dumps(trace) + "\n")
 
 
 def report(traces: list[dict]) -> dict:
-    """Return {"questions", "total_cost_usd", "slowest_question", "p95_seconds"}.
-
-    """
+    """Return {"questions", "total_cost_usd", "slowest_question", "p95_seconds"}."""
     if not traces:
         return {"questions": 0, "total_cost_usd": 0, "slowest_question": None, "p95_seconds": 0}
     seconds = sorted(trace["seconds"] for trace in traces)

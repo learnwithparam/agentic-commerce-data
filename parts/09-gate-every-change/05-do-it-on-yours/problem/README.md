@@ -46,11 +46,11 @@ count fails.
 
 ## If you get stuck
 
-| What you see                      | Fix                                                                  |
-| --------------------------------- | -------------------------------------------------------------------- |
-| `FAIL the scorecard has a line`   | Run each query and copy its row count. Do not guess it.              |
-| `FAIL at least three traces`      | The `question` in a trace must match a question in `golden.toml`.    |
-| `FAIL notes.md says`              | Each paragraph needs about twenty words from what really happened.   |
+| What you see                    | Fix                                                                |
+| ------------------------------- | ------------------------------------------------------------------ |
+| `FAIL the scorecard has a line` | Run each query and copy its row count. Do not guess it.            |
+| `FAIL at least three traces`    | The `question` in a trace must match a question in `golden.toml`.  |
+| `FAIL notes.md says`            | Each paragraph needs about twenty words from what really happened. |
 
 ## Words you will use
 

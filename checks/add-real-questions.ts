@@ -1,16 +1,18 @@
-// add-real-questions: the learner adds questions that real people asked, each with a query that runs
-// on the course database and a note that says how the answer was checked by hand.
+// add-real-questions: the learner adds questions that real people asked.
+// Each has a query that runs on the course database and a note on how it was checked by hand.
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Rule } from "../scripts/verify";
 import { tryRunSql } from "./lib/db";
 import { loadGolden, TRAP_LABELS } from "./lib/golden";
 
-type Entry = {
+// The key asked_by keeps its underscore, as it is written in the TOML file.
+type KeysWithUnderscores = Partial<Record<"asked_by", string>>;
+
+type Entry = KeysWithUnderscores & {
   id?: string;
   question?: string;
   source?: string;
-  asked_by?: string;
   traps?: string[];
   note?: string;
   sql?: string;
@@ -40,7 +42,10 @@ export default [
       const found = entries(folder);
       return (
         found.length >= 5 &&
-        found.every((e) => e.source === "real" && words(e.asked_by) >= 1 && words(e.question) >= 4)
+        found.every(
+          (entry) =>
+            entry.source === "real" && words(entry.asked_by) >= 1 && words(entry.question) >= 4,
+        )
       );
     },
     tryNext: 'add [[question]] blocks with source = "real", asked_by and a full question',
@@ -50,12 +55,12 @@ export default [
     test: (folder) => {
       const found = entries(folder);
       const golden = loadGolden();
-      const ids = new Set(golden.map((q) => q.id));
-      const texts = new Set(golden.map((q) => squash(q.question)));
-      for (const e of found) {
-        if (!e.id || ids.has(e.id) || texts.has(squash(e.question))) return false;
-        ids.add(e.id);
-        texts.add(squash(e.question));
+      const ids = new Set(golden.map((golden) => golden.id));
+      const texts = new Set(golden.map((golden) => squash(golden.question)));
+      for (const entry of found) {
+        if (!entry.id || ids.has(entry.id) || texts.has(squash(entry.question))) return false;
+        ids.add(entry.id);
+        texts.add(squash(entry.question));
       }
       return found.length > 0;
     },
@@ -66,8 +71,8 @@ export default [
     test: async (folder) => {
       const found = entries(folder);
       if (found.length === 0) return false;
-      for (const e of found) {
-        const sql = (e.sql ?? "").trim().replace(/;$/, "");
+      for (const entry of found) {
+        const sql = (entry.sql ?? "").trim().replace(/;$/, "");
         if (!/^(select|with)\b/i.test(sql) || sql.includes(";")) return false;
         const result = await tryRunSql(sql);
         if (!result || result.rows.length === 0) return false;
@@ -80,11 +85,12 @@ export default [
     says: "trap labels come from the golden set, and at least two questions name a trap",
     test: (folder) => {
       const found = entries(folder);
-      const labelled = found.filter((e) => (e.traps ?? []).length > 0);
+      const labelled = found.filter((entry) => (entry.traps ?? []).length > 0);
       return (
         found.length > 0 &&
         found.every(
-          (e) => Array.isArray(e.traps) && e.traps.every((t) => TRAP_LABELS.includes(t)),
+          (entry) =>
+            Array.isArray(entry.traps) && entry.traps.every((trap) => TRAP_LABELS.includes(trap)),
         ) &&
         labelled.length >= 2
       );
@@ -95,7 +101,7 @@ export default [
     says: "every question has a note of at least ten words on how you checked it by hand",
     test: (folder) => {
       const found = entries(folder);
-      return found.length > 0 && found.every((e) => words(e.note) >= 10);
+      return found.length > 0 && found.every((entry) => words(entry.note) >= 10);
     },
     tryNext: "write in the note what you counted by hand and what you compared it with",
   },

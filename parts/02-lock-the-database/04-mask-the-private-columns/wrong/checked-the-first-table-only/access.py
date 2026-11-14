@@ -1,7 +1,8 @@
 """Who may read what. Run it by hand:
 
   uv run python access.py check partner "SELECT * FROM customers"
-  echo '{"columns": ["customer_unique_id"], "rows": [["abc"]]}' | uv run python access.py mask analyst
+  echo '{"columns": ["customer_unique_id"], "rows": [["abc"]]}' \
+    | uv run python access.py mask analyst
 
 `check` prints {"ok": true, "sql": ...} or {"ok": false, "reason": ...}.
 `mask` reads {"columns": [...], "rows": [[...]]} on stdin and prints {"rows": [[...]]}.

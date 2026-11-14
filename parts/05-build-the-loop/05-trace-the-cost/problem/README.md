@@ -47,11 +47,11 @@ Expect: `Done. All 6 rules pass.`
 
 ## If you get stuck
 
-| What you see                               | Fix                                                                      |
-| ------------------------------------------ | ------------------------------------------------------------------------ |
-| `FAIL ... prices input and output apart`   | Use the input price for `tokens_in` and the output price for `tokens_out`. |
-| `FAIL ... adds one line to the log`        | Open the file with `"a"`, not `"w"`.                                      |
-| `FAIL ... 95th percentile`                 | Sort first. Then take index `ceil(0.95 * count) - 1`.                     |
+| What you see                             | Fix                                                                        |
+| ---------------------------------------- | -------------------------------------------------------------------------- |
+| `FAIL ... prices input and output apart` | Use the input price for `tokens_in` and the output price for `tokens_out`. |
+| `FAIL ... adds one line to the log`      | Open the file with `"a"`, not `"w"`.                                       |
+| `FAIL ... 95th percentile`               | Sort first. Then take index `ceil(0.95 * count) - 1`.                      |
 
 ## Words you will use
 

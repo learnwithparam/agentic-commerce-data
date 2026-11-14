@@ -34,12 +34,12 @@ flowchart LR
 
 42 minutes in 4 steps.
 
-| Step                                                            | Minutes | You produce                                                                | The check reads                                                                                          |
-| --------------------------------------------------------------- | ------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| [open-read-only](01-open-read-only/problem/README.md)           | 8       | `sql_tool.py` opens `file:...?mode=ro`                                     | sends five kinds of write straight to the tool; expects read-only errors and unchanged row counts        |
-| [validate-the-query](02-validate-the-query/problem/README.md)   | 12      | `validator.py` on `sqlglot`: one SELECT, the 9 tables, `LIMIT 1000` added  | the 12 attacks in `checks/attacks.toml` each refused with a reason; all 30 golden reference queries pass |
-| [refuse-the-mutation](03-refuse-the-mutation/problem/README.md) | 10      | `ask.py` refuses "Delete the test orders" and "Set seller ... to inactive" | `ask.py --json` returns `refused: true` and a reason; `data/logs/queries.jsonl` shows no write ran       |
-| [mask-the-private-columns](04-mask-the-private-columns/problem/README.md) | 12 | `access.py`: tables per role, private columns hashed | runs `access.py` for admin, analyst and partner; reads the JSON it prints |
+| Step                                                                      | Minutes | You produce                                                                | The check reads                                                                                          |
+| ------------------------------------------------------------------------- | ------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [open-read-only](01-open-read-only/problem/README.md)                     | 8       | `sql_tool.py` opens `file:...?mode=ro`                                     | sends five kinds of write straight to the tool; expects read-only errors and unchanged row counts        |
+| [validate-the-query](02-validate-the-query/problem/README.md)             | 12      | `validator.py` on `sqlglot`: one SELECT, the 9 tables, `LIMIT 1000` added  | the 12 attacks in `checks/attacks.toml` each refused with a reason; all 30 golden reference queries pass |
+| [refuse-the-mutation](03-refuse-the-mutation/problem/README.md)           | 10      | `ask.py` refuses "Delete the test orders" and "Set seller ... to inactive" | `ask.py --json` returns `refused: true` and a reason; `data/logs/queries.jsonl` shows no write ran       |
+| [mask-the-private-columns](04-mask-the-private-columns/problem/README.md) | 12      | `access.py`: tables per role, private columns hashed                       | runs `access.py` for admin, analyst and partner; reads the JSON it prints                                |
 
 Each step folder holds its own files. A step starts from the work of the step before it, already done.
 
@@ -114,12 +114,12 @@ in `ask.py`.
 
 **How it is graded.** Each line is yes or no.
 
-| Question                                                                             | How it is checked                    |
-| ------------------------------------------------------------------------------------ | ------------------------------------ |
-| Does every write sent straight to the tool fail with a read-only error?              | `bun run verify open-read-only`      |
-| Are 12 of 12 attacks refused, each with a reason, and do all 30 golden queries pass? | `bun run verify validate-the-query`  |
-| Is every write request refused with a reason, with no write in the query log?        | `bun run verify refuse-the-mutation` |
-| Is each role limited to its tables, with private columns hidden? | `bun run verify mask-the-private-columns` |
+| Question                                                                             | How it is checked                         |
+| ------------------------------------------------------------------------------------ | ----------------------------------------- |
+| Does every write sent straight to the tool fail with a read-only error?              | `bun run verify open-read-only`           |
+| Are 12 of 12 attacks refused, each with a reason, and do all 30 golden queries pass? | `bun run verify validate-the-query`       |
+| Is every write request refused with a reason, with no write in the query log?        | `bun run verify refuse-the-mutation`      |
+| Is each role limited to its tables, with private columns hidden?                     | `bun run verify mask-the-private-columns` |
 
 **Extension, not graded.** Write 3 new attack strings that the course list misses. Add them to a copy of
 `checks/attacks.toml` and show your validator refuses them.

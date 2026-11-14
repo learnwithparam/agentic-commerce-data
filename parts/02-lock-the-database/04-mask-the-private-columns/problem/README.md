@@ -49,10 +49,10 @@ Expect: `Done. All 7 rules pass.`
 
 ## If you get stuck
 
-| What you see                              | Fix                                                                  |
-| ----------------------------------------- | -------------------------------------------------------------------- |
-| `FAIL ... hides in a join`                | Loop over `find_all(exp.Table)`. Do not stop at the first table.     |
-| `FAIL ... a role that is not in the list` | Use `TABLES_BY_ROLE.get(role)`. When it is `None`, raise.            |
+| What you see                              | Fix                                                                      |
+| ----------------------------------------- | ------------------------------------------------------------------------ |
+| `FAIL ... hides in a join`                | Loop over `find_all(exp.Table)`. Do not stop at the first table.         |
+| `FAIL ... a role that is not in the list` | Use `TABLES_BY_ROLE.get(role)`. When it is `None`, raise.                |
 | `FAIL ... same token for the same person` | Hash the value. A fixed word such as `***` gives every person one token. |
 
 ## Words you will use

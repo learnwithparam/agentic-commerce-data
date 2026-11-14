@@ -1,8 +1,9 @@
 // point-at-your-database: the learner's own SQLite file, described in my-database.toml.
-// The check opens the learner's file read-only, never the course world, and runs their queries on it.
+// The check opens the learner's file read-only, never the course world.
+// It runs the learner's queries on that file.
 import { Database } from "bun:sqlite";
 import { existsSync, readFileSync, realpathSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { join, resolve } from "node:path";
 import type { Rule } from "../scripts/verify";
 import { DB_PATH } from "../world/build";
 
@@ -12,7 +13,7 @@ type Description = {
   question?: { question?: string; sql?: string }[];
 };
 
-function describe(folder: string): Description | null {
+function readDescription(folder: string): Description | null {
   const file = join(folder, "my-database.toml");
   if (!existsSync(file)) return null;
   try {
@@ -23,7 +24,7 @@ function describe(folder: string): Description | null {
 }
 
 function databaseFile(folder: string): string | null {
-  const given = describe(folder)?.path;
+  const given = readDescription(folder)?.path;
   if (!given) return null;
   const file = resolve(folder, given);
   return existsSync(file) ? realpathSync(file) : null;
@@ -50,8 +51,11 @@ const tablesOf = (database: Database): string[] =>
       .all() as { name: string }[]
   ).map((row) => row.name);
 
-const isOneSelect = (sql: string) =>
-  /^\s*(select|with)\b/i.test(sql) && !sql.trim().replace(/;$/, "").includes(";");
+function isOneSelect(sql: string): boolean {
+  const withoutEnd = sql.trim().replace(/;$/, "");
+  const startsRight = /^\s*(select|with)\b/i.test(withoutEnd);
+  return startsRight && !withoutEnd.includes(";");
+}
 
 export default [
   {
@@ -82,7 +86,7 @@ export default [
       withDatabase(
         folder,
         (database) => {
-          const blocks = describe(folder)?.table ?? [];
+          const blocks = readDescription(folder)?.table ?? [];
           return tablesOf(database).every((name) =>
             blocks.some(
               (block) => block.name === name && (block.grain ?? "").trim().split(/\s+/).length >= 3,
@@ -99,7 +103,7 @@ export default [
       withDatabase(
         folder,
         (database) => {
-          const questions = describe(folder)?.question ?? [];
+          const questions = readDescription(folder)?.question ?? [];
           const working = questions.filter((entry) => {
             const sql = entry.sql ?? "";
             if (!isOneSelect(sql) || (entry.question ?? "").trim().split(/\s+/).length < 3)

@@ -58,7 +58,7 @@ Add `--folder solution` after the step name to run the sample solution instead.
 | [correct-the-error](02-correct-the-error/problem/README.md)     | 10      | `retry.py`: on an error or no rows, rewrite and retry at most twice  | 5 broken queries, 3 runs: at least 4 answers match the golden rows; the ledger shows at most 2 retries |
 | [check-the-relevance](03-check-the-relevance/problem/README.md) | 8       | `relevance.py`: a relevance check on review hits                     | the review ids your answer cites; none of the 5 off-topic reviews is among them                        |
 | [cite-the-rows](04-cite-the-rows/problem/README.md)             | 15      | `cite.py`: every number cites a query and rows; every quote a review | every cited query, run again; every cited review, looked up                                            |
-| [trace-the-cost](05-trace-the-cost/problem/README.md) | 10 | `trace.py`: time, tokens and cost per question, and a report | runs `trace.py` on made-up questions; reads the JSON and the log file |
+| [trace-the-cost](05-trace-the-cost/problem/README.md)           | 10      | `trace.py`: time, tokens and cost per question, and a report         | runs `trace.py` on made-up questions; reads the JSON and the log file                                  |
 
 ## Walkthrough
 

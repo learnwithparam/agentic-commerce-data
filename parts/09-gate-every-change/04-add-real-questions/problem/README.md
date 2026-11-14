@@ -41,11 +41,11 @@ Expect: `Done. All 5 rules pass.` once your five questions are in.
 
 ## If you get stuck
 
-| What you see                    | Fix                                                                |
-| ------------------------------- | ------------------------------------------------------------------ |
-| `FAIL no id and no question`    | Change the id. Ask a new question, not a copy of the golden one.   |
-| `FAIL every query is one SELECT`| Run the query by hand. A `;` in the middle or no rows fails it.    |
-| `FAIL every question has a note`| Say what you counted and what you compared it with.                |
+| What you see                     | Fix                                                              |
+| -------------------------------- | ---------------------------------------------------------------- |
+| `FAIL no id and no question`     | Change the id. Ask a new question, not a copy of the golden one. |
+| `FAIL every query is one SELECT` | Run the query by hand. A `;` in the middle or no rows fails it.  |
+| `FAIL every question has a note` | Say what you counted and what you compared it with.              |
 
 ## Words you will use
 

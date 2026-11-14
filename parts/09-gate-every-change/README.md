@@ -49,13 +49,13 @@ These files come with the part. You do not change them:
 
 57 minutes in 5 steps.
 
-| Step                                                      | Minutes | You produce                                                          | The check reads                                                                            |
-| --------------------------------------------------------- | ------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| [gate-the-change](01-gate-the-change/problem/README.md)   | 10      | gate rules: 3 runs, the median run, every trap, every attack         | the gate's decision on six pretend agents with known scores, and the scorecard it writes   |
-| [catch-the-drift](02-catch-the-drift/problem/README.md)   | 8       | a metric change in `metrics.toml` and the golden references together | the new late count worked out by the check, the drift rule, and the gate on the desk agent |
-| [mutate-the-agent](03-mutate-the-agent/problem/README.md) | 7       | `mutants.toml`: no value index, `customer_id`, no validator          | the gate on the unbroken agent (pass) and on one copy per mutant (block)                   |
-| [add-real-questions](04-add-real-questions/problem/README.md) | 12 | `real-questions.toml`: five questions people really ask, each with a hand-checked note | each query on the database, the labels and the notes |
-| [do-it-on-yours](05-do-it-on-yours/problem/README.md) | 20 | a capstone folder on your own database: questions, scorecard, traces, a refusal, notes | your folder only; it runs your queries again and compares the scorecard |
+| Step                                                          | Minutes | You produce                                                                            | The check reads                                                                            |
+| ------------------------------------------------------------- | ------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| [gate-the-change](01-gate-the-change/problem/README.md)       | 10      | gate rules: 3 runs, the median run, every trap, every attack                           | the gate's decision on six pretend agents with known scores, and the scorecard it writes   |
+| [catch-the-drift](02-catch-the-drift/problem/README.md)       | 8       | a metric change in `metrics.toml` and the golden references together                   | the new late count worked out by the check, the drift rule, and the gate on the desk agent |
+| [mutate-the-agent](03-mutate-the-agent/problem/README.md)     | 7       | `mutants.toml`: no value index, `customer_id`, no validator                            | the gate on the unbroken agent (pass) and on one copy per mutant (block)                   |
+| [add-real-questions](04-add-real-questions/problem/README.md) | 12      | `real-questions.toml`: five questions people really ask, each with a hand-checked note | each query on the database, the labels and the notes                                       |
+| [do-it-on-yours](05-do-it-on-yours/problem/README.md)         | 20      | a capstone folder on your own database: questions, scorecard, traces, a refusal, notes | your folder only; it runs your queries again and compares the scorecard                    |
 
 ## Walkthrough
 
@@ -143,14 +143,14 @@ Hand in a commit on your course repo with your three finished step folders and t
 The course owner can then run the gate command in CI on every push. The grader answers each question with yes or
 no:
 
-| #   | Question                                                                              | How it is checked                 |
-| --- | ------------------------------------------------------------------------------------- | --------------------------------- |
-| 1   | Do your rules judge the median of 3 runs, every trap and every attack?                | `bun run verify gate-the-change`  |
-| 2   | Does `SCORECARD.md` show the median golden score and 12 of 12 attacks refused?        | the grader runs the gate again    |
-| 3   | Did the late metric and its golden references change together, with the gate passing? | `bun run verify catch-the-drift`  |
-| 4   | Does the gate block all three mutants and pass the unbroken agent?                    | `bun run verify mutate-the-agent` |
-| 5   | Are five real questions added, each with a hand-checked note?                          | `bun run verify add-real-questions` |
-| 6   | Does your own database pass the capstone, with a scorecard that matches a fresh run?   | `bun run verify do-it-on-yours`   |
+| #   | Question                                                                              | How it is checked                   |
+| --- | ------------------------------------------------------------------------------------- | ----------------------------------- |
+| 1   | Do your rules judge the median of 3 runs, every trap and every attack?                | `bun run verify gate-the-change`    |
+| 2   | Does `SCORECARD.md` show the median golden score and 12 of 12 attacks refused?        | the grader runs the gate again      |
+| 3   | Did the late metric and its golden references change together, with the gate passing? | `bun run verify catch-the-drift`    |
+| 4   | Does the gate block all three mutants and pass the unbroken agent?                    | `bun run verify mutate-the-agent`   |
+| 5   | Are five real questions added, each with a hand-checked note?                         | `bun run verify add-real-questions` |
+| 6   | Does your own database pass the capstone, with a scorecard that matches a fresh run?  | `bun run verify do-it-on-yours`     |
 
 Extension, not graded: swap the model in `config/models.py`, set a provider and a key, run the gate, and write
 down which questions moved.

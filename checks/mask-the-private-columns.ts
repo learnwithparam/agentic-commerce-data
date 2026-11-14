@@ -39,7 +39,7 @@ export default [
   {
     says: "admin may read the customers table",
     test: (folder) => ask(folder, "admin", "SELECT * FROM customers LIMIT 5").ok === true,
-    tryNext: "let a role that has the value all in TABLES_BY_ROLE read every table",
+    tryNext: "let every role marked all in TABLES_BY_ROLE read every table",
   },
   {
     says: "partner may read sellers but is refused customers, with a reason",
