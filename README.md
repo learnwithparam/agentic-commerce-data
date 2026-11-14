@@ -103,19 +103,19 @@ Start in [00-orientation](00-orientation/README.md). Each step has one check com
 | Part                                                                                                | Minutes | Status   |
 | --------------------------------------------------------------------------------------------------- | ------- | -------- |
 | [orientation](00-orientation/README.md): meet the desk                                              | 15      | ready    |
-| [score-the-naive-agent](parts/01-score-the-naive-agent/README.md)                                   | 35      | ready    |
-| [lock-the-database](parts/02-lock-the-database/README.md)                                           | 30      | ready    |
+| [score-the-naive-agent](parts/01-score-the-naive-agent/README.md)                                   | 47      | ready    |
+| [lock-the-database](parts/02-lock-the-database/README.md)                                           | 42      | ready    |
 | [define-the-metrics](parts/03-define-the-metrics/README.md)                                         | 35      | ready    |
 | [retrieve-the-context](parts/04-retrieve-the-context/README.md)                                     | 45      | ready    |
-| [build-the-loop](parts/05-build-the-loop/README.md)                                                 | 45      | ready    |
+| [build-the-loop](parts/05-build-the-loop/README.md)                                                 | 55      | ready    |
 | [answer-with-ui](parts/06-answer-with-ui/README.md)                                                 | 40      | ready    |
 | [approve-the-write](parts/07-approve-the-write/README.md)                                           | 25      | ready    |
 | [delegate-over-a2a](parts/08-delegate-over-a2a/README.md)                                           | 35      | ready    |
-| [gate-every-change](parts/09-gate-every-change/README.md)                                           | 25      | ready    |
+| [gate-every-change](parts/09-gate-every-change/README.md)                                           | 57      | ready    |
 | [serve-the-logistics-agent-with-a2a-sdk](parts/10-serve-the-logistics-agent-with-a2a-sdk/README.md) | 15      | optional |
 | [track-changed-facts-with-graphiti](parts/11-track-changed-facts-with-graphiti/README.md)           | 20      | optional |
 
-The steps take 365 minutes in total. The file [schedules.toml](schedules.toml) splits them into sessions. You can
+The steps take 431 minutes in total. The file [schedules.toml](schedules.toml) splits them into sessions. You can
 do them in one long session, in four evenings, or in six sessions a week apart. The file [PARTS.md](PARTS.md) lists every
 step and what its check reads.
 

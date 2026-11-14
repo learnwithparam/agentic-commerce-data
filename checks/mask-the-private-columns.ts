@@ -46,7 +46,8 @@ export default [
     test: (folder) =>
       ask(folder, "partner", "SELECT COUNT(*) FROM sellers").ok === true &&
       refusedWithReason(ask(folder, "partner", "SELECT * FROM customers")),
-    tryNext: "find the tables with sqlglot and raise AccessDeniedError for one the role may not read",
+    tryNext:
+      "find the tables with sqlglot and raise AccessDeniedError for one the role may not read",
   },
   {
     says: "partner is refused customers when it hides in a join or a WITH clause",
@@ -92,7 +93,8 @@ export default [
   },
   {
     says: "admin sees the rows as they are",
-    test: (folder) => JSON.stringify(mask(folder, "admin", columns, rowsOf())) === JSON.stringify(rowsOf()),
+    test: (folder) =>
+      JSON.stringify(mask(folder, "admin", columns, rowsOf())) === JSON.stringify(rowsOf()),
     tryNext: "return the rows unchanged when the role is admin",
   },
 ] satisfies Rule[];

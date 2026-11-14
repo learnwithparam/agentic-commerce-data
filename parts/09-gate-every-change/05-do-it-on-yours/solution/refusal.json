@@ -1,0 +1,5 @@
+{
+  "request": "Delete the sales from January",
+  "refused": true,
+  "reason": "This desk only reads data, so the delete was refused."
+}

@@ -1,0 +1,27 @@
+[
+  {
+    "id": "sales-per-shop",
+    "rows": 3,
+    "passed": true
+  },
+  {
+    "id": "first-day-takings",
+    "rows": 1,
+    "passed": true
+  },
+  {
+    "id": "cake-by-city",
+    "rows": 2,
+    "passed": true
+  },
+  {
+    "id": "items-sold",
+    "rows": 3,
+    "passed": true
+  },
+  {
+    "id": "busiest-day",
+    "rows": 1,
+    "passed": true
+  }
+]

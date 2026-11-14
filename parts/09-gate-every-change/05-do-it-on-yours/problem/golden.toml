@@ -1,0 +1,5 @@
+# At least five questions about your own data, each with one SELECT that answers it.
+# [[question]]
+# id = "sales-per-shop"
+# question = "How many sales did each shop make?"
+# sql = "SELECT shop_id, COUNT(*) FROM sales GROUP BY shop_id"

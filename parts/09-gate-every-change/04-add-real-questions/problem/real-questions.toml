@@ -1,0 +1,18 @@
+# Real questions from the people who use the desk. Add at least five.
+# Copy a block, change every line, and delete this comment. The check runs each sql on the course database.
+#
+# id        a short unique name, such as "canceled-orders-2018"
+# source    always "real"
+# asked_by  who asked it, such as "seller success lead"
+# traps     labels from the golden set: spelling, customer-id, fan-out, undefined-metric,
+#           date-text, status-filter, translation. Use [] when none apply.
+# note      how you checked the answer by hand
+#
+# [[question]]
+# id = "canceled-orders-2018"
+# question = "How many orders were canceled in 2018?"
+# source = "real"
+# asked_by = "support lead"
+# traps = ["status-filter", "date-text"]
+# note = "Counted canceled orders by purchase year by hand on a small slice, then matched the full count."
+# sql = "SELECT COUNT(*) FROM orders WHERE order_status = 'canceled' AND substr(order_purchase_timestamp, 1, 4) = '2018'"
