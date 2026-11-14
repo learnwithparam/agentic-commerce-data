@@ -50,7 +50,7 @@ Add `--folder solution` after the step name to run the sample solution instead.
 
 ## Steps
 
-45 minutes in 4 steps.
+55 minutes in 5 steps.
 
 | Step                                                            | Minutes | You produce                                                          | The check reads                                                                                        |
 | --------------------------------------------------------------- | ------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
@@ -58,6 +58,7 @@ Add `--folder solution` after the step name to run the sample solution instead.
 | [correct-the-error](02-correct-the-error/problem/README.md)     | 10      | `retry.py`: on an error or no rows, rewrite and retry at most twice  | 5 broken queries, 3 runs: at least 4 answers match the golden rows; the ledger shows at most 2 retries |
 | [check-the-relevance](03-check-the-relevance/problem/README.md) | 8       | `relevance.py`: a relevance check on review hits                     | the review ids your answer cites; none of the 5 off-topic reviews is among them                        |
 | [cite-the-rows](04-cite-the-rows/problem/README.md)             | 15      | `cite.py`: every number cites a query and rows; every quote a review | every cited query, run again; every cited review, looked up                                            |
+| [trace-the-cost](05-trace-the-cost/problem/README.md) | 10 | `trace.py`: time, tokens and cost per question, and a report | runs `trace.py` on made-up questions; reads the JSON and the log file |
 
 ## Walkthrough
 
@@ -99,11 +100,19 @@ bun run verify cite-the-rows
 
 Expect: `Done. All 5 rules pass.`
 
+Trace what each question costs:
+
+```bash
+bun run verify trace-the-cost
+```
+
+Expect: `Done. All 6 rules pass.`
+
 ```bash
 bun run verify part build-the-loop
 ```
 
-Expect: `Part build-the-loop is done: 4/4 steps pass.`
+Expect: `Part build-the-loop is done: 5/5 steps pass.`
 
 ## Assignment
 
@@ -118,6 +127,7 @@ relevance check, and citations.
 2. Does `bun run verify correct-the-error` pass, with at least 4 of 5 answers right?
 3. Does `bun run verify check-the-relevance` pass?
 4. Does `bun run verify cite-the-rows` pass?
+5. Does `bun run verify trace-the-cost` pass?
 
 **Extension, not graded.** Add a reviewer pass: a second model call that checks each answer before it goes out.
 Record how accuracy, tokens and time change. Anthropic reports that its adversarial review added 6% accuracy for
