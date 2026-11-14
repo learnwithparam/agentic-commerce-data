@@ -8,7 +8,7 @@ resolution-markers = [
 ]
 
 [[package]]
-name = "agentic-commerce-data"
+name = "agentic-ops-data"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
