@@ -9,7 +9,7 @@ In delegate-over-a2a you served an agent with a hand-built A2A server. Replace i
 
 The starter is `server.py` in this folder. It imports the SDK and the agent function, and serves nothing yet.
 `client.py` is ready. The steps are in
-[serve-with-the-sdk](../parts/10-do-it-with-the-tools-teams-run/01-serve-with-the-sdk/problem/README.md).
+[serve-with-the-sdk](../parts/10-serve-the-logistics-agent-with-a2a-sdk/01-serve-with-the-sdk/problem/README.md).
 This folder has no compose file, because the course needs no containers.
 
 Write `CHOICE.md` as well: two sentences on when you would use ADK's A2A support instead of the SDK.

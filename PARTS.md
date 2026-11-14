@@ -110,9 +110,9 @@ and no step folders, and `bun run check` skips them until their steps exist.
 - `gate-every-change`: the gate cannot be a GitHub workflow written by a session that may not touch `.github/`;
   make it a command (`bun run verify gate-the-change`) and leave the workflow file to the course owner.
 
-### do-it-with-the-tools-teams-run (`parts/10-do-it-with-the-tools-teams-run/`), 15 minutes
+### serve-the-logistics-agent-with-a2a-sdk (`parts/10-serve-the-logistics-agent-with-a2a-sdk/`), 15 minutes
 
-Optional in the live session, expected as homework. It redoes one hand-built thing with the tool teams run.
+Optional in the live session, expected as homework. It redoes one hand-built thing with the tool a team would run, the official `a2a-sdk`.
 
 | Step                 | Minutes | The learner produces                            | What the check reads                                                                                              |
 | -------------------- | ------- | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |

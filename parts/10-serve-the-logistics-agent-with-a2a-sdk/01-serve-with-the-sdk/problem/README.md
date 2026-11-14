@@ -39,7 +39,7 @@ Do not copy the agent's logic into `server.py`. The executor calls the function 
 `client.py` is ready. Start your server in one terminal:
 
 ```bash
-uv run parts/10-do-it-with-the-tools-teams-run/01-serve-with-the-sdk/problem/server.py --port 8812
+uv run parts/10-serve-the-logistics-agent-with-a2a-sdk/01-serve-with-the-sdk/problem/server.py --port 8812
 ```
 
 Expect: `The SDK agent is serving on http://127.0.0.1:8812`. Press Ctrl+C when you are done.
@@ -47,7 +47,7 @@ Expect: `The SDK agent is serving on http://127.0.0.1:8812`. Press Ctrl+C when y
 Then ask a question with the SDK client in a second terminal:
 
 ```bash
-uv run parts/10-do-it-with-the-tools-teams-run/01-serve-with-the-sdk/problem/client.py http://127.0.0.1:8812 9b189f6cf2ef734a7dd0419ed3c64d99
+uv run parts/10-serve-the-logistics-agent-with-a2a-sdk/01-serve-with-the-sdk/problem/client.py http://127.0.0.1:8812 9b189f6cf2ef734a7dd0419ed3c64d99
 ```
 
 Expect: `9b189f6c: Carrier Coast, sent back to the depot after a failed delivery attempt.`
