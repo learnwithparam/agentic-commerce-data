@@ -6,7 +6,7 @@ Numbers say what happened. Reviews say why. A category manager sees late deliver
 "What do customers say about late delivery?" The answer is in 40,977 written comments, and they are in
 Portuguese.
 
-For example, seller `1f50f920176fa81dab994f9023523100` had many reviews on orders placed in November 2017. One says
+For example, seller `1f50f920176fa81dab994f9023523100` had many reviews on orders placed in one November. One says
 "Atraso na entrega nunca é bom sinal", which means "A late delivery is never a good sign". A search for the English
 word "late" finds nothing in it.
 

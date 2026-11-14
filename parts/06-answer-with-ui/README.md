@@ -35,13 +35,13 @@ sample solution instead.
 
 ## Steps
 
-40 minutes in 3 steps.
+An evening in 3 steps.
 
-| Step                                                              | Minutes | You produce                                                                        | The check reads                                                                                            |
-| ----------------------------------------------------------------- | ------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| [render-the-answer](01-render-the-answer/problem/README.md)       | 15      | `render.py`: A2UI v1.0 messages with Table, LineChart, AssumptionCard, ReviewQuote | for 5 golden questions and the Sao Paulo question, the rows the table points to equal `rows`               |
-| [validate-the-surface](02-validate-the-surface/problem/README.md) | 10      | `validate.py`: a check against the pinned A2UI v1.0 schemas, plus two tree rules   | 5 broken surfaces rejected with the failing JSON path; 6 golden surfaces valid                             |
-| [stream-the-events](03-stream-the-events/problem/README.md)       | 15      | `server.py`: `POST /ask` streams AG-UI events                                      | the event order, that the tool call ends after the work, and that the first event arrives within 2 seconds |
+| Step                                                              | Minutes | You produce                                                                   | The check reads                                                                                            |
+| ----------------------------------------------------------------- | ------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| [render-the-answer](01-render-the-answer/problem/README.md)       | 15      | `render.py`: A2UI messages with Table, LineChart, AssumptionCard, ReviewQuote | for 5 golden questions and the Sao Paulo question, the rows the table points to equal `rows`               |
+| [validate-the-surface](02-validate-the-surface/problem/README.md) | 10      | `validate.py`: a check against the pinned A2UI schemas, plus two tree rules   | 5 broken surfaces rejected with the failing JSON path; 6 golden surfaces valid                             |
+| [stream-the-events](03-stream-the-events/problem/README.md)       | 15      | `server.py`: `POST /ask` streams AG-UI events                                 | the event order, that the tool call ends after the work, and that the first event arrives within 2 seconds |
 
 ## Walkthrough
 
@@ -106,7 +106,7 @@ a seller, the run ends with a question to a person, and nothing changes until th
 
 ## Read before or after
 
-- [A2UI specification v1.0](https://a2ui.org/specification/v1.0-a2ui/). The messages the agent sends, and why a
+- [A2UI specification](https://a2ui.org/specification/v1.0-a2ui/). The messages the agent sends, and why a
   catalog makes the screen data, not code.
 - [AG-UI events](https://docs.ag-ui.com/concepts/events). The event types used in stream-the-events.
 - [MCP Apps](https://blog.modelcontextprotocol.io/posts/2026-01-26-mcp-apps/). Another way to show a UI, inside

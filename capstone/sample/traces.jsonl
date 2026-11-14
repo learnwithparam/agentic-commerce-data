@@ -1,0 +1,3 @@
+{"question": "How many sales did each shop make?", "seconds": 1.5, "tokens_in": 900, "tokens_out": 80, "cost_usd": 0.0039}
+{"question": "How much did the bakery take in on the first of January?", "seconds": 2.5, "tokens_in": 900, "tokens_out": 80, "cost_usd": 0.0039}
+{"question": "Which city sold the most cake?", "seconds": 3.5, "tokens_in": 900, "tokens_out": 80, "cost_usd": 0.0039}

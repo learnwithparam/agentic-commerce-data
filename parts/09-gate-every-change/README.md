@@ -47,13 +47,15 @@ These files come with the part. You do not change them:
 
 ## Steps
 
-25 minutes in 3 steps.
+An evening in 5 steps.
 
-| Step                                                      | Minutes | You produce                                                          | The check reads                                                                            |
-| --------------------------------------------------------- | ------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| [gate-the-change](01-gate-the-change/problem/README.md)   | 10      | gate rules: 3 runs, the median run, every trap, every attack         | the gate's decision on six pretend agents with known scores, and the scorecard it writes   |
-| [catch-the-drift](02-catch-the-drift/problem/README.md)   | 8       | a metric change in `metrics.toml` and the golden references together | the new late count worked out by the check, the drift rule, and the gate on the desk agent |
-| [mutate-the-agent](03-mutate-the-agent/problem/README.md) | 7       | `mutants.toml`: no value index, `customer_id`, no validator          | the gate on the unbroken agent (pass) and on one copy per mutant (block)                   |
+| Step                                                          | Minutes | You produce                                                                            | The check reads                                                                            |
+| ------------------------------------------------------------- | ------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| [gate-the-change](01-gate-the-change/problem/README.md)       | 10      | gate rules: 3 runs, the median run, every trap, every attack                           | the gate's decision on six pretend agents with known scores, and the scorecard it writes   |
+| [catch-the-drift](02-catch-the-drift/problem/README.md)       | 8       | a metric change in `metrics.toml` and the golden references together                   | the new late count worked out by the check, the drift rule, and the gate on the desk agent |
+| [mutate-the-agent](03-mutate-the-agent/problem/README.md)     | 7       | `mutants.toml`: no value index, `customer_id`, no validator                            | the gate on the unbroken agent (pass) and on one copy per mutant (block)                   |
+| [add-real-questions](04-add-real-questions/problem/README.md) | 12      | `real-questions.toml`: five questions people really ask, each with a hand-checked note | each query on the database, the labels and the notes                                       |
+| [do-it-on-yours](05-do-it-on-yours/problem/README.md)         | 20      | a capstone folder on your own database: questions, scorecard, traces, a refusal, notes | your folder only; it runs your queries again and compares the scorecard                    |
 
 ## Walkthrough
 
@@ -65,7 +67,7 @@ Run every command from the repo root. Each step's files are in its `problem/` fo
 bun parts/09-gate-every-change/gate.ts --rules parts/09-gate-every-change/01-gate-the-change/problem/gate-rules.ts
 ```
 
-Expect: `attacks: 12 of 12 refused`, `run 1: 30 of 30` (and runs 2 and 3), and `The gate passes. Wrote SCORECARD.md.`
+Expect: a line that says 12 of 12 attacks were refused, a line for each of the 3 runs that says 30 of 30, and `The gate passes. Wrote SCORECARD.md.`
 
 ```bash
 bun run verify gate-the-change
@@ -79,7 +81,7 @@ Expect: `Done. All 6 rules pass.`
 bun parts/09-gate-every-change/gate.ts --rules parts/09-gate-every-change/02-catch-the-drift/problem/gate-rules.ts --golden parts/09-gate-every-change/02-catch-the-drift/problem/golden.toml --metrics parts/09-gate-every-change/02-catch-the-drift/problem/metrics.toml
 ```
 
-Expect: `run 1: 28 of 30` (and runs 2 and 3) and `The gate passes.`
+Expect: a line for each of the 3 runs that says 28 of 30, and `The gate passes.`
 
 ```bash
 bun run verify catch-the-drift
@@ -103,18 +105,34 @@ Expect: `Done. All 5 rules pass.`
 
 Then check the whole part:
 
+Add questions that real people ask:
+
+```bash
+bun run verify add-real-questions
+```
+
+Expect: `Done. All 5 rules pass.`
+
+Hand in the capstone on your own data:
+
+```bash
+bun run verify do-it-on-yours
+```
+
+Expect: `Done. All 6 rules pass.`
+
 ```bash
 bun run verify part gate-every-change
 ```
 
-Expect: `Part gate-every-change is done: 3/3 steps pass.`
+Expect: `Part gate-every-change is done: 5/5 steps pass.`
 
 ```text
 Part gate-every-change:
   PASS   gate-the-change  (6/6 rules)
   PASS   catch-the-drift  (4/4 rules)
   PASS   mutate-the-agent  (5/5 rules)
-Part gate-every-change is done: 3/3 steps pass.
+Part gate-every-change is done: 5/5 steps pass.
 ```
 
 ## Assignment
@@ -125,12 +143,14 @@ Hand in a commit on your course repo with your three finished step folders and t
 The course owner can then run the gate command in CI on every push. The grader answers each question with yes or
 no:
 
-| #   | Question                                                                              | How it is checked                 |
-| --- | ------------------------------------------------------------------------------------- | --------------------------------- |
-| 1   | Do your rules judge the median of 3 runs, every trap and every attack?                | `bun run verify gate-the-change`  |
-| 2   | Does `SCORECARD.md` show the median golden score and 12 of 12 attacks refused?        | the grader runs the gate again    |
-| 3   | Did the late metric and its golden references change together, with the gate passing? | `bun run verify catch-the-drift`  |
-| 4   | Does the gate block all three mutants and pass the unbroken agent?                    | `bun run verify mutate-the-agent` |
+| #   | Question                                                                              | How it is checked                   |
+| --- | ------------------------------------------------------------------------------------- | ----------------------------------- |
+| 1   | Do your rules judge the median of 3 runs, every trap and every attack?                | `bun run verify gate-the-change`    |
+| 2   | Does `SCORECARD.md` show the median golden score and 12 of 12 attacks refused?        | the grader runs the gate again      |
+| 3   | Did the late metric and its golden references change together, with the gate passing? | `bun run verify catch-the-drift`    |
+| 4   | Does the gate block all three mutants and pass the unbroken agent?                    | `bun run verify mutate-the-agent`   |
+| 5   | Are five real questions added, each with a hand-checked note?                         | `bun run verify add-real-questions` |
+| 6   | Does your own database pass the capstone, with a scorecard that matches a fresh run?  | `bun run verify do-it-on-yours`     |
 
 Extension, not graded: swap the model in `config/models.py`, set a provider and a key, run the gate, and write
 down which questions moved.
@@ -141,8 +161,8 @@ You now have a gate that any change must pass. It runs the golden set three time
 It keeps every trap, refuses every attack, and refuses a metric that disagrees with its golden references.
 And you proved it bites: it blocked a missing value index, a forgotten customer trap and a missing validator.
 
-This is the last part. For example, your repo now holds a `SCORECARD.md` that says `30 of 30` and
-`12 of 12` attacks refused. That file, the gate behind it and the failures it caught are your project.
+This is the last part. For example, your repo now holds a `SCORECARD.md` that says 30 of 30 and
+12 of 12 attacks refused. That file, the gate behind it and the failures it caught are your project.
 
 ## Read before or after
 

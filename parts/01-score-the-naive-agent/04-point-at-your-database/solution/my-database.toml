@@ -1,0 +1,21 @@
+path = "bakery.db"
+
+[[table]]
+name = "shops"
+grain = "one shop in one city"
+
+[[table]]
+name = "sales"
+grain = "one sale of one item in one shop"
+
+[[question]]
+question = "How many sales did each shop make?"
+sql = "SELECT shop_id, COUNT(*) FROM sales GROUP BY shop_id"
+
+[[question]]
+question = "How much did the bakery take in on the first of January?"
+sql = "SELECT SUM(price) FROM sales WHERE sold_on = '2026-01-01'"
+
+[[question]]
+question = "Which city sold the most cake?"
+sql = "SELECT city, COUNT(*) AS cakes FROM sales JOIN shops USING (shop_id) WHERE item = 'cake' GROUP BY city ORDER BY cakes DESC"

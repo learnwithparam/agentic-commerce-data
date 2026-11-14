@@ -21,7 +21,7 @@ flowchart LR
 
 Open `validate.py` in this folder. Fill in `problems_in(messages)`:
 
-1. Check every message with `kit.schema_problems(index, message)`. It uses the A2UI v1.0 schemas in `schemas/`,
+1. Check every message with `kit.schema_problems(index, message)`. It uses the A2UI schemas in `schemas/`,
    copied from the A2UI project, and the course catalog.
 2. Add two rules the schema cannot see. One component must have the id `root`. Every child id that a `Column`
    names must be a component of the surface.

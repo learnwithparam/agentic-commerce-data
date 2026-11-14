@@ -62,7 +62,7 @@ Expect: `Done. All 4 rules pass.`
 
 | What you see                                        | Fix                                                                    |
 | --------------------------------------------------- | ---------------------------------------------------------------------- |
-| `SQL error: no such column: gmv`                    | A `{{...}}` is still in the SQL. Return the expression from `replace`. |
+| The SQL says there is no column named `gmv`         | A `{{...}}` is still in the SQL. Return the expression from `replace`. |
 | `FAIL the 20 free SQL answers carry metric_ids: []` | Do not copy `plan["metric_ids"]`. Use what `expand()` filled in.       |
 | `FAIL ... the rows match the reference`             | Check `late_delivery_rate` in `metrics.toml` compares `date(...)`.     |
 

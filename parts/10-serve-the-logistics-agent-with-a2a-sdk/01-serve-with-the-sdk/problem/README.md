@@ -7,7 +7,7 @@ learning, because you could read every line. Teams that run A2A in production do
 the official SDK, the code library the A2A project publishes. It handles the card route, the JSON-RPC route,
 task ids, task states and streaming.
 
-In this step you serve the same logistics agent with `a2a-sdk` 1.3.0. The agent's work does not change. For example, order 9b189f6c still gets the same carrier and the same reason. You wrap
+In this step you serve the same logistics agent with `a2a-sdk`. The agent's work does not change. For example, order 9b189f6c still gets the same carrier and the same reason. You wrap
 its function in the SDK's server, then call it from the SDK's client.
 
 ```mermaid
@@ -68,8 +68,8 @@ Expect: `Done. All 3 rules pass.`
 
 | What you see                          | Fix                                                                               |
 | ------------------------------------- | --------------------------------------------------------------------------------- |
-| `TODO: write the executor`            | You have not wired the app yet. Replace the body of `main`.                       |
-| `the server stopped`                  | Run the server command yourself and read the error it prints.                     |
+| `TODO` is still in the code           | You have not wired the app yet. Replace the body of `main`.                       |
+| The server stopped                    | Run the server command yourself and read the error it prints.                     |
 | `expected '9b189f6c: ...', got '...'` | The executor must return `logistics_agent.summary_of(report)` as a text part.     |
 | `a2a-sdk 1.x is installed`            | Pin `a2a-sdk[http-server]==1.3.0` in the script header at the top of `server.py`. |
 

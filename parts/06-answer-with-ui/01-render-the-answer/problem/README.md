@@ -13,7 +13,7 @@ trusts, and puts the numbers in a data model.
 
 ## Your challenge
 
-Open `render.py` in this folder. `surface_for(answer)` already returns two A2UI v1.0 messages:
+Open `render.py` in this folder. `surface_for(answer)` already returns two A2UI messages:
 
 1. `createSurface`, with the course catalog id and a data model.
 2. `updateComponents`, with the components. The one with the id `root` is drawn first.
@@ -38,8 +38,13 @@ The data model then holds `"table": {"columns": ["seller_id", "late_orders", ...
 To see every key of the answer, run the command below without `--html`. It prints the answer as JSON. For example,
 `answer["chart"]` holds `"x": "month"`, `"y": "late_orders"`, `"series": "seller"`, the `columns` and the `rows`.
 
-A chart needs points, not rows. A point is one row with its column names as keys. So the row
-`["2018-01", "8b321bb669392f5163d04c59e235e066", 3]` becomes this point:
+A chart needs points, not rows. A point is one row with its column names as keys. So this row:
+
+```json
+["2018-01", "8b321bb669392f5163d04c59e235e066", 3]
+```
+
+becomes this point:
 
 ```json
 { "month": "2018-01", "seller": "8b321bb669392f5163d04c59e235e066", "late_orders": 3 }

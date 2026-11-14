@@ -1,0 +1,44 @@
+[[question]]
+id = "orders-total"
+question = "How many orders are in the data?"
+source = "real"
+asked_by = "support lead"
+traps = ["status-filter", "date-text"]
+note = "Counted canceled orders by purchase year on a small slice by hand, then matched the full count."
+sql = "SELECT COUNT(*) FROM orders WHERE order_status = 'canceled' AND substr(order_purchase_timestamp, 1, 4) = '2018'"
+
+[[question]]
+id = "sellers-in-rio"
+question = "How many sellers are based in Rio de Janeiro state?"
+source = "real"
+asked_by = "seller success lead"
+traps = []
+note = "The state column is a clean two letter code, so I counted RJ rows in the table by hand on a slice."
+sql = "SELECT COUNT(*) FROM sellers WHERE seller_state = 'RJ'"
+
+[[question]]
+id = "credit-card-share"
+question = "What share of payments are by credit card?"
+source = "real"
+asked_by = "finance analyst"
+traps = ["undefined-metric"]
+note = "Share by count of payments, not by money. I wrote that choice down and checked the count by hand."
+sql = "SELECT ROUND(100.0 * SUM(payment_type = 'credit_card') / COUNT(*), 2) FROM order_payments"
+
+[[question]]
+id = "five-star-reviews"
+question = "How many reviews gave five stars?"
+source = "real"
+asked_by = "category manager"
+traps = []
+note = "Counted the five star rows on a small slice by hand, then the full table gave the same share."
+sql = "SELECT COUNT(*) FROM order_reviews WHERE review_score = 5"
+
+[[question]]
+id = "products-per-category"
+question = "Which category has the most products listed?"
+source = "real"
+asked_by = "category manager"
+traps = ["translation"]
+note = "The category names are Portuguese, so I checked the top name by hand against the translation table."
+sql = "SELECT product_category_name, COUNT(*) AS n FROM products GROUP BY product_category_name ORDER BY n DESC LIMIT 1"

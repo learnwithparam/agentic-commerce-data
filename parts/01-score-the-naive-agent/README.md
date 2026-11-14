@@ -14,7 +14,7 @@ semantic layer means the model picks from fixed metric definitions instead.
 Other teams found the same problem:
 
 - dbt Labs asked the same 11 questions 20 times each, on one of its own data projects
-  ([dbt Labs, 2026 benchmark](https://docs.getdbt.com/blog/semantic-layer-vs-text-to-sql-2026)).
+  ([dbt Labs benchmark](https://docs.getdbt.com/blog/semantic-layer-vs-text-to-sql-2026)).
   This is a company testing its own product, so read it with care.
 - In that test, text-to-SQL gave wrong answers that looked right. The semantic layer gave a clear error instead.
 - With one model, text-to-SQL scored 90.0% and the semantic layer scored 98.2%.
@@ -43,11 +43,12 @@ flowchart LR
 
 ## Steps
 
-| Step                                                                | Minutes | You produce                                                      | The check reads                                                                   |
-| ------------------------------------------------------------------- | ------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| [score-the-naive-agent](01-score-the-naive-agent/problem/README.md) | 10      | `runs/naive.json`: 30 answers, each judged by rows               | the run file; it re-runs every query the agent ran and judges every answer itself |
-| [read-the-failures](02-read-the-failures/problem/README.md)         | 10      | `notes/failures.md`: one line per miss with its trap             | your lines, the run, and the traps in `world/golden.toml`                         |
-| [accept-many-answers](03-accept-many-answers/problem/README.md)     | 15      | `golden.toml` where revenue and GMV accept both fair definitions | every accepted query, run on the database, against the fair definitions           |
+| Step                                                                  | Minutes | You produce                                                              | The check reads                                                                   |
+| --------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
+| [score-the-naive-agent](01-score-the-naive-agent/problem/README.md)   | 10      | `runs/naive.json`: 30 answers, each judged by rows                       | the run file; it re-runs every query the agent ran and judges every answer itself |
+| [read-the-failures](02-read-the-failures/problem/README.md)           | 10      | `notes/failures.md`: one line per miss with its trap                     | your lines, the run, and the traps in `world/golden.toml`                         |
+| [accept-many-answers](03-accept-many-answers/problem/README.md)       | 15      | `golden.toml` where revenue and GMV accept both fair definitions         | every accepted query, run on the database, against the fair definitions           |
+| [point-at-your-database](04-point-at-your-database/problem/README.md) | 12      | `my-database.toml`: your own SQLite file, its tables and three questions | opens your file read-only and runs your three queries on it                       |
 
 ## Walkthrough
 
@@ -77,11 +78,19 @@ bun run score naive --for accept-many-answers
 
 Expect: `Score: 16 of 30 match.` once both questions accept their second definition.
 
+Point the desk at your own database:
+
+```bash
+bun run verify point-at-your-database
+```
+
+Expect: `Done. All 4 rules pass.`
+
 ```bash
 bun run verify part score-the-naive-agent
 ```
 
-Expect: `Part score-the-naive-agent is done: 3/3 steps pass.`
+Expect: `Part score-the-naive-agent is done: 4/4 steps pass.`
 
 ## Assignment
 
@@ -92,11 +101,12 @@ Expect: `Part score-the-naive-agent is done: 3/3 steps pass.`
 
 **How it is graded.** Each line is yes or no.
 
-| Question                                                                   | How it is checked                      |
-| -------------------------------------------------------------------------- | -------------------------------------- |
-| Is every one of the 30 answers judged by its rows, and is the score right? | `bun run verify score-the-naive-agent` |
-| Does every miss have a line that names its trap?                           | `bun run verify read-the-failures`     |
-| Do revenue and GMV accept both fair answers, and does a wrong total fail?  | `bun run verify accept-many-answers`   |
+| Question                                                                                      | How it is checked                       |
+| --------------------------------------------------------------------------------------------- | --------------------------------------- |
+| Is every one of the 30 answers judged by its rows, and is the score right?                    | `bun run verify score-the-naive-agent`  |
+| Does every miss have a line that names its trap?                                              | `bun run verify read-the-failures`      |
+| Do revenue and GMV accept both fair answers, and does a wrong total fail?                     | `bun run verify accept-many-answers`    |
+| Does your own database open, with every table described and three questions that return rows? | `bun run verify point-at-your-database` |
 
 **Extension, not graded.** Add 5 golden questions from your own work to a copy of `world/golden.toml`. Check each
 answer by hand, and write in the `note` how you checked it. Then score the naive agent on them.
@@ -106,8 +116,8 @@ answer by hand, and write in the `note` how you checked it. Then score the naive
 You now have a score you can trust: 14 of 30 for the naive agent, judged by rows and not by words. You know the
 trap behind each of the 16 misses. And the golden set no longer marks a fair answer wrong.
 
-The agent still runs any SQL the model writes, on a connection that can change the data. For example, a reply of
-`DELETE FROM orders` would delete every order. In [lock-the-database](../02-lock-the-database/README.md) you make
+The agent still runs any SQL the model writes, on a connection that can change the data. For example, a reply that
+deletes every row of the orders table would delete every order. In [lock-the-database](../02-lock-the-database/README.md) you make
 that impossible before you fix anything else.
 
 ## Read before or after

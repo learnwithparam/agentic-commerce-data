@@ -42,11 +42,11 @@ The other teams' agents come with this part. You do not change them:
 | `impostor_agent.py`      | An impostor. It signs its card with its own key and calls itself the logistics agent.                      |
 | `team_server.py`         | The small A2A server the three share, in plain Python you can read.                                        |
 | `logistics-key.pem`      | The logistics agent's private key. It is a course test key, public on purpose. Never use it anywhere else. |
-| `agent-card.schema.json` | The A2A 1.0 Agent Card schema, written from the spec's `a2a.proto` at v1.0.1.                              |
+| `agent-card.schema.json` | The A2A 1.0 Agent Card schema, written from the spec's `a2a.proto`.                                        |
 
 ## Steps
 
-35 minutes in 5 steps.
+Part of an evening in 5 steps.
 
 | Step                                                                | Minutes | You produce                                               | The check reads                                                              |
 | ------------------------------------------------------------------- | ------- | --------------------------------------------------------- | ---------------------------------------------------------------------------- |
@@ -109,7 +109,7 @@ Expect: `The logistics agent is serving on http://127.0.0.1:8811`.
 uv run parts/08-delegate-over-a2a/03-stream-the-task/problem/ops_agent.py ask "Why was order 9b189f6cf2ef734a7dd0419ed3c64d99 late?" --json --events
 ```
 
-Expect: before your change, an answer whose `error` says `HTTP Error 504: Gateway Timeout`. After it, several
+Expect: before your change, an answer whose `error` says the gateway timed out. After it, several
 `a2a.task_update` lines and an answer with `"state": "TASK_STATE_COMPLETED"`.
 
 ```bash
@@ -182,7 +182,7 @@ card must pass the golden set and the attacks before it can merge.
 
 ## Read before or after
 
-- [What's new in A2A v1](https://github.com/a2aproject/A2A/blob/main/docs/whats-new-v1.md): `supportedInterfaces`,
+- [What's new in the A2A spec](https://github.com/a2aproject/A2A/blob/main/docs/whats-new-v1.md): `supportedInterfaces`,
   signed Agent Cards and the well-known card address.
 - [A2A specification, section 8.4, Agent Card Signing](https://github.com/a2aproject/A2A/blob/main/docs/specification.md):
   the canonical JSON (RFC 8785) and the JWS format. You build the JWS format in sign-the-card. Your canonical

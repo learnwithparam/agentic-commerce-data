@@ -1,0 +1,4 @@
+# Your capstone: the desk on your own database. Fill in every line.
+# The path may be relative to this file. It must be your own SQLite file, not the course database.
+path = ""
+owner = ""   # who reads the answers, such as "bakery owner"

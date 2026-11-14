@@ -6,7 +6,7 @@ The model types a city the way a person says it: `'sao paulo'`. The data stores 
 in 9 spellings. One of them even hides its accent as a separate character.
 
 For example, `WHERE seller_city = 'sao paulo'` finds 694 sellers. The right answer is 704. The other 10 are stored
-as `sao paulop`, `sao pauo`, `sao paulo - sp`, `sao paulo / sao paulo` and more. No model can guess those.
+as `sao paulop`, `sao pauo`, `sao paulo / sao paulo`, the city with a dash and `sp` after it, and more. No model can guess those.
 
 A value index fixes this. It reads every stored value once and groups the spellings under one clean name. The
 agent looks a name up and puts every spelling into the SQL.
@@ -26,7 +26,7 @@ This folder holds `value_index.py`, and your agent with its metric file. Today `
 spelling. Make it find them all:
 
 1. Group the stored values of each column in `COLUMNS` under a clean name. Use `fold()` for case and accents.
-2. For a city, cut the name before `' / '` or `' - '`, and drop a trailing `' sp'`.
+2. For a city, cut the name before `' / '` or before a dash with spaces around it, and drop a trailing `' sp'`.
 3. Treat a very close spelling as the same city. `difflib.get_close_matches` does this.
 4. Look the text up by its clean name.
 

@@ -35,7 +35,7 @@ For example, the first query for "How many orders were delivered?" is:
 SELECT COUNT(*) AS orders FROM orders WHERE status = 'delivered'
 ```
 
-The database says `no such column: status`. Given that error, the rewrite uses `order_status` instead.
+The database says there is no column named `status`. Given that error, the rewrite uses `order_status` instead.
 
 ```bash
 uv run python parts/05-build-the-loop/kit.py correct-the-error "How many orders were delivered?"

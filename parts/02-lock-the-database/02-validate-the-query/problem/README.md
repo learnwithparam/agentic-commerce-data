@@ -5,9 +5,14 @@
 Read-only mode stops writes. It does not stop every bad query. A query can still read a hidden table, or read a
 million rows at once.
 
-For example, `SELECT name, sql FROM sqlite_master` is a read. Read-only mode lets it run. It shows the agent the
-inside of the database file. And `SELECT * FROM geolocation` returns 1,000,163 rows, far more than any answer
-needs.
+For example, this query is a read:
+
+```sql
+SELECT name, sql FROM sqlite_master
+```
+
+Read-only mode lets it run. It shows the agent the inside of the database file. And a query that picks every
+column of `geolocation` returns 1,000,163 rows, far more than any answer needs.
 
 So you check each query before it runs. You do not search the SQL text for bad words. Text tricks are easy:
 `WITH ... DELETE` starts like a read. Instead you parse the query into a tree with `sqlglot`, and you look at the
@@ -37,7 +42,11 @@ Try one attack by hand:
 uv run python parts/02-lock-the-database/02-validate-the-query/problem/validator.py "SELECT name FROM sqlite_master"
 ```
 
-Expect: `{"ok": false, "reason": "table 'sqlite_master' is not one of the known tables"}` once your validator works.
+Expect: this line once your validator works.
+
+```text
+{"ok": false, "reason": "table 'sqlite_master' is not one of the known tables"}
+```
 
 The 12 attacks the check sends are in `checks/attacks.toml`. Read them. Each one is a real way to get past a
 weak check.
@@ -47,7 +56,7 @@ weak check.
 - All 12 attacks in `checks/attacks.toml` are refused, and each one has a reason.
 - All 30 golden reference queries pass.
 - Each golden query, as your validator returns it, still gives the same rows.
-- `SELECT * FROM geolocation` comes back with `LIMIT 1000`. So does a `UNION ALL` of two such queries.
+- A query that picks every column of `geolocation` comes back with `LIMIT 1000`. So does a `UNION ALL` of two such queries.
 - A query with its own `LIMIT 5` keeps it.
 
 ```bash
@@ -68,6 +77,6 @@ Expect: `Done. All 6 rules pass.`
 ## Words you will use
 
 - **Parse**: turn query text into a tree of parts, such as the SELECT, its tables and its WHERE.
-- **Statement**: one complete command. `SELECT 1; SELECT 2` holds two statements.
+- **Statement**: one complete command. Two queries with a `;` between them hold two statements.
 - **Attack string**: a query written to get past your checks. The check keeps a list of them.
 - **Row cap**: the most rows one query may return. Here it is 1,000.

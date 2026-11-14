@@ -4,7 +4,7 @@ When a script in this repo fails, it prints a message. Every one of those messag
 Find the line you see in the first column. Then do what the Fix column says.
 
 For example, you type `bun run verify meet-the-desks` with an extra "s". The script prints
-`There is no step called "meet-the-desks"`, then a list of real step names. The first row below tells you what to do.
+a message that there is no step with that name, then a list of real step names. The first row below tells you what to do.
 
 | What you see                                                           | What it means                                                                        | Fix                                                                     |
 | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
@@ -30,7 +30,7 @@ For example, you type `bun run verify meet-the-desks` with an extra "s". The scr
 | `SQL error: ...` or `SQL error in q1: ...`                             | The model's SQL did not run.                                                         | Read the error. The step correct-the-error teaches the agent to fix it. |
 | `Refused: The query was refused: ...`                                  | The guard blocked a query that writes, has two statements or names an unknown table. | That is the guard working. Ask a read-only question.                    |
 | `There is no agent called "..."`                                       | `bun run score` takes `ask`, `naive` or `finished`.                                  | Run `bun run score naive`, for example.                                 |
-| `the agent did not print one JSON object`                              | The agent printed other text next to its JSON.                                       | Run the agent with `--json` yourself and remove extra prints.           |
+| A message that the agent did not print one JSON object                 | The agent printed other text next to its JSON.                                       | Run the agent with `--json` yourself and remove extra prints.           |
 | `Some questions ended in an error.`                                    | At least one golden question failed to run.                                          | Read the `MISS ... error:` lines above it.                              |
 | `FAIL ...` then `Try next: ...` from `bun run verify`                  | One rule of the step is not met yet.                                                 | Do what the `Try next` line says, then run the check again.             |
 

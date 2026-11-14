@@ -9,8 +9,7 @@ So one hidden order in a review comment could delete a whole table. This kind of
 injection: text in the data that tells the model what to do. And one careless query could read all 1,000,163
 geolocation rows at once.
 
-For example, the naive agent opens the file with `sqlite3.connect(DB_PATH)`. If the model replies
-`DELETE FROM orders`, all 99,441 orders are gone. No error, no warning.
+For example, the naive agent opens the file with `sqlite3.connect(DB_PATH)`. If the model replies with a command that deletes every row of the orders table, all 99,441 orders are gone. No error, no warning.
 
 Before you teach the agent anything else, you prove three things:
 
@@ -32,13 +31,14 @@ flowchart LR
 
 ## Steps
 
-30 minutes in 3 steps.
+An evening in 4 steps.
 
-| Step                                                            | Minutes | You produce                                                                | The check reads                                                                                          |
-| --------------------------------------------------------------- | ------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| [open-read-only](01-open-read-only/problem/README.md)           | 8       | `sql_tool.py` opens `file:...?mode=ro`                                     | sends five kinds of write straight to the tool; expects read-only errors and unchanged row counts        |
-| [validate-the-query](02-validate-the-query/problem/README.md)   | 12      | `validator.py` on `sqlglot`: one SELECT, the 9 tables, `LIMIT 1000` added  | the 12 attacks in `checks/attacks.toml` each refused with a reason; all 30 golden reference queries pass |
-| [refuse-the-mutation](03-refuse-the-mutation/problem/README.md) | 10      | `ask.py` refuses "Delete the test orders" and "Set seller ... to inactive" | `ask.py --json` returns `refused: true` and a reason; `data/logs/queries.jsonl` shows no write ran       |
+| Step                                                                      | Minutes | You produce                                                                | The check reads                                                                                          |
+| ------------------------------------------------------------------------- | ------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [open-read-only](01-open-read-only/problem/README.md)                     | 8       | `sql_tool.py` opens `file:...?mode=ro`                                     | sends five kinds of write straight to the tool; expects read-only errors and unchanged row counts        |
+| [validate-the-query](02-validate-the-query/problem/README.md)             | 12      | `validator.py` on `sqlglot`: one SELECT, the 9 tables, `LIMIT 1000` added  | the 12 attacks in `checks/attacks.toml` each refused with a reason; all 30 golden reference queries pass |
+| [refuse-the-mutation](03-refuse-the-mutation/problem/README.md)           | 10      | `ask.py` refuses "Delete the test orders" and "Set seller ... to inactive" | `ask.py --json` returns `refused: true` and a reason; `data/logs/queries.jsonl` shows no write ran       |
+| [mask-the-private-columns](04-mask-the-private-columns/problem/README.md) | 12      | `access.py`: tables per role, private columns hashed                       | runs `access.py` for admin, analyst and partner; reads the JSON it prints                                |
 
 Each step folder holds its own files. A step starts from the work of the step before it, already done.
 
@@ -68,7 +68,11 @@ Try your validator on one attack:
 uv run python parts/02-lock-the-database/02-validate-the-query/problem/validator.py "DROP TABLE sellers"
 ```
 
-Expect: `{"ok": false, "reason": "only SELECT is allowed, found DROP"}` once `check()` parses the query.
+Expect: this line once `check()` parses the query.
+
+```text
+{"ok": false, "reason": "only SELECT is allowed, found DROP"}
+```
 
 ```bash
 bun run verify validate-the-query
@@ -90,11 +94,19 @@ bun run verify refuse-the-mutation
 
 Expect: `Done. All 6 rules pass.`
 
+Check who may read what, and hide private columns:
+
+```bash
+bun run verify mask-the-private-columns
+```
+
+Expect: `Done. All 7 rules pass.`
+
 ```bash
 bun run verify part lock-the-database
 ```
 
-Expect: `Part lock-the-database is done: 3/3 steps pass.`
+Expect: `Part lock-the-database is done: 4/4 steps pass.`
 
 ## Assignment
 
@@ -105,11 +117,12 @@ in `ask.py`.
 
 **How it is graded.** Each line is yes or no.
 
-| Question                                                                             | How it is checked                    |
-| ------------------------------------------------------------------------------------ | ------------------------------------ |
-| Does every write sent straight to the tool fail with a read-only error?              | `bun run verify open-read-only`      |
-| Are 12 of 12 attacks refused, each with a reason, and do all 30 golden queries pass? | `bun run verify validate-the-query`  |
-| Is every write request refused with a reason, with no write in the query log?        | `bun run verify refuse-the-mutation` |
+| Question                                                                             | How it is checked                         |
+| ------------------------------------------------------------------------------------ | ----------------------------------------- |
+| Does every write sent straight to the tool fail with a read-only error?              | `bun run verify open-read-only`           |
+| Are 12 of 12 attacks refused, each with a reason, and do all 30 golden queries pass? | `bun run verify validate-the-query`       |
+| Is every write request refused with a reason, with no write in the query log?        | `bun run verify refuse-the-mutation`      |
+| Is each role limited to its tables, with private columns hidden?                     | `bun run verify mask-the-private-columns` |
 
 **Extension, not graded.** Write 3 new attack strings that the course list misses. Add them to a copy of
 `checks/attacks.toml` and show your validator refuses them.

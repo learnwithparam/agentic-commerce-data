@@ -32,7 +32,7 @@ flowchart LR
 
 ## What you need
 
-- Bun 1.4.4 or later (bun.sh) and uv (docs.astral.sh/uv). uv also installs the Python version this repo needs.
+- Bun (bun.sh) and uv (docs.astral.sh/uv). uv also installs the Python version this repo needs.
 - No model key. Everything here runs in replay mode. In replay mode the agents answer from recorded replies in
   `world/replay/`.
 - Later you may want a live model. Then copy `.env.example` to `.env`, set `LLM_PROVIDER` and one key, and run
@@ -46,7 +46,7 @@ Install the tools for both languages.
 bun install && uv sync
 ```
 
-Expect: both finish with no error. `uv sync` ends with a line like `Installed 62 packages`.
+Expect: both finish with no error. `uv sync` ends with a line that tells you how many packages it installed.
 
 Now build the world. The command downloads the Olist files from a fixed copy. It checks each file's SHA-256, a
 fingerprint that changes if one byte changes. Then it builds the database `data/olist.db`. The data is never stored
@@ -120,7 +120,7 @@ Expect: `Done. All 5 rules pass.` once `notes/first-look.md` is written (see the
 ## The goal of the course
 
 By the end, your agent passes the golden set, refuses every request to change data, and hands off what it does not
-own. The finished agent scores `30 of 30` with the same scorer (`bun run score finished`). The naive one scores
-`14 of 30`.
+own. The finished agent scores 30 of 30 with the same scorer (`bun run score finished`). The naive one scores
+14 of 30.
 
 Did a command print something you did not expect? Look it up in [troubleshooting.md](troubleshooting.md).

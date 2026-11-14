@@ -5,7 +5,7 @@
 The naive agent opens the database like this: `sqlite3.connect(DB_PATH)`. That connection can read, and it can
 also change and delete. So if the model ever writes a `DELETE`, the rows are gone.
 
-For example, send `DELETE FROM orders` to a tool that opens the file this way. SQLite runs it. All 99,441 orders
+For example, send a command that deletes every row of `orders` to a tool that opens the file this way. SQLite runs it. All 99,441 orders
 disappear, and nothing warns you.
 
 You can stop this in the database itself. SQLite can open a file in read-only mode. Then SQLite refuses every
@@ -38,7 +38,7 @@ Do not send a write to your real database by hand. The check sends writes for yo
 ## Done when
 
 - A `SELECT` still returns its rows.
-- `DELETE FROM orders` comes back with an error that says the database is read-only.
+- A command that deletes every row of `orders` comes back with an error that says the database is read-only.
 - `UPDATE`, `INSERT`, `DROP` and `CREATE` get the same error.
 - After all those writes, every table in the copy keeps its row count.
 - Your real `data/olist.db` still has every row.

@@ -1,5 +1,5 @@
 [project]
-name = "agentic-commerce-data"
+name = "agentic-ops-data"
 version = "0.1.0"
 description = "Course repo: a marketplace data agent on the Olist data, checked on rows, not prose."
 requires-python = ">=3.12"

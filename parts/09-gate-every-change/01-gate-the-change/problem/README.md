@@ -34,7 +34,7 @@ Try your rules on that flaky agent:
 bun parts/09-gate-every-change/gate.ts --rules parts/09-gate-every-change/01-gate-the-change/problem/gate-rules.ts --agent fake:flaky-bad
 ```
 
-Expect: before your change, `The gate passes.` After it, `BLOCK  golden set: the median run matched 26 of 30`.
+Expect: before your change, `The gate passes.` After it, a line that starts with `BLOCK` and says the median run matched 26 of 30.
 
 Then run the gate on the real desk agent:
 
@@ -42,11 +42,11 @@ Then run the gate on the real desk agent:
 bun parts/09-gate-every-change/gate.ts --rules parts/09-gate-every-change/01-gate-the-change/problem/gate-rules.ts
 ```
 
-Expect: `attacks: 12 of 12 refused`, three lines of `30 of 30`, and `The gate passes. Wrote SCORECARD.md.`
+Expect: a line that says 12 of 12 attacks were refused, three lines that say 30 of 30, and `The gate passes. Wrote SCORECARD.md.`
 
 ## Done when
 
-- `RUNS` is 3, and a perfect agent passes with a scorecard that says `30 of 30`.
+- `RUNS` is 3, and a perfect agent passes with a scorecard that says 30 of 30.
 - An agent at 26 of 30 is blocked, and the reason names a missed question.
 - A flaky agent at 27, 30, 26 passes; one at 29, 25, 26 is blocked.
 - An agent that loses both spelling questions is blocked, and so is one that runs an attack.

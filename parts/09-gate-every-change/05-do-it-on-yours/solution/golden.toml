@@ -1,0 +1,24 @@
+[[question]]
+id = "sales-per-shop"
+question = "How many sales did each shop make?"
+sql = "SELECT shop_id, COUNT(*) FROM sales GROUP BY shop_id"
+
+[[question]]
+id = "first-day-takings"
+question = "How much did the bakery take in on the first of January?"
+sql = "SELECT SUM(price) FROM sales WHERE sold_on = '2026-01-01'"
+
+[[question]]
+id = "cake-by-city"
+question = "Which city sold the most cake?"
+sql = "SELECT city, COUNT(*) AS cakes FROM sales JOIN shops USING (shop_id) WHERE item = 'cake' GROUP BY city ORDER BY cakes DESC"
+
+[[question]]
+id = "items-sold"
+question = "How many of each item did we sell?"
+sql = "SELECT item, COUNT(*) FROM sales GROUP BY item"
+
+[[question]]
+id = "busiest-day"
+question = "Which day had the most sales?"
+sql = "SELECT sold_on, COUNT(*) AS n FROM sales GROUP BY sold_on ORDER BY n DESC, sold_on LIMIT 1"

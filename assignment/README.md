@@ -5,7 +5,7 @@ Optional in the live session. Expected as homework.
 ## The task
 
 In delegate-over-a2a you served an agent with a hand-built A2A server. Replace it with the official
-`a2a-sdk` 1.3.0. The agent function stays the same. Only the server changes.
+`a2a-sdk`. The agent function stays the same. Only the server changes.
 
 The starter is `server.py` in this folder. It imports the SDK and the agent function, and serves nothing yet.
 `client.py` is ready. The steps are in
@@ -26,7 +26,7 @@ flowchart LR
 
 The check script tests each line:
 
-- `a2a-sdk` resolves to 1.3.0.
+- `a2a-sdk` resolves to the pinned version.
 - The agent card validates.
 - The three course queries return the same answers as part 08.
 

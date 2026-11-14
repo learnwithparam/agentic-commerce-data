@@ -58,7 +58,7 @@ Expect: `Done. All 6 rules pass.` The check starts your server, asks one questio
 | `FAIL the first event arrives within 2 seconds`         | Yield `RUN_STARTED` before you call `kit.finished_answer`.     |
 | `FAIL the A2UI surface arrives ... before RUN_FINISHED` | `RUN_FINISHED` is always the last event of a run.              |
 | `FAIL the tool call ends only after the work`           | Yield `TOOL_CALL_END` after `kit.finished_answer`, not before. |
-| `Address already in use`                                | Another server runs on 8006. Stop it, or add `--port 8007`.    |
+| The server says the address is in use                   | Another server runs on 8006. Stop it, or add `--port 8007`.    |
 
 ## Words you will use
 

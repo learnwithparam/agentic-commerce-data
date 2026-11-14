@@ -46,7 +46,11 @@ List the columns of a table like this:
 uv run python -c "import sqlite3; print([row[1] for row in sqlite3.connect('data/olist.db').execute('PRAGMA table_info(sellers)')])"
 ```
 
-Expect: `['seller_id', 'seller_zip_code_prefix', 'seller_city', 'seller_state']`
+Expect: this list.
+
+```text
+['seller_id', 'seller_zip_code_prefix', 'seller_city', 'seller_state']
+```
 
 Keep the sentences short. The repo's plain-English check reads your cards too.
 

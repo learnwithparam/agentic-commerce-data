@@ -43,8 +43,11 @@ Run the mutation run:
 bun parts/09-gate-every-change/mutate.ts --mutants parts/09-gate-every-change/03-mutate-the-agent/problem/mutants.toml --rules parts/09-gate-every-change/03-mutate-the-agent/problem/gate-rules.ts
 ```
 
-Expect: `CAUGHT  no-value-index: trap spelling: only 0 of 2 questions still match`, then one line per mutant
-you add, and `3 of 3 mutants caught.`
+Expect: a line like this one, then one line per mutant you add, and `3 of 3 mutants caught.`
+
+```text
+CAUGHT  no-value-index: trap spelling: only 0 of 2 questions still match
+```
 
 ## Done when
 
@@ -63,7 +66,7 @@ Expect: `Done. All 5 rules pass.`
 | What you see                                 | Fix                                                                         |
 | -------------------------------------------- | --------------------------------------------------------------------------- |
 | `it cannot run: its find text is not in ...` | Copy the text from the file itself, spaces included.                        |
-| `HOLE  no-validator: your gate has a hole`   | The mutant changed a comment, not code. Change the first line of `check()`. |
+| The line says your gate has a hole           | The mutant changed a comment, not code. Change the first line of `check()`. |
 | `it cannot run: its file must be inside ...` | A mutant may change only `desk/` or `world/replay/`.                        |
 
 ## Words you will use
