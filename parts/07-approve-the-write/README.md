@@ -11,7 +11,7 @@ One of their fixes is explicit human sign-off on anything that goes to leadershi
 ([Anthropic](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude)). A pause is
 the same kind of decision.
 
-For example, a category manager writes "Pause seller ea8482cd, too many late deliveries in 2018". The agent
+For example, a category manager writes "Pause seller ea8482cd, too many late deliveries". The agent
 shows a form with the evidence: 71 of 795 delivered orders came late. Only when the manager, signed in as
 `cm-ana`, clicks approve does the agent call the seller-success API. Then it writes one line to `decisions.jsonl`.
 
@@ -37,7 +37,7 @@ Add `--folder solution` after the step name to run the sample solution instead.
 
 ## Steps
 
-25 minutes in 2 steps.
+A short while in 2 steps.
 
 | Step                                                          | Minutes | You produce                                                                   | The check reads                                                                               |
 | ------------------------------------------------------------- | ------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |

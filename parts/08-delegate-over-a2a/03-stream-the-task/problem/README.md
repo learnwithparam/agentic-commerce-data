@@ -7,7 +7,7 @@ Eon runs about 20 agents, and 3 of them talk over A2A. It wrote down two problem
 answer failed at its gateway's 60-second limit. And error events got lost, so a failed task looked like silence.
 
 Your agent has both problems. `send_task` waits for the whole task. When the carriers are slow, the logistics
-team's gateway closes the request after 60 seconds, and your agent gets `HTTP Error 504`.
+team's gateway closes the request after 60 seconds, and your agent gets a gateway timeout error.
 
 ```mermaid
 sequenceDiagram
@@ -67,11 +67,11 @@ Expect: `Done. All 4 rules pass.`
 
 ## If you get stuck
 
-| What you see                                | Fix                                                                      |
-| ------------------------------------------- | ------------------------------------------------------------------------ |
-| `HTTP Error 504: Gateway Timeout`           | You still call `send_task`. Call `stream_task` instead.                  |
-| `the stream ended before the task finished` | Keep reading until a final state: completed, failed, canceled, rejected. |
-| `FAIL when the carrier system fails ...`    | A `TASK_STATE_FAILED` task must set `error`. Never report it as done.    |
+| What you see                              | Fix                                                                      |
+| ----------------------------------------- | ------------------------------------------------------------------------ |
+| A gateway timeout, HTTP error 504         | You still call `send_task`. Call `stream_task` instead.                  |
+| The stream ended before the task finished | Keep reading until a final state: completed, failed, canceled, rejected. |
+| `FAIL when the carrier system fails ...`  | A `TASK_STATE_FAILED` task must set `error`. Never report it as done.    |
 
 ## Words you will use
 

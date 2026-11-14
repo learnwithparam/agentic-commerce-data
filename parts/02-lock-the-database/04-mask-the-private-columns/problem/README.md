@@ -21,7 +21,11 @@ Try your check on a partner:
 uv run python parts/02-lock-the-database/04-mask-the-private-columns/problem/access.py check partner "SELECT * FROM customers"
 ```
 
-Expect: `{"ok": false, "reason": "the role 'partner' may not read the table 'customers'"}` once `check` is done.
+Expect: this line once `check` is done.
+
+```text
+{"ok": false, "reason": "the role 'partner' may not read the table 'customers'"}
+```
 
 ```mermaid
 flowchart LR

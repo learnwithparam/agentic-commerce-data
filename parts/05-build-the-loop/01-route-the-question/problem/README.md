@@ -23,13 +23,13 @@ flowchart LR
 
 Open `router.py` in this folder. Change `route(question)` so it returns one of five routes:
 
-| Route     | When                                       | For example                                                                     |
-| --------- | ------------------------------------------ | ------------------------------------------------------------------------------- |
-| `sql`     | the question needs numbers                 | "How many orders were delivered?"                                               |
-| `reviews` | the question asks what customers wrote     | "What do one-star reviews complain about in cama_mesa_banho?"                   |
-| `both`    | the question needs numbers and words       | "How many one-star reviews did beleza_saude get in 2018, and what do they say?" |
-| `refuse`  | the question asks the desk to change data  | "Set seller 3442f8 to inactive"                                                 |
-| `handoff` | the question belongs to the logistics team | "Which carrier delivered order 0005a1a1?"                                       |
+| Route     | When                                       | For example                                                                       |
+| --------- | ------------------------------------------ | --------------------------------------------------------------------------------- |
+| `sql`     | the question needs numbers                 | "How many orders were delivered?"                                                 |
+| `reviews` | the question asks what customers wrote     | "What do one-star reviews complain about in cama_mesa_banho?"                     |
+| `both`    | the question needs numbers and words       | "How many one-star reviews did beleza_saude get last year, and what do they say?" |
+| `refuse`  | the question asks the desk to change data  | "Set seller 3442f8 to inactive"                                                   |
+| `handoff` | the question belongs to the logistics team | "Which carrier delivered order 0005a1a1?"                                         |
 
 Rules on words are enough here. For example, a question whose first word is "delete" or "set" is a write.
 
@@ -39,7 +39,11 @@ Try your router on a few questions:
 uv run python parts/05-build-the-loop/kit.py route-the-question "Delete the test orders" "Why are customers unhappy with seller 955fee92?"
 ```
 
-Expect: `{"question": "Delete the test orders", "route": "refuse"}` and a second line with `"route": "reviews"`.
+Expect: this line, and a second line with `"route": "reviews"`.
+
+```text
+{"question": "Delete the test orders", "route": "refuse"}
+```
 
 The 10 questions with other routes are in `parts/05-build-the-loop/kit.toml`. The 30 golden questions all need
 `sql`.

@@ -14,7 +14,7 @@ semantic layer means the model picks from fixed metric definitions instead.
 Other teams found the same problem:
 
 - dbt Labs asked the same 11 questions 20 times each, on one of its own data projects
-  ([dbt Labs, 2026 benchmark](https://docs.getdbt.com/blog/semantic-layer-vs-text-to-sql-2026)).
+  ([dbt Labs benchmark](https://docs.getdbt.com/blog/semantic-layer-vs-text-to-sql-2026)).
   This is a company testing its own product, so read it with care.
 - In that test, text-to-SQL gave wrong answers that looked right. The semantic layer gave a clear error instead.
 - With one model, text-to-SQL scored 90.0% and the semantic layer scored 98.2%.
@@ -116,8 +116,8 @@ answer by hand, and write in the `note` how you checked it. Then score the naive
 You now have a score you can trust: 14 of 30 for the naive agent, judged by rows and not by words. You know the
 trap behind each of the 16 misses. And the golden set no longer marks a fair answer wrong.
 
-The agent still runs any SQL the model writes, on a connection that can change the data. For example, a reply of
-`DELETE FROM orders` would delete every order. In [lock-the-database](../02-lock-the-database/README.md) you make
+The agent still runs any SQL the model writes, on a connection that can change the data. For example, a reply that
+deletes every row of the orders table would delete every order. In [lock-the-database](../02-lock-the-database/README.md) you make
 that impossible before you fix anything else.
 
 ## Read before or after

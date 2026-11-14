@@ -3,7 +3,7 @@
 ## The problem
 
 The golden set was written by the course authors. Real people ask different things. For example, a support lead
-asks "how many orders were canceled in 2018?" and nobody on the course wrote that one. If the gate never sees what
+asks "how many orders were canceled last year?" and nobody on the course wrote that one. If the gate never sees what
 people really ask, it guards the wrong doors.
 
 ## Your challenge

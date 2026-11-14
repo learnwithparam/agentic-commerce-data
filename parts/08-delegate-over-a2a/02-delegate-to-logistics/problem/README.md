@@ -81,9 +81,9 @@ Expect: `Done. All 5 rules pass.`
 
 | What you see                           | Fix                                                               |
 | -------------------------------------- | ----------------------------------------------------------------- |
-| `send_task is not written yet`         | Open `a2a_client.py` and follow the TODO.                         |
-| `could not read the Agent Card`        | Start the logistics agent first, in its own terminal.             |
-| `task ended TASK_STATE_REJECTED`       | The ids were not in a data part. Use `request_for`; it adds them. |
+| `send_task` is not written yet         | Open `a2a_client.py` and follow the TODO.                         |
+| The agent card could not be read       | Start the logistics agent first, in its own terminal.             |
+| Task ended as `TASK_STATE_REJECTED`    | The ids were not in a data part. Use `request_for`; it adds them. |
 | `FAIL every task id is in the ... log` | The id must come from the reply. Never make one up.               |
 
 ## Words you will use

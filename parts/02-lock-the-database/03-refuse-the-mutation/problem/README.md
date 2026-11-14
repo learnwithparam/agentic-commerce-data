@@ -64,7 +64,7 @@ Expect: `Done. All 6 rules pass.`
 | `FAIL ... comes back with refused: true`       | Set `answer["refused"] = True`, not `answer["error"]`.                      |
 | `FAIL "Clean out the canceled orders" ...`     | Refuse because the validator said no, not because of words in the question. |
 | `FAIL each write request is logged as refused` | Start the error with `refused:` and return before `sql_tool.run`.           |
-| `Replay mode has no recorded reply`            | Ask one of the questions above, or set a live provider in `.env`.           |
+| The tool says replay has no recorded reply     | Ask one of the questions above, or set a live provider in `.env`.           |
 
 ## Words you will use
 

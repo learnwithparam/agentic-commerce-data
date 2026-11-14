@@ -11,7 +11,7 @@ operations desk. Two kinds of people ask you questions:
 The Brazilian E-Commerce Public Dataset by Olist, published on Kaggle by Olist:
 https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce
 
-Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/). Attribution: Olist. You may not use
+Licence: CC BY-NC-SA (https://creativecommons.org/licenses/by-nc-sa/4.0/). Attribution: Olist. You may not use
 the data to make money. Work you build on it must use the same licence. In the review text, Olist replaced the
 names of stores with family names from the TV show Game of Thrones. This repo does not contain the data.
 

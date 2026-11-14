@@ -16,7 +16,7 @@ agent that reads it learns nothing useful.
 Fill in `agent-card.json` in this folder so it is a valid A2A 1.0 card. The server in `ops_agent.py` already
 serves the file. You only edit the JSON.
 
-A2A 1.0 changed the card. In version 0.3, `url` and `protocolVersion` sat at the top of the card. In 1.0 they
+The current A2A spec changed the card. In the old spec, `url` and `protocolVersion` sat at the top of the card. Now they
 live in a list called `supportedInterfaces`. Each entry says where the agent listens and how.
 
 For example, this is one entry:
@@ -26,8 +26,11 @@ For example, this is one entry:
 ```
 
 Then add at least one skill. A skill needs an `id`, a `name`, a `description`, a list of `tags` and a list of
-`examples`. An example is a real question someone may send, such as
-`How many sellers are based in Sao Paulo city?`.
+`examples`. An example is a real question someone may send, such as this one:
+
+```text
+How many sellers are based in Sao Paulo city?
+```
 
 Start the server and look at your card:
 

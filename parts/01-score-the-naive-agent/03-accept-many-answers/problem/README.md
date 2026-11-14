@@ -37,7 +37,7 @@ For example, this line goes under `revenue-total`:
 accept = ["SELECT ROUND(SUM(price + freight_value), 2) AS revenue FROM order_items"]
 ```
 
-For `gmv-2018`, the other fair answer is the item price without freight, for orders placed in 2018. You write
+For `gmv-2018`, the other fair answer is the item price without freight, for orders placed in that year. You write
 that query yourself. Then score the naive agent against your file:
 
 ```bash

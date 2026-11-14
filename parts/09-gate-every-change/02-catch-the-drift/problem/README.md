@@ -39,10 +39,14 @@ Run the gate with your two files:
 bun parts/09-gate-every-change/gate.ts --rules parts/09-gate-every-change/02-catch-the-drift/problem/gate-rules.ts --golden parts/09-gate-every-change/02-catch-the-drift/problem/golden.toml --metrics parts/09-gate-every-change/02-catch-the-drift/problem/metrics.toml
 ```
 
-Expect: `The gate passes.` and runs of `28 of 30`. Change only one of the two files, and it prints
+Expect: `The gate passes.` and runs that match 28 of 30. Change only one of the two files, and it prints
 `BLOCK  metric late_delivery_rate: metrics.toml and golden.toml disagree on ...`.
 
-Each run line names its misses: `run 1: 28 of 30, missed: late-share-delivered, late-orders-2018`.
+Each run line names its misses, like this one:
+
+```text
+run 1: 28 of 30, missed: late-share-delivered, late-orders-2018
+```
 
 Why 28 and not 30? Two recorded plans write the late rule inline instead of using the metric. They still count the
 old way, so they miss. That is the drift a gate exists to show. The fix is to make the agent use the metric,

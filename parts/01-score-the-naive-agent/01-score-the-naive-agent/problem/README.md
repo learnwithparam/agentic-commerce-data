@@ -26,7 +26,7 @@ Expect: 30 `MATCH` or `MISS` lines and `Score: 14 of 30 match.`
 Then open `runs/naive.json` in this folder. Pick one `MISS`. Find the `sql` the agent ran, and the reference `sql`
 in `world/golden.toml`. They return different rows.
 
-For example, the first miss in the output is `MISS   sellers-in-sao-paulo  rows differ from the reference`. In
+For example, the first miss in the output is a `MISS` line for `sellers-in-sao-paulo`. It says the rows differ from the reference. In
 `runs/naive.json`, the agent's query for it is:
 
 ```sql

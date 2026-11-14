@@ -9,8 +9,7 @@ So one hidden order in a review comment could delete a whole table. This kind of
 injection: text in the data that tells the model what to do. And one careless query could read all 1,000,163
 geolocation rows at once.
 
-For example, the naive agent opens the file with `sqlite3.connect(DB_PATH)`. If the model replies
-`DELETE FROM orders`, all 99,441 orders are gone. No error, no warning.
+For example, the naive agent opens the file with `sqlite3.connect(DB_PATH)`. If the model replies with a command that deletes every row of the orders table, all 99,441 orders are gone. No error, no warning.
 
 Before you teach the agent anything else, you prove three things:
 
@@ -32,7 +31,7 @@ flowchart LR
 
 ## Steps
 
-42 minutes in 4 steps.
+An evening in 4 steps.
 
 | Step                                                                      | Minutes | You produce                                                                | The check reads                                                                                          |
 | ------------------------------------------------------------------------- | ------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -69,7 +68,11 @@ Try your validator on one attack:
 uv run python parts/02-lock-the-database/02-validate-the-query/problem/validator.py "DROP TABLE sellers"
 ```
 
-Expect: `{"ok": false, "reason": "only SELECT is allowed, found DROP"}` once `check()` parses the query.
+Expect: this line once `check()` parses the query.
+
+```text
+{"ok": false, "reason": "only SELECT is allowed, found DROP"}
+```
 
 ```bash
 bun run verify validate-the-query

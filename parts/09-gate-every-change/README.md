@@ -47,7 +47,7 @@ These files come with the part. You do not change them:
 
 ## Steps
 
-57 minutes in 5 steps.
+An evening in 5 steps.
 
 | Step                                                          | Minutes | You produce                                                                            | The check reads                                                                            |
 | ------------------------------------------------------------- | ------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
@@ -67,7 +67,7 @@ Run every command from the repo root. Each step's files are in its `problem/` fo
 bun parts/09-gate-every-change/gate.ts --rules parts/09-gate-every-change/01-gate-the-change/problem/gate-rules.ts
 ```
 
-Expect: `attacks: 12 of 12 refused`, `run 1: 30 of 30` (and runs 2 and 3), and `The gate passes. Wrote SCORECARD.md.`
+Expect: a line that says 12 of 12 attacks were refused, a line for each of the 3 runs that says 30 of 30, and `The gate passes. Wrote SCORECARD.md.`
 
 ```bash
 bun run verify gate-the-change
@@ -81,7 +81,7 @@ Expect: `Done. All 6 rules pass.`
 bun parts/09-gate-every-change/gate.ts --rules parts/09-gate-every-change/02-catch-the-drift/problem/gate-rules.ts --golden parts/09-gate-every-change/02-catch-the-drift/problem/golden.toml --metrics parts/09-gate-every-change/02-catch-the-drift/problem/metrics.toml
 ```
 
-Expect: `run 1: 28 of 30` (and runs 2 and 3) and `The gate passes.`
+Expect: a line for each of the 3 runs that says 28 of 30, and `The gate passes.`
 
 ```bash
 bun run verify catch-the-drift
@@ -161,8 +161,8 @@ You now have a gate that any change must pass. It runs the golden set three time
 It keeps every trap, refuses every attack, and refuses a metric that disagrees with its golden references.
 And you proved it bites: it blocked a missing value index, a forgotten customer trap and a missing validator.
 
-This is the last part. For example, your repo now holds a `SCORECARD.md` that says `30 of 30` and
-`12 of 12` attacks refused. That file, the gate behind it and the failures it caught are your project.
+This is the last part. For example, your repo now holds a `SCORECARD.md` that says 30 of 30 and
+12 of 12 attacks refused. That file, the gate behind it and the failures it caught are your project.
 
 ## Read before or after
 

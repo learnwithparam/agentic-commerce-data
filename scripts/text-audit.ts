@@ -13,7 +13,11 @@ if (!existsSync(routesFile)) {
 }
 
 const configFile = join(ROOT, "e2e", "playwright.config.ts");
-const install = Bun.spawnSync(["bunx", "playwright", "install", "chromium"], { cwd: ROOT });
+// A machine that already has a Chromium needs no download.
+const hasBrowser = process.env.CHROMIUM_PATH || existsSync("/opt/pw-browsers");
+const install = hasBrowser
+  ? { exitCode: 0 }
+  : Bun.spawnSync(["bunx", "playwright", "install", "chromium"], { cwd: ROOT });
 if (install.exitCode !== 0) {
   console.error("Could not get the browser. Try next: run bunx playwright install chromium.");
   process.exit(2);

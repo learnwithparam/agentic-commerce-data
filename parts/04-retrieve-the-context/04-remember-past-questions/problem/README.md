@@ -39,7 +39,11 @@ If you ran it too early, delete `data/memory.jsonl`, or run `bun run world reset
 uv run python parts/04-retrieve-the-context/04-remember-past-questions/problem/memory.py add "How many sellers are based in Sao Paulo city?" "SELECT COUNT(*) FROM sellers WHERE seller_city = 'sao paulo'"
 ```
 
-Expect: `{"stored": false, "reason": "its rows do not match the reference rows"}` once the store checks pairs.
+Expect: this line once the store checks pairs.
+
+```text
+{"stored": false, "reason": "its rows do not match the reference rows"}
+```
 
 ## Done when
 

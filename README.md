@@ -52,7 +52,7 @@ Expect: `Seller ea8482cd71df3c1969d7b9473ff13abc had the most late deliveries in
 bun run score finished
 ```
 
-Expect: `Score: 30 of 30 match.` The naive agent you start from scores `14 of 30` on the same questions (`bun run score naive`).
+Expect: `Score: 30 of 30 match.` The naive agent you start from scores 14 of 30 on the same questions (`bun run score naive`).
 
 ```bash
 uv run ask-finished "Delete the test orders"
@@ -115,7 +115,7 @@ Start in [00-orientation](00-orientation/README.md). Each step has one check com
 | [serve-the-logistics-agent-with-a2a-sdk](parts/10-serve-the-logistics-agent-with-a2a-sdk/README.md) | 15      | optional |
 | [track-changed-facts-with-graphiti](parts/11-track-changed-facts-with-graphiti/README.md)           | 20      | optional |
 
-The steps take 431 minutes in total. The file [schedules.toml](schedules.toml) splits them into sessions. You can
+The steps take about a working day in total. The file [schedules.toml](schedules.toml) splits them into sessions. You can
 do them in one long session, in four evenings, or in six sessions a week apart. The file [PARTS.md](PARTS.md) lists every
 step and what its check reads.
 
@@ -135,13 +135,13 @@ licence lets you publish it. The commands and the checks stay the same.
 ## Read before you start
 
 1. Anthropic, [How Anthropic enables self-service data analytics with Claude](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude). Without written skills and metric definitions, accuracy was 21% at most. With them, it stayed above 95%. Without upkeep, it fell from about 95% to about 65% in a month.
-2. dbt Labs, [Semantic Layer vs. Text-to-SQL: 2026 Benchmark Update](https://docs.getdbt.com/blog/semantic-layer-vs-text-to-sql-2026). A company tests its own product here, so read it with care. Look for why a semantic layer fails with a clear error.
+2. dbt Labs, [Semantic Layer vs. Text-to-SQL: Benchmark Update](https://docs.getdbt.com/blog/semantic-layer-vs-text-to-sql-2026). A company tests its own product here, so read it with care. Look for why a semantic layer fails with a clear error.
 3. Jin and others, [Pervasive Annotation Errors Break Text-to-SQL Benchmarks and Leaderboards](https://arxiv.org/abs/2601.08778). Read the abstract and section 1. It shows why every test answer in this course is checked by hand.
 
 ## The data and its licence
 
 The data is the Brazilian E-Commerce Public Dataset by Olist ([Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)).
-Its licence is [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/). The data is not stored in
+Its licence is [CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/). The data is not stored in
 this repo. The command `bun run world` downloads a fixed copy. Then it checks each file's SHA-256, a fingerprint
 that changes if even one byte changes. You can read more in [world/README.md](world/README.md).
 
@@ -161,6 +161,10 @@ To use a live model:
 uv run models
 ```
 
-Expect: one `PASS` line per role, for example `provider replay  role fast   PASS  64 recorded replies, no key, cost 0`.
+Expect: one `PASS` line per role, for example this one.
+
+```text
+provider replay  role fast   PASS  64 recorded replies, no key, cost 0
+```
 
 The rules that every course repo follows are in [STANDARD.md](STANDARD.md), with the check behind each rule.

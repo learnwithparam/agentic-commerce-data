@@ -29,5 +29,5 @@
   },
   "capstone": true,
   "ladder": false,
-  "picks": true
+  "picks": false
 }

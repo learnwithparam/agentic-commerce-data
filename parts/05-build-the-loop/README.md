@@ -5,7 +5,7 @@
 Some questions need numbers, and some need words. A pipeline that always runs SQL cannot answer "what do their
 reviews say". A pipeline that always searches text cannot count.
 
-For example, "Which Sao Paulo sellers had the most late deliveries in 2018?" needs both. The finished agent's plan
+For example, "Which Sao Paulo sellers had the most late deliveries last year?" needs both. The finished agent's plan
 for it has the route `both`. It counts late orders with SQL, then quotes reviews from those orders.
 
 SQL errors are normal, so the agent must fix its own queries. It must also know when to stop trying.
@@ -43,14 +43,19 @@ You run a step's program with `kit.py` and the step name. For example:
 uv run python parts/05-build-the-loop/kit.py route-the-question "Delete the test orders"
 ```
 
-Expect: `{"question": "Delete the test orders", "route": "sql"}` before you start, and `"route": "refuse"` when
-your router works.
+Expect: this line before you start.
+
+```text
+{"question": "Delete the test orders", "route": "sql"}
+```
+
+When your router works, the route is `refuse`.
 
 Add `--folder solution` after the step name to run the sample solution instead.
 
 ## Steps
 
-55 minutes in 5 steps.
+An evening in 5 steps.
 
 | Step                                                            | Minutes | You produce                                                          | The check reads                                                                                        |
 | --------------------------------------------------------------- | ------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |

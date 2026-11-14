@@ -28,11 +28,11 @@ flowchart LR
 
 ## Steps
 
-15 minutes in 1 step. Part 08 must be done first, because the step reuses its logistics agent and card schema.
+A short while in 1 step. Part 08 must be done first, because the step reuses its logistics agent and card schema.
 
-| Step                                                          | Minutes | You produce                                     | The check reads                                        |
-| ------------------------------------------------------------- | ------- | ----------------------------------------------- | ------------------------------------------------------ |
-| [serve-with-the-sdk](01-serve-with-the-sdk/problem/README.md) | 15      | the logistics agent served with `a2a-sdk` 1.3.0 | the card, and the answers to 3 questions, from the SDK |
+| Step                                                          | Minutes | You produce                               | The check reads                                        |
+| ------------------------------------------------------------- | ------- | ----------------------------------------- | ------------------------------------------------------ |
+| [serve-with-the-sdk](01-serve-with-the-sdk/problem/README.md) | 15      | the logistics agent served with `a2a-sdk` | the card, and the answers to 3 questions, from the SDK |
 
 ## Walkthrough
 

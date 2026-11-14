@@ -29,7 +29,7 @@ flowchart LR
 
 ## Steps
 
-About 20 minutes in 1 step.
+A short while in 1 step.
 
 | Step                                                      | Minutes | You produce                         | The check reads                                                      |
 | --------------------------------------------------------- | ------- | ----------------------------------- | -------------------------------------------------------------------- |
@@ -83,10 +83,10 @@ Expect: Neo4j starts and listens on port 7687. This is not checked here.
 **Mem0, the runner-up.**
 
 - Choose when: you need simple memory for each user.
-- Trade-off: it has no built-in validity dates on a fact. Mem0 2.2.1 on PyPI is Apache-2.0 on GitHub.
+- Trade-off: it has no built-in validity dates on a fact. Mem0 on PyPI is Apache-2.0 on GitHub.
 
 **Graph databases for Graphiti.** Check the license before you choose one for a company.
 
 - Neo4j Community Edition: GPL-3.0, from its repository license file.
 - FalkorDB server: SSPL version 1, from its repository license file.
-- Kuzu: embedded and MIT on PyPI. Its last PyPI release, 0.11.3, is from October 2025. Its maintenance is not confirmed here.
+- Kuzu: embedded and MIT on PyPI. Its last PyPI release is old. Its maintenance is not confirmed here.

@@ -39,11 +39,11 @@ five fields:
 
 What the three new metrics mean:
 
-| Metric               | What it means                                                                 |
-| -------------------- | ----------------------------------------------------------------------------- |
-| `late_delivery_rate` | The share of delivered orders that came on a later day than the estimate.     |
-| `active_seller`      | A seller with at least one item in an order placed in one year, such as 2018. |
-| `repeat_customer`    | A person, `customer_unique_id`, with more than one order.                     |
+| Metric               | What it means                                                             |
+| -------------------- | ------------------------------------------------------------------------- |
+| `late_delivery_rate` | The share of delivered orders that came on a later day than the estimate. |
+| `active_seller`      | A seller with at least one item in an order placed in one year.           |
+| `repeat_customer`    | A person, `customer_unique_id`, with more than one order.                 |
 
 For `active_seller`, the expression is the period test, so it goes after `WHERE`. For `repeat_customer`, it
 tests a group, so it goes after `HAVING`.
@@ -65,7 +65,7 @@ Expect: `[(3095,)]`
 - Each `sql` contains its own `expression`.
 - Each `sql` passes the validator and returns rows.
 - `repeat_customer` counts people by `customer_unique_id`: 2,997.
-- `active_seller` has a period, such as 2018.
+- `active_seller` has a period, such as one year.
 - `late_delivery_rate` compares dates: 6.77% of delivered orders.
 
 ```bash
