@@ -1,7 +1,7 @@
 """The naive agent: the one the desk shipped first, and the one you start from.
 
 It asks the model for SQL, splits the reply on ';' and runs every statement on a read-write
-connection. It reads as right most of the time. Part one measures how often it is wrong;
+connection. It reads as right most of the time. Part 01 measures how often it is wrong;
 later parts fix it. Do not copy its database handling: lock-the-database exists because of it.
 """
 
