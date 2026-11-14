@@ -1,5 +1,5 @@
 # Parts mapped onto formats. This is the only file that holds time. Every format covers all 365 minutes of steps (330 core, 15 and 20 homework).
-# Part minutes: orientation 15, score-the-naive-agent 35, lock-the-database 30, define-the-metrics 35,
+# Part minutes: orientation 15, score-the-naive-agent 35, lock-the-database 42, define-the-metrics 35,
 # retrieve-the-context 45, build-the-loop 45, answer-with-ui 40, approve-the-write 25, delegate-over-a2a 35,
 # gate-every-change 25, serve-the-logistics-agent-with-a2a-sdk 15, track-changed-facts-with-graphiti 20.
 
