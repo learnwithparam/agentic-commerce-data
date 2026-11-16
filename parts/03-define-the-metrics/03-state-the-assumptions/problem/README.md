@@ -44,8 +44,8 @@ changes are in.
 
 The check asks all 30 golden questions, three times. In most runs:
 
-- every answer lists at least one assumption;
-- every answer that uses a metric shows that metric's assumption;
+- every answer lists at least one assumption.
+- every answer that uses a metric shows that metric's assumption.
 - every late-delivery answer says late is measured against the estimated date.
 
 ```bash

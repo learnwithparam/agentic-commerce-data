@@ -26,8 +26,8 @@ flowchart LR
 
 Fill in `why_not_store()` in `memory.py`. Return a reason, so the pair is refused, when:
 
-1. the question has no reference query in `world/golden.toml`;
-2. the SQL does not run;
+1. the question has no reference query in `world/golden.toml`.
+2. the SQL does not run.
 3. its rows are not the reference rows. Compare `comparable(rows)`, not the SQL text, and not the row count.
 
 Return `None` when the pair is right. `add()` and `examples()` already work.

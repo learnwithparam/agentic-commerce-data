@@ -16,6 +16,7 @@ You build it on real, messy data from Olist, a Brazilian online marketplace.
 For example, a team lead asks: "How many sellers are based in Sao Paulo city?" The naive agent says 694. It is the
 simple agent you start from. The right answer is 704. The city is written in 9 different ways in the data, and the
 naive agent finds only one of them.
+
 Nothing looks wrong, so nobody checks. This course teaches you to catch mistakes like this one.
 
 **This course is for you** if you are a backend or data engineer and someone asked you for "a chat box on the
@@ -26,9 +27,10 @@ You need to know some Python, and how to write SQL with a `JOIN` and a `GROUP BY
 an agent before.
 
 **At the end you have** an agent that gets the right rows on 30 test questions. Each question has an answer that a
-person checked by hand. The course calls these the golden questions. Your agent also refuses every
-request to change data. It passes questions it does not own to another agent. You also have a scorecard that shows
-your score before and after.
+person checked by hand. The course calls these the golden questions.
+
+Your agent also refuses every request to change data. It passes questions it does not own to another agent. You also
+have a scorecard that shows your score before and after.
 
 ## Run the finished system first
 
@@ -124,9 +126,9 @@ step and what its check reads.
 At the end you publish a repo of your own. The gate passes on its last commit. It has a file called
 `SCORECARD.md` that shows:
 
-- the naive score and your score on the same 30 golden questions, as the middle value of 3 runs;
-- the attacks your agent refused;
-- the broken copies of your agent that the gate caught;
+- the naive score and your score on the same 30 golden questions, as the middle value of 3 runs.
+- the attacks your agent refused.
+- the broken copies of your agent that the gate caught.
 - the review quotes your agent cited, each one traced back to a real review.
 
 Add 5 golden questions from your own work, and check each answer by hand. You may bring your own database if its
@@ -142,8 +144,10 @@ licence lets you publish it. The commands and the checks stay the same.
 
 The data is the Brazilian E-Commerce Public Dataset by Olist ([Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)).
 Its licence is [CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/). The data is not stored in
-this repo. The command `bun run world` downloads a fixed copy. Then it checks each file's SHA-256, a fingerprint
-that changes if even one byte changes. You can read more in [world/README.md](world/README.md).
+this repo. The command `bun run world` downloads a fixed copy.
+
+Then it checks each file's SHA-256, a fingerprint that changes if even one byte changes. You can read more in
+[world/README.md](world/README.md).
 
 ## Models
 

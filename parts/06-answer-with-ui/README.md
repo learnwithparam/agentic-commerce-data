@@ -13,8 +13,8 @@ works.
 
 You write Python only. The course gives you the page that draws the screen: `renderer.html` in this folder.
 
-For example, the finished agent's answer about late deliveries in Sao Paulo shows four parts: a table of sellers,
-a chart of late orders by month, the assumptions, and three quoted reviews. You saw it in `answer.html` in the
+For example, the finished agent's answer about late deliveries in Sao Paulo shows four parts.
+They are a table of sellers, a chart of late orders by month, the assumptions, and three quoted reviews. You saw it in `answer.html` in the
 orientation. In this part you build the same screen from A2UI messages.
 
 ```mermaid

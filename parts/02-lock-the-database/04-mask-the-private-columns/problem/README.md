@@ -3,8 +3,10 @@
 ## The problem
 
 A seller partner asks the desk a question. The desk can read the `customers` table, so it may answer with a
-buyer's id and zip code. The partner was never meant to see those. For example, "which cities do our buyers live in?" comes back with a zip prefix for every buyer. One question, one leak. A good desk checks who
-is asking, and hides private columns before the rows leave.
+buyer's id and zip code. The partner was never meant to see those.
+
+For example, "which cities do our buyers live in?" comes back with a zip prefix for every buyer. One question, one
+leak. A good desk checks who is asking, and hides private columns before the rows leave.
 
 ## Your challenge
 

@@ -3,7 +3,7 @@
 You join the operations desk of Olist. Olist is a Brazilian marketplace. It lists the products of small sellers on
 large shopping sites. Two kinds of people send the desk questions:
 
-- category managers, who own the sales and quality of one product category;
+- category managers, who own the sales and quality of one product category.
 - seller-success leads, who help sellers start, coach them, and sometimes pause them.
 
 Today a chatbot answers their questions.
@@ -49,8 +49,9 @@ bun install && uv sync
 Expect: both finish with no error. `uv sync` ends with a line that tells you how many packages it installed.
 
 Now build the world. The command downloads the Olist files from a fixed copy. It checks each file's SHA-256, a
-fingerprint that changes if one byte changes. Then it builds the database `data/olist.db`. The data is never stored
-in this repo. Read [world/README.md](../world/README.md) for the source and the licence.
+fingerprint that changes if one byte changes. Then it builds the database `data/olist.db`.
+
+The data is never stored in this repo. Read [world/README.md](../world/README.md) for the source and the licence.
 
 ```bash
 bun run world

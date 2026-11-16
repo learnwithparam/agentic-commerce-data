@@ -126,13 +126,13 @@ your write-up.
 
 You now have every kind of context the agent needs:
 
-- cards that describe each table, and a pruner that sends only the right ones;
-- a value index that turns "Sao Paulo" into nine stored spellings;
-- a store of past pairs that were right;
+- cards that describe each table, and a pruner that sends only the right ones.
+- a value index that turns "Sao Paulo" into nine stored spellings.
+- a store of past pairs that were right.
 - a review search that quotes real comments with their `review_id`.
 
-Each piece works on its own. In [build-the-loop](../05-build-the-loop/README.md) you join them in one agent loop:
-it routes each question to SQL, reviews or both, repairs a failed query, and cites the rows behind every number.
+Each piece works on its own. In [build-the-loop](../05-build-the-loop/README.md) you join them in one agent loop.
+The loop routes each question to SQL, reviews or both, repairs a failed query, and cites the rows behind every number.
 
 ## Read before or after
 

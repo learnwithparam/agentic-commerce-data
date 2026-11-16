@@ -34,8 +34,8 @@ flowchart LR
 This folder holds your agent, `ask.py`, with the `sql_tool.py` and `validator.py` you built. Find the TODO in
 `ask()`. Run `validator.check(sql)` before `sql_tool.run`. When it raises `validator.QueryRefusedError`:
 
-1. log the query with `log_query_failure`, with an error that starts with `refused:`;
-2. set `refused` to true, `route` to `"refuse"`, and a `reason` a person can read;
+1. log the query with `log_query_failure`, with an error that starts with `refused:`.
+2. set `refused` to true, `route` to `"refuse"`, and a `reason` a person can read.
 3. return the answer, so the query never runs.
 
 Here is the result you want:

@@ -31,10 +31,10 @@ flowchart LR
 Open `metrics.toml` in this folder. `gmv` is done, as an example. Add the other three metrics. Each one needs
 five fields:
 
-- `description`: what the number means, in one plain sentence;
-- `owner`: the role who decides what it means, such as "logistics operations lead";
-- `grain`: what one row counts, for example `order`, `seller` or `customer_unique_id`;
-- `expression`: the piece of SQL that defines it, for example `COUNT(DISTINCT o.order_id) > 1`;
+- `description`: what the number means, in one plain sentence.
+- `owner`: the role who decides what it means, such as "logistics operations lead".
+- `grain`: what one row counts, for example `order`, `seller` or `customer_unique_id`.
+- `expression`: the piece of SQL that defines it, for example `COUNT(DISTINCT o.order_id) > 1`.
 - `sql`: one full query that uses the expression on all the data.
 
 What the three new metrics mean:

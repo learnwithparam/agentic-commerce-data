@@ -18,8 +18,9 @@ Two things go wrong when teams start with A2A:
   any card can be pointed at an impostor. A2A 1.0 lets an agent sign its card, so you can check who wrote it.
 
 In this part your ops agent does five things. It publishes its own card. It hands carrier questions to the
-logistics agent. It streams the task, so slow work and errors reach the user. It signs its card. And it refuses
-agents it cannot verify.
+logistics agent. It streams the task, so slow work and errors reach the user.
+
+It also signs its card. And it refuses agents it cannot verify.
 
 ```mermaid
 flowchart LR

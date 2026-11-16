@@ -4,7 +4,7 @@
 
 Some questions have more than one honest answer. For example, "What is our total revenue?" has two in this data:
 
-- the payments received: 16,008,872.12;
+- the payments received: 16,008,872.12.
 - the item prices plus the freight: 15,843,553.24.
 
 Freight is the cost of shipping. GMV, the total value of goods sold, also has two answers: with freight or without

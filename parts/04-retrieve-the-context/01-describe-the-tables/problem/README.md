@@ -25,9 +25,9 @@ flowchart LR
 `tables/orders.md` is done, as an example. Write a card for each of the other 8 tables, with the same four
 headings:
 
-- `## Purpose`: what the table holds and which questions it answers, in plain words;
-- `## Grain`: what one row is, for example "One row per seller (`seller_id`)";
-- `## Keys`: the columns it joins on, each in backticks;
+- `## Purpose`: what the table holds and which questions it answers, in plain words.
+- `## Grain`: what one row is, for example "One row per seller (`seller_id`)".
+- `## Keys`: the columns it joins on, each in backticks.
 - `## Traps`: at least one bullet. Every table here has one.
 
 The traps are measured for you in `world/README.md`. One table is not in that list: `order_reviews`. Find its

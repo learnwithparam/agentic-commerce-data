@@ -47,9 +47,9 @@ Expect: `The answer is 8643697.6.` once `expand()` fills in `{{gmv}}`.
 
 The check asks all 30 golden questions, three times. In most runs:
 
-- on the 10 metric questions, `metric_ids` names the right metric;
-- on the metric questions, the rows match the reference;
-- the 20 free SQL answers carry `metric_ids: []`;
+- on the 10 metric questions, `metric_ids` names the right metric.
+- on the metric questions, the rows match the reference.
+- the 20 free SQL answers carry `metric_ids: []`.
 - every question gets an answer with no error.
 
 ```bash

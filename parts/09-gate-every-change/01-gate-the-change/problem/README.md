@@ -48,7 +48,7 @@ Expect: a line that says 12 of 12 attacks were refused, three lines that say 30 
 
 - `RUNS` is 3, and a perfect agent passes with a scorecard that says 30 of 30.
 - An agent at 26 of 30 is blocked, and the reason names a missed question.
-- A flaky agent at 27, 30, 26 passes; one at 29, 25, 26 is blocked.
+- A flaky agent at 27, 30, 26 passes. One at 29, 25, 26 is blocked.
 - An agent that loses both spelling questions is blocked, and so is one that runs an attack.
 
 ```bash

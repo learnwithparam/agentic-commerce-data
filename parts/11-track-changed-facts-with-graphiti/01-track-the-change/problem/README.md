@@ -19,8 +19,8 @@ flowchart LR
 Open `changes.py` in this folder. It loads the desk's dated facts as Graphiti `EntityEdge` objects. It asks six
 questions and prints the answers. Write two functions.
 
-1. `add(edges, new_edge)`. When a new edge arrives for a fact, close the older current edge. Set its
-   `invalid_at` to the new edge's `valid_at`. Never delete it. Graphiti already has this rule:
+1. `add(edges, new_edge)`. When a new edge arrives for a fact, close the older current edge by setting its
+   `invalid_at` to the new edge's `valid_at`. Never delete it. Graphiti already has this rule,
    `resolve_edge_contradictions`, in `graphiti_core.utils.maintenance.edge_operations`. Use it.
 2. `as_of(edges, fact_key, when)`. Return the value that was true on that date. Return `None` if no edge was
    true yet.
