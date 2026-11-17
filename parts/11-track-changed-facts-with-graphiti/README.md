@@ -2,15 +2,17 @@
 
 ## The problem
 
-The desk gave a number that later changed. In March it said Sao Paulo city had 694 sellers. After a spelling
-fix, it says 704. Part 04 keeps verified questions and their SQL, but it overwrites them. So nobody can ask
-what the desk believed in March, or when the belief changed.
+The desk gave a number that later changed. In March it said Sao Paulo city had 694 sellers. After a spelling fix, it says 704.
+
+Part 04 keeps verified questions and their SQL, but it overwrites them. So nobody can ask what the desk believed in March. Nobody can ask when the belief changed.
 
 ## Why it matters
 
-A report needs the value true now. An audit needs the value true on an old date. If you keep only the newest
-value, the old answer is gone. If you add the new value and never close the old one, two values look current.
-For example, a replay of a March question must still give 694, while the report gives 704.
+A report needs the value that is true now. An audit needs the value that was true on an old date.
+
+If you keep only the newest value, the old answer is gone. If you add the new value and never close the old one, two values look current.
+
+For example, a replay of a March question must still give 694. The report must give 704.
 
 ```mermaid
 flowchart LR
@@ -23,9 +25,9 @@ flowchart LR
 
 ## What we teach
 
-- A fact in Graphiti is an edge with a start date (`valid_at`) and an end date (`invalid_at`).
+- A fact in Graphiti is an edge. It has a start date (`valid_at`) and an end date (`invalid_at`).
 - A change closes the old edge. It never deletes it.
-- A date question returns the value true on that date, or nothing before the first edge.
+- A date question returns the value true on that date. It returns nothing before the first edge.
 
 ## Steps
 
@@ -63,9 +65,7 @@ bun run verify track-the-change solution
 
 Expect: `Done. All 8 rules pass.`
 
-**Read-only: a graph database, needs your own key, not checked.** Graphiti stores its edges in a graph
-database. This command starts Neo4j in Docker. The course does not run it, and the check does not use it.
-The live Graphiti also needs a model key, which you set yourself.
+**Read-only: a graph database, needs your own key, not checked.** Graphiti stores its edges in a graph database. This command starts Neo4j in Docker. The course does not run it, and the check does not use it. The live Graphiti also needs a model key, which you set yourself.
 
 ```bash
 docker run --rm -p 7687:7687 neo4j:5
@@ -78,7 +78,7 @@ Expect: Neo4j starts and listens on port 7687. This is not checked here.
 **Graphiti.**
 
 - Choose when: you must answer "what was true on that date?" and keep the old value.
-- Trade-off: it needs a graph database and a model call for each episode.
+- Trade-off: it needs a graph database, and a model call for each episode.
 
 **Mem0, the runner-up.**
 

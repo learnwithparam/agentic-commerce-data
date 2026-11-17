@@ -2,15 +2,11 @@
 
 ## The problem
 
-You now have nine table cards. Sending all nine with every question is easy, and it is a mistake. The model
-reads a long prompt, pays for it, and grabs a table it does not need.
+You now have nine table cards. Sending all nine with every question is easy. It is also a mistake. The model reads a long prompt, pays for it, and may grab a table it does not need.
 
-For example, "Which 5 customer states placed the most orders?" needs only `customers` and `orders`. With all nine
-cards in front of it, the model may join `geolocation` to find the states. That join repeats each order many
-times, and the counts come out far too large.
+For example, "Which 5 customer states placed the most orders?" needs only `customers` and `orders`. With all nine cards in front of it, the model may join `geolocation` to find the states. That join repeats each order many times. The counts come out far too large.
 
-So the agent picks the few cards a question needs, and sends only those to the SQL writer. To prune means to cut
-away the parts you do not need.
+So the agent picks the few cards a question needs. It sends only those to the SQL writer. To prune means to cut away the parts you do not need.
 
 ```mermaid
 flowchart LR
@@ -22,15 +18,13 @@ flowchart LR
 
 ## Your challenge
 
-This folder holds `prune.py` and the nine cards in `tables/`. Today `select_tables()` returns every table. Make
-it choose:
+This folder holds `prune.py` and the nine cards in `tables/`. Today `select_tables()` returns every table. Make it choose:
 
 1. In `card_words()`, read the words of each card's Purpose section.
 2. In `select_tables()`, score each table by the words its card shares with the question.
 3. Keep the best tables that share any word, at most `MOST_TABLES` (4).
 
-Any method passes, as long as the picks are right. You may also improve the cards: a word people ask with, such
-as "late" or "stars", helps the right card win.
+Any method passes, as long as the picks are right. You may also improve the cards. A word people ask with, such as "late" or "stars", helps the right card win.
 
 Try one question:
 

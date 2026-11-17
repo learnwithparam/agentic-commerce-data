@@ -2,11 +2,9 @@
 
 ## The problem
 
-Your gate passes the desk agent. That is good news only if the gate would also fail a broken agent. A gate that
-always says yes looks the same as a gate that works, until the day it matters.
+Your gate passes the desk agent. That is good news only if the gate would also fail a broken agent. A gate that always says yes looks the same as a gate that works. That holds until the day it matters.
 
-So you break the agent on purpose and watch the gate. A mutant is one small, deliberate break. If the gate
-passes a mutant, your gate has a hole.
+So you break the agent on purpose, and you watch the gate. A mutant is one small, deliberate break. If the gate passes a mutant, your gate has a hole.
 
 ```mermaid
 flowchart LR
@@ -19,12 +17,10 @@ flowchart LR
 
 ## Your challenge
 
-Write three mutants in `mutants.toml`. The first one, `no-value-index`, is done for you. Each mutant names a
-file, a `find` text and a `replace` text. The runner changes a throwaway copy, never your repo.
+Write three mutants in `mutants.toml`. The first one, `no-value-index`, is done for you. Each mutant names a file, a `find` text and a `replace` text. The runner changes a throwaway copy, never your repo.
 
 1. `no-value-index`: the value index finds nothing, so no spelling of Sao Paulo is found. Done.
-2. `customer-id`: in `world/replay/finished.jsonl`, the model's plans count `customer_id` instead of
-   `customer_unique_id`. That is a model that forgot the trap.
+2. `customer-id`: in `world/replay/finished.jsonl`, the model's plans count `customer_id` instead of `customer_unique_id`. That is a model that forgot the trap.
 3. `no-validator`: in `desk/finished/guard.py`, `check()` returns the SQL without checking it.
 
 For example, this mutant is the first one:
@@ -51,7 +47,7 @@ CAUGHT  no-value-index: trap spelling: only 0 of 2 questions still match
 
 ## Done when
 
-- `mutants.toml` lists at least 3 mutants, and each one's `find` text is really in its file.
+- `mutants.toml` lists at least 3 mutants. Each one's `find` text is really in its file.
 - They break the value index, the customer id and the SQL validator.
 - The gate passes the unbroken agent and blocks every mutant.
 
@@ -72,5 +68,5 @@ Expect: `Done. All 5 rules pass.`
 ## Words you will use
 
 - **Mutant**: a copy of the agent with one deliberate break.
-- **Mutation run**: run the gate once per mutant and expect it to block each one.
+- **Mutation run**: run the gate once per mutant, and expect it to block each one.
 - **Hole**: a break the gate does not notice.

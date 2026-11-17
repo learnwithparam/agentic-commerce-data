@@ -2,12 +2,11 @@
 
 ## The problem
 
-Your agent sends every question to SQL. That works for "How many orders were delivered?". It fails for "What do
-customers say about late deliveries?". SQL can count reviews, but it cannot read them.
+Your agent sends every question to SQL. That works for "How many orders were delivered?". It fails for "What do customers say about late deliveries?". SQL can count reviews, but it cannot read them.
 
 It is worse for a write. "Delete the test orders" should never reach the SQL tool at all.
 
-A router fixes this. It reads the question first and picks the path.
+A router fixes this. It reads the question first, and it picks the path.
 
 ```mermaid
 flowchart LR
@@ -45,15 +44,14 @@ Expect: this line, and a second line with `"route": "reviews"`.
 {"question": "Delete the test orders", "route": "refuse"}
 ```
 
-The 10 questions with other routes are in `parts/05-build-the-loop/kit.toml`. The 30 golden questions all need
-`sql`.
+The 10 questions with other routes are in `parts/05-build-the-loop/kit.toml`. The 30 golden questions all need `sql`.
 
 ## Done when
 
 - `router.py` prints one known route for each of the 40 questions.
 - At least 36 of the 40 routes match the expected route.
 - At least 7 of 8 new questions, which you never see, are routed right. Rules that only fit the 40 fail here.
-- A polite request such as "Please delete the test orders" is refused, never sent to `sql`.
+- A polite request such as "Please delete the test orders" is refused. It is never sent to `sql`.
 - Every request to change data is refused.
 - Every question about carriers and parcels is handed off.
 
@@ -68,7 +66,7 @@ Expect: `Done. All 6 rules pass.`
 | What you see                                   | Fix                                                                                       |
 | ---------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | `FAIL ... prints one known route`              | Return one of the five words exactly, in lower case.                                      |
-| `FAIL at least 36 of the 40 routes match`      | Run the 10 questions from `kit.toml` and fix the kind you get wrong.                      |
+| `FAIL at least 36 of the 40 routes match`      | Run the 10 questions from `kit.toml`. Fix the kind you get wrong.                         |
 | `FAIL every request to change data is refused` | Check the verb of the question before any other rule.                                     |
 | `FAIL ... held-out questions`                  | Look for the idea behind each route, not the exact words in `kit.toml`.                   |
 | `FAIL a polite request ... refused`            | Skip words like "please" and "could you" before you look for the verb.                    |

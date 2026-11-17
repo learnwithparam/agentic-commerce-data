@@ -2,21 +2,15 @@
 
 ## The problem
 
-Some questions need numbers, and some need words. A pipeline that always runs SQL cannot answer "what do their
-reviews say". A pipeline that always searches text cannot count.
+Some questions need numbers. Some need words. A pipeline that always runs SQL cannot answer "what do their reviews say?". A pipeline that always searches text cannot count.
 
-For example, "Which Sao Paulo sellers had the most late deliveries last year?" needs both. The finished agent's plan
-for it has the route `both`. It counts late orders with SQL, then quotes reviews from those orders.
+For example, "Which Sao Paulo sellers had the most late deliveries last year?" needs both. The finished agent's plan for it has the route `both`. It counts late orders with SQL. Then it quotes reviews from those orders.
 
-SQL errors are normal, so the agent must fix its own queries. It must also know when to stop trying.
+SQL errors are normal. So the agent must fix its own queries. It must also know when to stop trying.
 
-An answer also needs citations. A citation points to the exact query or review behind a claim. Without
-citations, the category manager cannot check the answer.
+An answer also needs citations. A citation points to the exact query or review behind a claim. Without citations, the category manager cannot check the answer.
 
-Anthropic automates 95% of its business analytics questions with Claude, at about 95% accuracy. It still names
-one failure it cannot fully catch: an answer that is wrong but looks right. One of its fixes is a footer on every
-answer that says where the answer came from
-([Anthropic](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude)).
+Anthropic automates 95% of its business analytics questions with Claude. It reports about 95% accuracy. It still names one failure it cannot fully catch: an answer that is wrong but looks right. One of its fixes is a footer on every answer. The footer says where the answer came from ([Anthropic](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude)).
 
 ```mermaid
 flowchart LR
@@ -34,8 +28,7 @@ flowchart LR
 
 ## How the steps run
 
-Each step has one small Python program in its `problem/` folder. You change that program. The helpers it uses
-are in `kit.py` in this folder, and the test data is in `kit.toml`.
+Each step has one small Python program in its `problem/` folder. You change that program. The helpers it uses are in `kit.py` in this folder. The test data is in `kit.toml`.
 
 You run a step's program with `kit.py` and the step name. For example:
 
@@ -123,8 +116,7 @@ Expect: `Part build-the-loop is done: 5/5 steps pass.`
 
 **The problem.** A pipeline that always runs SQL cannot say why.
 
-**What you hand in.** A commit on your repo with your router, the retry loop with at most 2 retries, the
-relevance check, and citations.
+**What you hand in.** A commit on your repo. It holds your router, the retry loop with at most 2 retries, the relevance check, and citations.
 
 **How it is checked.** Each line is yes or no:
 
@@ -134,21 +126,15 @@ relevance check, and citations.
 4. Does `bun run verify cite-the-rows` pass?
 5. Does `bun run verify trace-the-cost` pass?
 
-**Extension, not graded.** Add a reviewer pass: a second model call that checks each answer before it goes out.
-Record how accuracy, tokens and time change. Anthropic reports that its adversarial review added 6% accuracy for
-32% more tokens and 72% more time
-([Anthropic](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude)).
+**Extension, not graded.** Add a reviewer pass. It is a second model call that checks each answer before it goes out. Record how accuracy, tokens and time change. Anthropic reports that its adversarial review added 6% accuracy. It cost 32% more tokens and 72% more time ([Anthropic](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude)).
 
 ## Finished
 
-You now have the four parts of an agent loop: a router, a retry loop with a limit, a relevance check and
-citations. Every claim in an answer points to rows or a review that a check can look up.
+You now have the four parts of an agent loop. They are a router, a retry loop with a limit, a relevance check and citations. Every claim in an answer points to rows or a review. A check can look up each one.
 
-Next, in answer-with-ui, you turn this answer into a screen. The rows become a table and a chart, and the cited
-quotes become review cards. The citations you built here are what each card shows.
+Next, in answer-with-ui, you turn this answer into a screen. The rows become a table and a chart. The cited quotes become review cards. The citations you built here are what each card shows.
 
 ## Read before or after
 
-- Chen and others, [Text-to-SQL for Enterprise Data Analytics](https://arxiv.org/abs/2507.14372). LinkedIn's SQL
-  Bot, with checks before a query runs and the error-repair path.
+- Chen and others, [Text-to-SQL for Enterprise Data Analytics](https://arxiv.org/abs/2507.14372). LinkedIn's SQL Bot, with checks before a query runs and the error-repair path.
 - [QueryGPT](https://www.uber.com/blog/query-gpt/) from Uber. Why a router comes before the SQL writer.

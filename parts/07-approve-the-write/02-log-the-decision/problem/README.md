@@ -2,12 +2,11 @@
 
 ## The problem
 
-A seller asks: "Who paused my shop, and why?" The desk must answer with a name, a time and the evidence. A pause
-with no record is a pause nobody can explain.
+A seller asks, "Who paused my shop, and why?" The desk must answer with a name, a time and the evidence. A pause with no record is a pause nobody can explain.
 
-The name must come from the session: the person who is signed in. The model also writes names. For example,
-the recorded plan says `"approver": "cm-joao"`, but nobody signed in as cm-joao. A log that copies the model's
-name records a decision nobody made.
+The name must come from the session. That means the person who is signed in.
+
+The model also writes names. For example, the recorded plan says `"approver": "cm-joao"`. But nobody signed in as cm-joao. A log that copies the model's name records a decision nobody made.
 
 ```mermaid
 flowchart LR
@@ -19,8 +18,7 @@ flowchart LR
 
 ## Your challenge
 
-Open `approve.py` in this folder. It is the solution to ask-before-pausing. In `resume`, write one line to
-`kit.decisions_log()` for every decision, approved or rejected. Use `kit.append_line(path, entry)`.
+Open `approve.py` in this folder. It is the solution to ask-before-pausing. In `resume`, write one line to `kit.decisions_log()` for every decision, approved or rejected. Use `kit.append_line(path, entry)`.
 
 Each line holds:
 
@@ -37,8 +35,7 @@ Each line holds:
 uv run python parts/07-approve-the-write/kit.py log-the-decision resume approval-1a2b3c4d5e6f --reject --user sl-rui
 ```
 
-Expect: `"approved": false`, and one new line in `data/logs/decisions.jsonl` with `"approver": "sl-rui"`. Ask
-first, as in ask-before-pausing, and use the id it printed.
+Expect: `"approved": false`, and one new line in `data/logs/decisions.jsonl` with `"approver": "sl-rui"`. Ask first, as in ask-before-pausing, and use the id it printed.
 
 ## Done when
 
@@ -63,5 +60,5 @@ Expect: `Done. All 4 rules pass.`
 
 ## Words you will use
 
-- **Audit log**: a file that records who did what, and when, so anyone can check it later.
+- **Audit log**: a file that records who did what, and when. Anyone can check it later.
 - **Session**: who is signed in right now. The program gets it from `--user`, not from the model.

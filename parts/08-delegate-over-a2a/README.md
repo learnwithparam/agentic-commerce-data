@@ -2,23 +2,17 @@
 
 ## The problem
 
-Some questions need data your desk does not own. For example, a category manager asks: "Why was order
-`9b189f6cf2ef734a7dd0419ed3c64d99` delivered late?" Your database says it came 12 days after the estimate.
-Only the logistics team knows why. Their carrier data lives in their own system, behind their own agent.
+Some questions need data your desk does not own. For example, a category manager asks: "Why was order `9b189f6cf2ef734a7dd0419ed3c64d99` delivered late?" Your database says it came 12 days after the estimate. Only the logistics team knows why. Their carrier data lives in their own system, behind their own agent.
 
-A2A (Agent2Agent) is an open standard for this. One agent sends a task to another agent and gets the result back.
-It is a Linux Foundation project. Its partner page lists 180 organisations
+A2A (Agent2Agent) is an open standard for this. One agent sends a task to another agent. Then it gets the result back. It is a Linux Foundation project. Its partner page lists 180 organisations
 ([A2A partners](https://github.com/a2aproject/A2A/blob/main/docs/partners.md), read from commit `d18aa92`).
 
 Two things go wrong when teams start with A2A:
 
-- **A slow task.** A request that waits for the whole answer can hit a gateway time limit. A gateway is the server
-  in front of an agent. Here it closes any request that waits more than 60 seconds.
-- **A fake agent.** Each agent publishes an Agent Card, a small file that says who it is. An agent that believes
-  any card can be pointed at an impostor. A2A 1.0 lets an agent sign its card, so you can check who wrote it.
+- **A slow task.** A request that waits for the whole answer can hit a gateway time limit. A gateway is the server in front of an agent. Here it closes any request that waits more than 60 seconds.
+- **A fake agent.** Each agent publishes an Agent Card. It is a small file that says who the agent is. An agent that believes any card can be pointed at an impostor. A2A 1.0 lets an agent sign its card, so you can check who wrote it.
 
-In this part your ops agent does five things. It publishes its own card. It hands carrier questions to the
-logistics agent. It streams the task, so slow work and errors reach the user.
+In this part your ops agent does five things. It publishes its own card. It hands carrier questions to the logistics agent. It streams the task, so slow work and errors reach the user.
 
 It also signs its card. And it refuses agents it cannot verify.
 
@@ -59,8 +53,7 @@ Part of an evening in 5 steps.
 
 ## Walkthrough
 
-Each step folder holds your starting files in `problem/`. You edit them there. Run every command from the repo
-root. Commands that start a server keep running, so give each server its own terminal and stop it with Ctrl+C.
+Each step folder holds your starting files in `problem/`. You edit them there. Run every command from the repo root. Commands that start a server keep running. So give each server its own terminal, and stop it with Ctrl+C.
 
 **publish-the-card.** Fill in `agent-card.json`, then start your server:
 
@@ -155,10 +148,9 @@ Part delegate-over-a2a is done: 5/5 steps pass.
 
 ## Assignment
 
-The problem: carrier data belongs to another team, and your agent must reach it without trusting a stranger.
+The problem: carrier data belongs to another team. Your agent must reach it without trusting a stranger.
 
-Hand in a commit on your course repo with your five finished step folders. The grader answers each question with
-yes or no:
+Hand in a commit on your course repo with your five finished step folders. The grader answers each question with yes or no:
 
 | #   | Question                                                                                    | How it is checked                      |
 | --- | ------------------------------------------------------------------------------------------- | -------------------------------------- |
@@ -168,18 +160,15 @@ yes or no:
 | 4   | Does your card's signature verify with your published key, and break when one byte changes? | `bun run verify sign-the-card`         |
 | 5   | Are the pricing agent and the impostor refused, and the logistics agent accepted?           | `bun run verify refuse-the-unsigned`   |
 
-Extension, not graded: rotate your signing key. Put two signatures on the card: one from the old key and one from the new. Then show that a client with
-either key in its allowlist accepts the card.
+Extension, not graded: rotate your signing key. Put two signatures on the card: one from the old key and one from the new. Then show that a client with either key in its allowlist accepts the card.
 
 ## Finished
 
-You now have an ops agent that other agents can find. It hands work it does not own to the team that owns it.
-It keeps the user informed while a slow task runs. And it talks only to agents whose cards it can verify.
-For example, it accepts the logistics agent and refuses the impostor, even though both call themselves
-"Logistics agent".
+You now have an ops agent that other agents can find. It hands work it does not own to the team that owns it. It keeps the user informed while a slow task runs. It talks only to agents whose cards it can verify.
 
-The next part, gate-every-change, puts all of this behind a gate. A change to a prompt, a model, a metric or a
-card must pass the golden set and the attacks before it can merge.
+For example, it accepts the logistics agent and refuses the impostor. Both call themselves "Logistics agent".
+
+The next part, gate-every-change, puts all of this behind a gate. A change to a prompt, a model, a metric or a card must pass the golden set and the attacks. Only then can it merge.
 
 ## Read before or after
 

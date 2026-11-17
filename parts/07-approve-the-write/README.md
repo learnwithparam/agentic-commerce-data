@@ -2,18 +2,13 @@
 
 ## The problem
 
-Pausing a seller cuts their income. The agent may find the evidence and write a draft of the action. But a named
-person decides. The change never goes through SQL. It goes to the seller-success team's system, which the course
-replaces with a mock.
+Pausing a seller cuts their income. The agent may find the evidence and write a draft of the action. But a named person decides. The change never goes through SQL.
 
-Anthropic's data team names a failure their checks cannot fully catch: an answer that is wrong but looks right.
-One of their fixes is explicit human sign-off on anything that goes to leadership
-([Anthropic](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude)). A pause is
-the same kind of decision.
+It goes to the seller-success team's system. The course replaces that system with a mock.
 
-For example, a category manager writes "Pause seller ea8482cd, too many late deliveries". The agent
-shows a form with the evidence: 71 of 795 delivered orders came late. Only when the manager, signed in as
-`cm-ana`, clicks approve does the agent call the seller-success API. Then it writes one line to `decisions.jsonl`.
+Anthropic's data team names a failure their checks cannot fully catch: an answer that is wrong but looks right. One of their fixes is explicit human sign-off on anything that goes to leadership ([Anthropic](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude)). A pause is the same kind of decision.
+
+For example, a category manager writes "Pause seller ea8482cd, too many late deliveries". The agent shows a form with the evidence: 71 of 795 delivered orders came late. Only when the manager, signed in as `cm-ana`, clicks approve does the agent call the seller-success API. Then it writes one line to `decisions.jsonl`.
 
 ```mermaid
 sequenceDiagram
@@ -30,8 +25,7 @@ sequenceDiagram
 
 ## How the steps run
 
-Both steps use one program, `approve.py`, in each step's `problem/` folder. The helpers are in `kit.py` in this
-folder. They hold the recorded plan, the mock seller-success API and the list of runs that wait for a person.
+Both steps use one program, `approve.py`, in each step's `problem/` folder. The helpers are in `kit.py` in this folder. They hold the recorded plan, the mock seller-success API and the list of runs that wait for a person.
 
 Add `--folder solution` after the step name to run the sample solution instead.
 
@@ -76,27 +70,23 @@ Expect: `Part approve-the-write is done: 2/2 steps pass.`
 
 **The problem.** Pausing a seller cuts their income.
 
-**What you hand in.** A commit on your repo with the approval form, the interrupt and resume, and
-`decisions.jsonl`.
+**What you hand in.** A commit on your repo. It holds the approval form, the interrupt and resume, and `decisions.jsonl`.
 
 **How it is checked.** Each line is yes or no:
 
 1. Does the mock seller API log stay empty without approval, and hold one call after it? (`ask-before-pausing`)
 2. Does every decision write one line, with the signed-in user as approver? (`log-the-decision`)
 
-**Extension, not graded.** Add a second approver rule. A pause for a seller above a GMV threshold needs two
-approvals from two different people. Then only the second approval calls the API.
+**Extension, not graded.** Add a second approver rule. A pause for a seller above a GMV threshold needs two approvals from two different people. Then only the second approval calls the API.
 
 ## Finished
 
-Your agent can now act, but only with a person's yes. A pause request ends as an interrupt with the evidence on
-screen. An approval calls the seller-success API once, and a rejection calls it never. Every decision leaves one
-line that says who decided, when, and on which queries.
+Your agent can now act, but only with a person's yes. A pause request ends as an interrupt, with the evidence on screen. An approval calls the seller-success API once. A rejection never calls it.
 
-Next, in delegate-over-a2a, the agent meets questions it does not own. Carrier data belongs to the logistics team,
-so the agent hands those questions to the logistics team's agent, and checks who that agent is first.
+Every decision leaves one line. The line says who decided, when, and on which queries.
+
+Next, in delegate-over-a2a, the agent meets questions it does not own. Carrier data belongs to the logistics team. So the agent hands those questions to the logistics team's agent. It checks who that agent is first.
 
 ## Read before or after
 
-- [AG-UI interrupts](https://docs.ag-ui.com/concepts/interrupts). How a run ends as an interrupt and resumes with
-  a decision.
+- [AG-UI interrupts](https://docs.ag-ui.com/concepts/interrupts). How a run ends as an interrupt, and how it resumes with a decision.

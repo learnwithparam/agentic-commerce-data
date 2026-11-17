@@ -2,12 +2,9 @@
 
 ## The problem
 
-A category manager asks: "Why was order `9b189f6cf2ef734a7dd0419ed3c64d99` delivered late?" Your database
-knows the order was 12 days late. It does not know why. The carrier data belongs to the logistics team, and
-they run their own agent.
+A category manager asks: "Why was order `9b189f6cf2ef734a7dd0419ed3c64d99` delivered late?" Your database knows the order was 12 days late. It does not know why. The carrier data belongs to the logistics team, and they run their own agent.
 
-Today your agent gives up on this question. You make it hand the question to the logistics agent as an A2A task,
-and bring back the answer.
+Today your agent gives up on this question. You make it hand the question to the logistics agent as an A2A task. Then it brings back the answer.
 
 ```mermaid
 sequenceDiagram
@@ -22,11 +19,9 @@ sequenceDiagram
 
 ## Your challenge
 
-Write `send_task` in `a2a_client.py`. The rest of the agent is ready: it finds the order ids in the question,
-reads the remote card and calls `send_task`.
+Write `send_task` in `a2a_client.py`. The rest of the agent is ready. It finds the order ids in the question, reads the remote card, and calls `send_task`.
 
-A message carries parts. Send two parts: the question as text, and the order ids as data. The logistics agent
-reads the ids from the data part. `request_for` already builds this request for you.
+A message carries parts. Send two parts: the question as text, and the order ids as data. The logistics agent reads the ids from the data part. `request_for` already builds this request for you.
 
 For example, the request looks like this:
 
@@ -45,8 +40,7 @@ For example, the request looks like this:
 }
 ```
 
-The reply holds the finished task in `result.task`. Return its `id`, its `status.state`, and the text parts of
-its artifacts.
+The reply holds the finished task in `result.task`. Return its `id`, its `status.state`, and the text parts of its artifacts.
 
 Start the logistics agent in one terminal:
 

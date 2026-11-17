@@ -2,23 +2,22 @@
 
 ## The problem
 
-A metric is a business number with one fixed meaning, such as revenue or the share of late orders. In this data,
-"revenue" has two right answers: the payments (16,008,872.12) and the items plus freight (15,843,553.24). "Late"
-also has two.
+A metric is a business number with one fixed meaning. Examples are revenue, or the share of late orders.
 
-For example, order `8563039e855156e48fccee4d611a3196` arrived at `2018-03-20 00:59:25`. Its estimated delivery
-date is `2018-03-20 00:00:00`. If you compare the two as text, the order is late. If you compare the dates, it
-came on the estimated day, so it is on time. Across all delivered orders, that is 8.11% late against 6.77% late.
+In this data, "revenue" has two right answers. One is the payments, 16,008,872.12. The other is the items plus freight, 15,843,553.24. "Late" also has two right answers.
 
-Anthropic wrote down skills and metric definitions for its own data questions. Without them, accuracy on its
-tests was never above 21%. With them, it is "consistently above 95%"
-([Anthropic](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude)).
+For example, order `8563039e855156e48fccee4d611a3196` arrived at `2018-03-20 00:59:25`. Its estimated delivery date is `2018-03-20 00:00:00`. If you compare the two as text, the order is late. If you compare the dates, it came on the estimated day. So it is on time.
 
-So the metric file becomes the agent's normal path. When the agent writes free SQL instead, that is the exception,
-and the answer says so. In this part you do three things:
+Across all delivered orders, that is 8.11% late against 6.77% late.
 
-1. You write the four desk metrics down once, each with an owner.
-2. You make the agent use them first, and name the ones it used.
+Anthropic wrote down skills and metric definitions for its own data questions. Without them, accuracy on its tests was never above 21%. With them, it is "consistently above 95%" ([Anthropic](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude)).
+
+So the metric file becomes the agent's normal path. When the agent writes free SQL instead, that is the exception. The answer must say so.
+
+In this part you do three things:
+
+1. You write the four desk metrics down once. Each one has an owner.
+2. You make the agent use them first. It names the ones it used.
 3. You make every answer list its assumptions.
 
 ```mermaid
@@ -41,8 +40,7 @@ Part of an evening in 3 steps.
 | [query-through-metrics](02-query-through-metrics/problem/README.md) | 12      | `ask.py` fills `{{metric}}` placeholders and names only the metrics it used           | on the 10 metric questions, `metric_ids` names the right metric and the rows match; free SQL has `[]` |
 | [state-the-assumptions](03-state-the-assumptions/problem/README.md) | 8       | every answer lists its assumptions                                                    | `assumptions` is non-empty on every golden answer; late-delivery answers mention the estimated date   |
 
-Each step folder holds its own files. A step starts from the work of the step before it, already done. The
-recorded model plans for this part are in `replies.jsonl`, so everything runs with no key.
+Each step folder holds its own files. A step starts from the work of the step before it. That work is already done. The recorded model plans for this part are in `replies.jsonl`. So everything runs with no key.
 
 ## Walkthrough
 
@@ -70,8 +68,7 @@ Expect: `Done. All 4 rules pass.`
 uv run python parts/03-define-the-metrics/03-state-the-assumptions/problem/ask.py "How many orders placed in 2018 were delivered late?"
 ```
 
-Expect: a line that starts with `Assumption: Late means delivered on a later day than the estimated delivery date.`
-and one more `Assumption:` line, once the answer lists its assumptions.
+Expect: a line that starts with `Assumption: Late means delivered on a later day than the estimated delivery date.` and one more `Assumption:` line, once the answer lists its assumptions.
 
 ```bash
 bun run verify state-the-assumptions
@@ -89,8 +86,7 @@ Expect: `Part define-the-metrics is done: 3/3 steps pass.`
 
 **The problem.** "Revenue" has two right answers in this data.
 
-**What you hand in.** A commit with `metrics.toml` (four metrics, each with an owner), metric-first routing in
-`ask.py`, and assumptions on every answer.
+**What you hand in.** A commit with three things: `metrics.toml` (four metrics, each with an owner), metric-first routing in `ask.py`, and assumptions on every answer.
 
 **How it is graded.** Each line is yes or no.
 
@@ -100,19 +96,14 @@ Expect: `Part define-the-metrics is done: 3/3 steps pass.`
 | Do the 10 metric questions name the right metric and match their rows?                  | `bun run verify query-through-metrics` |
 | Does every golden answer list assumptions, and do late answers name the estimated date? | `bun run verify state-the-assumptions` |
 
-**Extension, not graded.** Add a fifth metric with an owner other than yourself. Add a test that fails when its
-grain is wrong.
+**Extension, not graded.** Add a fifth metric with an owner other than yourself. Add a test that fails when its grain is wrong.
 
 ## Finished
 
-You now have one written meaning for each desk metric, an agent that uses those meanings first, and answers that
-show their assumptions. A reader can see what each number means and who owns it.
+You now have one written meaning for each desk metric. You have an agent that uses those meanings first. Its answers show their assumptions. A reader can see what each number means, and who owns it.
 
-The agent still guesses some facts about the data. It cannot know that `sao paulo` has nine spellings, or which of
-the nine tables a question needs. In [retrieve-the-context](../04-retrieve-the-context/README.md) you give it table
-cards, a value index, past questions and review search.
+The agent still guesses some facts about the data. It cannot know that `sao paulo` has nine spellings. It cannot know which of the nine tables a question needs. In [retrieve-the-context](../04-retrieve-the-context/README.md) you give it table cards, a value index, past questions and review search.
 
 ## Read before or after
 
-- [How Anthropic enables self-service data analytics with Claude](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude).
-  It shows why written definitions are the normal path, and how accuracy drifts without them.
+- [How Anthropic enables self-service data analytics with Claude](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude). It shows why written definitions are the normal path. It also shows how accuracy drifts without them.

@@ -2,13 +2,11 @@
 
 ## The problem
 
-An assumption is a choice the agent made that the question did not say. Every number has some. If the answer
-hides them, the reader cannot tell if the number fits their need.
+An assumption is a choice the agent made that the question did not say. Every number has some. If the answer hides them, the reader cannot tell if the number fits their need.
 
-For example, ask "What percentage of delivered orders arrived late?" The agent answers 6.77. That is right, but
-only for one meaning of "late": delivered on a later day than the estimated date. A logistics lead who counts
-"late" from the promised hour expects 8.11. Without the assumption, the two people argue about the number instead
-of the meaning.
+For example, ask "What percentage of delivered orders arrived late?" The agent answers 6.77. That is right, but only for one meaning of "late". The meaning is: delivered on a later day than the estimated date.
+
+A logistics lead who counts "late" from the promised hour expects 8.11. Without the assumption, the two people argue about the number. They should argue about the meaning.
 
 So every answer lists its assumptions in plain English. A metric brings its own. The model adds the rest.
 
@@ -22,12 +20,10 @@ flowchart LR
 
 ## Your challenge
 
-Two changes, one in each file:
+Make two changes, one in each file:
 
-1. In `metrics.toml`, give each metric an `assumption`: one sentence a manager can read. The late one must say
-   what late is measured against.
-2. In `ask.py`, find the TODO. Set `answer["assumptions"]` to the assumption of each metric in `used_metrics`,
-   then the model's `plan["assumptions"]`.
+1. In `metrics.toml`, give each metric an `assumption`. It is one sentence a manager can read. The late one must say what late is measured against.
+2. In `ask.py`, find the TODO. Set `answer["assumptions"]` to the assumption of each metric in `used_metrics`. Then add the model's `plan["assumptions"]`.
 
 Try it:
 
@@ -35,8 +31,7 @@ Try it:
 uv run python parts/03-define-the-metrics/03-state-the-assumptions/problem/ask.py "What percentage of delivered orders arrived late?"
 ```
 
-Expect: `Assumption: Late means delivered on a later day than the estimated delivery date.` and more, once both
-changes are in.
+Expect: `Assumption: Late means delivered on a later day than the estimated delivery date.` and more, once both changes are in.
 
 ## Done when
 
@@ -44,9 +39,9 @@ changes are in.
 
 The check asks all 30 golden questions, three times. In most runs:
 
-- every answer lists at least one assumption.
-- every answer that uses a metric shows that metric's assumption.
-- every late-delivery answer says late is measured against the estimated date.
+- Every answer lists at least one assumption.
+- Every answer that uses a metric shows that metric's assumption.
+- Every late-delivery answer says late is measured against the estimated date.
 
 ```bash
 bun run verify state-the-assumptions
@@ -64,5 +59,5 @@ Expect: `Done. All 4 rules pass.`
 
 ## Words you will use
 
-- **Assumption**: a choice the answer made that the question did not say, such as which orders count.
-- **Plan**: the JSON the model replies with: its metrics, its SQL and its own assumptions.
+- **Assumption**: a choice the answer made that the question did not say. An example is which orders count.
+- **Plan**: the JSON the model replies with. It holds its metrics, its SQL and its own assumptions.

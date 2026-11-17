@@ -2,8 +2,7 @@
 
 ## The problem
 
-The seller-success lead asked the desk's chatbot how many sellers are based in Sao Paulo city. It answered 694.
-The lead was about to plan a big programme for every seller in the city, based on that number.
+The seller-success lead asked the desk's chatbot how many sellers are based in Sao Paulo city. It answered 694. The lead was about to plan a big programme for every seller in the city. The plan used that number.
 
 A wrong count that looks right costs more than a count that fails. Nobody checks a number that looks fine.
 
@@ -14,7 +13,7 @@ A wrong count that looks right costs more than a count that fails. Nobody checks
 Ask both agents the same question. Write down both counts. Then say in one sentence why they are different.
 
 1. Run `uv run ask-naive "How many sellers are based in Sao Paulo city?"`.
-2. Run `uv run ask-finished "How many sellers are based in Sao Paulo city?"` and read its `Assumption:` line.
+2. Run `uv run ask-finished "How many sellers are based in Sao Paulo city?"`. Read its `Assumption:` line.
 3. Create `notes/first-look.md` in this folder with three lines:
 
 ```
@@ -23,8 +22,7 @@ Finished: <the finished agent's count>
 Gap: <one sentence: why the counts differ>
 ```
 
-For example, here is a `Gap:` line for a different golden question, `customers-in-sao-paulo`. Your question is about
-sellers, so you write your own line.
+For example, here is a `Gap:` line for a different golden question, `customers-in-sao-paulo`. Your question is about sellers, so write your own line.
 
 ```
 Gap: the naive agent counted orders, but the question asked for people.
@@ -32,10 +30,9 @@ Gap: the naive agent counted orders, but the question asked for people.
 
 ## Done when
 
-- `bun run world` has built the database, and every table has the row count of the fixed download.
+- `bun run world` has built the database. Every table has the row count of the fixed download.
 - `notes/first-look.md` exists in this folder.
-- The `Naive:` and `Finished:` numbers are the ones the agents printed. The check works out both numbers from the
-  database, so a guess fails.
+- The `Naive:` and `Finished:` numbers are the ones the agents printed. The check works out both numbers from the database. A guess fails.
 - The `Gap:` line has at least five words.
 
 ```bash
@@ -56,9 +53,7 @@ Expect: `Done. All 5 rules pass.` and a `Progress:` line.
 
 ## Words you will use
 
-- **Agent**: a program that asks a model what to do, runs tools (here, SQL), and gives an answer.
-- **Replay mode**: the model's replies come from recorded files. So the course runs with no key, and every run gives
-  the same result.
-- **Golden set**: test questions, each with a reference query that a person checked by hand. `world/golden.toml`
-  holds 30.
+- **Agent**: a program. It asks a model what to do, runs tools (here, SQL), and gives an answer.
+- **Replay mode**: the model's replies come from recorded files. So the course runs with no key, and every run gives the same result.
+- **Golden set**: test questions. Each one has a reference query that a person checked by hand. `world/golden.toml` holds 30.
 - **System of record**: the place whose numbers count as the truth. Here it is `data/olist.db`.

@@ -2,16 +2,13 @@
 
 ## The problem
 
-The golden set was written by the course authors. Real people ask different things. For example, a support lead
-asks "how many orders were canceled last year?" and nobody on the course wrote that one. If the gate never sees what
-people really ask, it guards the wrong doors.
+The course authors wrote the golden set. Real people ask different things. For example, a support lead asks, "How many orders were canceled last year?" Nobody on the course wrote that question. If the gate never sees what people really ask, it guards the wrong doors.
 
 ## Your challenge
 
-Open `real-questions.toml` in this folder. Add at least five questions that people on your desk really ask. Ask a
-teammate if you do not have five.
+Open `real-questions.toml` in this folder. Add at least five questions that people on your desk really ask. Ask a teammate if you do not have five.
 
-1. Give each one an `id`, the `question`, `source = "real"` and who asked it in `asked_by`.
+1. Give each one an `id`, the `question`, `source = "real"`, and who asked it in `asked_by`.
 2. Write one `SELECT` in `sql` that answers it on the course database. Run it by hand first.
 3. Name its `traps` from the golden set, or leave the list empty.
 4. Write a `note` that says how you checked the answer by hand.
@@ -49,6 +46,6 @@ Expect: `Done. All 5 rules pass.` once your five questions are in.
 
 ## Words you will use
 
-- **Real question**: one that a person on the desk actually asked, not one you made up.
+- **Real question**: one that a person on the desk actually asked. You did not make it up.
 - **Trap**: a reason a question is hard in this data, such as spelling or fan-out.
-- **By hand**: checked a small slice yourself, without the agent.
+- **By hand**: checked on a small slice, by you, without the agent.

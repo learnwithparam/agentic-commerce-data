@@ -2,13 +2,11 @@
 
 ## The problem
 
-In delegate-over-a2a you used a small A2A server written with the Python standard library. It was good for
-learning, because you could read every line. Teams that run A2A in production do not write that part. They use
-the official SDK, the code library the A2A project publishes. It handles the card route, the JSON-RPC route,
-task ids, task states and streaming.
+In delegate-over-a2a you used a small A2A server written with the Python standard library. It was good for learning, because you could read every line.
 
-In this step you serve the same logistics agent with `a2a-sdk`. The agent's work does not change. For example, order 9b189f6c still gets the same carrier and the same reason. You wrap
-its function in the SDK's server, then call it from the SDK's client.
+Teams that run A2A in production do not write that part. They use the official SDK, the code library the A2A project publishes. It handles the card route, the JSON-RPC route, task ids, task states and streaming.
+
+In this step you serve the same logistics agent with `a2a-sdk`. The agent's work does not change. For example, order 9b189f6c still gets the same carrier and the same reason. You wrap its function in the SDK's server. Then you call it from the SDK's client.
 
 ```mermaid
 flowchart LR
@@ -28,13 +26,11 @@ Open `server.py` in this folder. It imports the SDK and the agent function. It d
 
 Write three things:
 
-1. A `LogisticsExecutor` that extends `AgentExecutor`. Its `execute` reads the `order_ids` from the message's
-   data part, calls `logistics_agent.carrier_report`, adds the report as an artifact, and completes the task.
+1. A `LogisticsExecutor` that extends `AgentExecutor`. Its `execute` reads the `order_ids` from the message's data part. It calls `logistics_agent.carrier_report`, adds the report as an artifact, and completes the task.
 2. A function that builds the `AgentCard`. Reuse `logistics_agent.SKILL` for the skill.
-3. An app. Pass the executor, a task store and the card to `DefaultRequestHandler`, add the card route and the
-   JSON-RPC route, and start it with `uvicorn`.
+3. An app. Pass the executor, a task store and the card to `DefaultRequestHandler`. Add the card route and the JSON-RPC route. Then start it with `uvicorn`.
 
-Do not copy the agent's logic into `server.py`. The executor calls the function and passes on what it returns.
+Do not copy the agent's logic into `server.py`. The executor calls the function. It passes on what the function returns.
 
 `client.py` is ready. Start your server in one terminal:
 
@@ -54,7 +50,7 @@ Expect: `9b189f6c: Carrier Coast, sent back to the depot after a failed delivery
 
 ## Done when
 
-- `server.py` pins `a2a-sdk==1.3.0` and that version is the one that runs.
+- `server.py` pins `a2a-sdk==1.3.0`, and that version is the one that runs.
 - The agent card your server serves validates against the A2A 1.0 schema from delegate-over-a2a.
 - The three course queries return the same text as the hand-built logistics agent.
 
@@ -69,13 +65,13 @@ Expect: `Done. All 3 rules pass.`
 | What you see                          | Fix                                                                               |
 | ------------------------------------- | --------------------------------------------------------------------------------- |
 | `TODO` is still in the code           | You have not wired the app yet. Replace the body of `main`.                       |
-| The server stopped                    | Run the server command yourself and read the error it prints.                     |
+| The server stopped                    | Run the server command yourself. Read the error it prints.                        |
 | `expected '9b189f6c: ...', got '...'` | The executor must return `logistics_agent.summary_of(report)` as a text part.     |
 | `a2a-sdk 1.x is installed`            | Pin `a2a-sdk[http-server]==1.3.0` in the script header at the top of `server.py`. |
 
 ## Words you will use
 
-- **SDK**: a software development kit, a library that does the common work of a protocol for you.
+- **SDK**: a software development kit. It is a library that does the common work of a protocol for you.
 - **Executor**: the class where you put what the agent does. The SDK calls it for each task.
 - **Task store**: the place the SDK keeps tasks while they run. The in-memory one forgets them on restart.
 - **Artifact**: the result of a task. Here it holds the carrier report.

@@ -2,23 +2,17 @@
 
 ## The problem
 
-A data agent can get worse with no warning. A new model, a new column or an edited metric changes the answers,
-and every answer still looks fine.
+A data agent can get worse with no warning. A new model, a new column or an edited metric changes the answers. Every answer still looks fine.
 
-Anthropic saw this with its own analytics agent
-([Anthropic](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude)):
+Anthropic saw this with its own analytics agent ([Anthropic](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude)):
 
-- Its offline accuracy fell from about 95% at launch to about 65% over a month. Then it started to treat the fall
-  as an engineering problem.
+- Its offline accuracy fell from about 95% at launch to about 65% over a month. Then it started to treat the fall as an engineering problem.
 - Roughly 90% of its data-model pull requests now change the agent's docs in the same diff.
 - A domain could not launch until its slice of the eval set cleared a threshold. It started at about 90%.
 
-A gate is a check that must pass before a change can merge. For example, someone edits the agent to count
-`customer_id` again instead of `customer_unique_id`. The golden question `distinct-customers` then returns
-99,441 instead of 96,096. The gate sees the miss and blocks the change, with the ids of the questions that broke.
+A gate is a check that must pass before a change can merge. For example, someone edits the agent to count `customer_id` again instead of `customer_unique_id`. The golden question `distinct-customers` then returns 99,441 instead of 96,096. The gate sees the miss and blocks the change. It names the questions that broke.
 
-In this part you write the gate's rules, change a metric without breaking the gate's truth, and prove the gate
-can catch a broken agent.
+In this part you write the gate's rules. You change a metric without breaking the gate's truth. Then you prove the gate can catch a broken agent.
 
 ```mermaid
 flowchart LR
@@ -139,9 +133,7 @@ Part gate-every-change is done: 5/5 steps pass.
 
 The problem: accuracy fell from 95% to 65% in a month at Anthropic. Your agent must not get worse in silence.
 
-Hand in a commit on your course repo with your three finished step folders and the `SCORECARD.md` the gate wrote.
-The course owner can then run the gate command in CI on every push. The grader answers each question with yes or
-no:
+Hand in a commit on your course repo. It holds your three finished step folders and the `SCORECARD.md` the gate wrote. The course owner can then run the gate command in CI on every push. The grader answers each question with yes or no:
 
 | #   | Question                                                                              | How it is checked                   |
 | --- | ------------------------------------------------------------------------------------- | ----------------------------------- |
@@ -152,20 +144,17 @@ no:
 | 5   | Are five real questions added, each with a hand-checked note?                         | `bun run verify add-real-questions` |
 | 6   | Does your own database pass the capstone, with a scorecard that matches a fresh run?  | `bun run verify do-it-on-yours`     |
 
-Extension, not graded: swap the model in `config/models.py`, set a provider and a key, run the gate, and write
-down which questions moved.
+Extension, not graded: swap the model in `config/models.py`. Set a provider and a key. Run the gate, and write down which questions moved.
 
 ## Finished
 
-You now have a gate that any change must pass. It runs the golden set three times and judges the median run.
-It keeps every trap, refuses every attack, and refuses a metric that disagrees with its golden references.
-And you proved it bites: it blocked a missing value index, a forgotten customer trap and a missing validator.
+You now have a gate that any change must pass. It runs the golden set three times, and it judges the median run. It keeps every trap. It refuses every attack.
 
-This is the last part. For example, your repo now holds a `SCORECARD.md` that says 30 of 30 and
-12 of 12 attacks refused. That file, the gate behind it and the failures it caught are your project.
+It refuses a metric that disagrees with its golden references. And you proved it bites. It blocked a missing value index, a forgotten customer trap and a missing validator.
+
+This is the last part. For example, your repo now holds a `SCORECARD.md`. It says 30 of 30, and 12 of 12 attacks refused. That file, the gate behind it, and the failures it caught are your project.
 
 ## Read before or after
 
-- [How Anthropic enables self-service data analytics with Claude](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude):
-  the drift, the per-domain launch gate, and docs that change with the data model.
+- [How Anthropic enables self-service data analytics with Claude](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude). It covers the drift, the per-domain launch gate, and docs that change with the data model.
 - [defog-ai/sql-eval](https://github.com/defog-ai/sql-eval): the same idea of judging SQL by its result rows.

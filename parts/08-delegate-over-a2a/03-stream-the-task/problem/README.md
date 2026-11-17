@@ -2,12 +2,11 @@
 
 ## The problem
 
-Eon runs about 20 agents, and 3 of them talk over A2A. It wrote down two problems
-([AAIF blog](https://aaif.io/blog/what-we-learned-putting-a2a-into-production)). A send that waited for the whole
-answer failed at its gateway's 60-second limit. And error events got lost, so a failed task looked like silence.
+Eon runs about 20 agents, and 3 of them talk over A2A. It wrote down two problems ([AAIF blog](https://aaif.io/blog/what-we-learned-putting-a2a-into-production)). A send that waited for the whole answer failed at its gateway's 60-second limit.
 
-Your agent has both problems. `send_task` waits for the whole task. When the carriers are slow, the logistics
-team's gateway closes the request after 60 seconds, and your agent gets a gateway timeout error.
+And error events got lost. So a failed task looked like silence.
+
+Your agent has both problems. `send_task` waits for the whole task. When the carriers are slow, the logistics team's gateway closes the request after 60 seconds. Your agent then gets a gateway timeout error.
 
 ```mermaid
 sequenceDiagram
@@ -25,12 +24,11 @@ sequenceDiagram
 
 ## Your challenge
 
-Switch to `SendStreamingMessage`. The reply is a stream of server-sent events. A server-sent event is one line
-that starts with `data:`, sent as soon as something happens. Each one holds a `task`, a `statusUpdate` or an
-`artifactUpdate`. The updates keep the line busy, so the gateway never closes it.
+Switch to `SendStreamingMessage`. The reply is a stream of server-sent events. A server-sent event is one line that starts with `data:`. The server sends it as soon as something happens.
 
-1. In `a2a_client.py`, write `stream_task(card, question, order_ids, on_update)`. Read each `data:` line, keep
-   the task id and the last state, call `on_update` on each status update, and keep the artifact's text.
+Each one holds a `task`, a `statusUpdate` or an `artifactUpdate`. The updates keep the line busy, so the gateway never closes it.
+
+1. In `a2a_client.py`, write `stream_task(card, question, order_ids, on_update)`. Read each `data:` line. Keep the task id and the last state. Call `on_update` on each status update. Keep the artifact's text.
 2. In `ops_agent.py`, call `stream_task` with `events.task_update`. That prints each update as an event.
 3. When the last state is not `TASK_STATE_COMPLETED`, set the answer's `error`.
 
@@ -44,7 +42,7 @@ For example, a slow task prints lines like these before the answer:
 }
 ```
 
-Try it with a slow logistics agent. `A2A_CLOCK_SPEED=20` runs its clock 20 times faster, so 70 seconds take 3.5:
+Try it with a slow logistics agent. `A2A_CLOCK_SPEED=20` runs its clock 20 times faster. So 70 seconds take 3.5:
 
 ```bash
 A2A_CLOCK_SPEED=20 uv run parts/08-delegate-over-a2a/logistics_agent.py --slow 70

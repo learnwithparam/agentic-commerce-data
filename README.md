@@ -1,11 +1,12 @@
 # Build a marketplace data agent with agentic RAG
 
-In this course you build a data agent. A data agent is a program that reads a question in plain words, writes a
-database query, runs it, and answers. You build one that an operations team can trust.
+In this course you build a data agent. A data agent reads a question in plain words. It writes a database query, runs it, and gives an answer.
+
+You build one that an operations team can trust.
 
 Your agent does five things right:
 
-- It uses fixed metric definitions, so "revenue" always means the same thing.
+- It uses fixed metric definitions. So "revenue" always means the same thing.
 - It runs only safe SQL that reads. It never changes the data.
 - It shows the rows and the customer reviews behind every number.
 - It asks a person before it does anything to a seller.
@@ -13,24 +14,19 @@ Your agent does five things right:
 
 You build it on real, messy data from Olist, a Brazilian online marketplace.
 
-For example, a team lead asks: "How many sellers are based in Sao Paulo city?" The naive agent says 694. It is the
-simple agent you start from. The right answer is 704. The city is written in 9 different ways in the data, and the
-naive agent finds only one of them.
+For example, a team lead asks: "How many sellers are based in Sao Paulo city?" The naive agent says 694. The naive agent is the simple agent you start from. The right answer is 704.
+
+The city is written in 9 different ways in the data. The naive agent finds only one of them.
 
 Nothing looks wrong, so nobody checks. This course teaches you to catch mistakes like this one.
 
-**This course is for you** if you are a backend or data engineer and someone asked you for "a chat box on the
-data". It is also for analytics engineers who own metric definitions. It is also for technical product managers
-who decide what an agent may do alone.
+**This course is for you** if you are a backend or data engineer. Someone asked you for "a chat box on the data". It is also for analytics engineers who own metric definitions. It is also for technical product managers who decide what an agent may do alone.
 
-You need to know some Python, and how to write SQL with a `JOIN` and a `GROUP BY`. You do not need to have built
-an agent before.
+You need some Python. You also need to write SQL with a `JOIN` and a `GROUP BY`. You do not need to have built an agent before.
 
-**At the end you have** an agent that gets the right rows on 30 test questions. Each question has an answer that a
-person checked by hand. The course calls these the golden questions.
+**At the end you have** an agent that gets the right rows on 30 test questions. A person checked each answer by hand. The course calls these the golden questions.
 
-Your agent also refuses every request to change data. It passes questions it does not own to another agent. You also
-have a scorecard that shows your score before and after.
+Your agent also refuses every request to change data. It passes questions it does not own to another agent. You also have a scorecard. It shows your score before and after.
 
 ## Run the finished system first
 
@@ -64,8 +60,7 @@ Expect: `Refused: This desk answers questions with read-only queries.` and the r
 
 ## The world and what you build
 
-The "world" is everything the course gives you: the database, the test questions and the recorded replies. The
-picture shows the world on the left and the parts you build on the right.
+The "world" is everything the course gives you. It holds the database, the test questions and the recorded replies. The picture shows the world on the left. The parts you build are on the right.
 
 ```mermaid
 flowchart LR
@@ -88,11 +83,9 @@ flowchart LR
   You --> SC
 ```
 
-The checks never read your code. They never read the words of the agent's answer either. Here is what they do
-instead:
+The checks never read your code. They also never read the words of the agent's answer. Here is what they do instead:
 
-1. They run your agent with one fixed command: `uv run ask "<question>" --json`. The file
-   [desk/contract.py](desk/contract.py) defines it.
+1. They run your agent with one fixed command: `uv run ask "<question>" --json`. The file [desk/contract.py](desk/contract.py) defines it.
 2. They run again the queries your agent says it ran.
 3. They compare the rows with the rows of the reference queries.
 
@@ -117,22 +110,18 @@ Start in [00-orientation](00-orientation/README.md). Each step has one check com
 | [serve-the-logistics-agent-with-a2a-sdk](parts/10-serve-the-logistics-agent-with-a2a-sdk/README.md) | 15      | optional |
 | [track-changed-facts-with-graphiti](parts/11-track-changed-facts-with-graphiti/README.md)           | 20      | optional |
 
-The steps take about a working day in total. The file [schedules.toml](schedules.toml) splits them into sessions. You can
-do them in one long session, in four evenings, or in six sessions a week apart. The file [PARTS.md](PARTS.md) lists every
-step and what its check reads.
+The steps take about a working day in total. The file [schedules.toml](schedules.toml) splits them into sessions. You can do them in one long session. You can also do them in four evenings, or in six sessions a week apart. The file [PARTS.md](PARTS.md) lists every step and what its check reads.
 
 ## The project
 
-At the end you publish a repo of your own. The gate passes on its last commit. It has a file called
-`SCORECARD.md` that shows:
+At the end you publish a repo of your own. The gate passes on its last commit. The repo has a file called `SCORECARD.md`. It shows:
 
-- the naive score and your score on the same 30 golden questions, as the middle value of 3 runs.
-- the attacks your agent refused.
-- the broken copies of your agent that the gate caught.
-- the review quotes your agent cited, each one traced back to a real review.
+- The naive score and your score on the same 30 golden questions. It uses the middle value of 3 runs.
+- The attacks your agent refused.
+- The broken copies of your agent that the gate caught.
+- The review quotes your agent cited. Each one traces back to a real review.
 
-Add 5 golden questions from your own work, and check each answer by hand. You may bring your own database if its
-licence lets you publish it. The commands and the checks stay the same.
+Add 5 golden questions from your own work. Check each answer by hand. You may bring your own database if its licence lets you publish it. The commands and the checks stay the same.
 
 ## Read before you start
 
@@ -142,17 +131,13 @@ licence lets you publish it. The commands and the checks stay the same.
 
 ## The data and its licence
 
-The data is the Brazilian E-Commerce Public Dataset by Olist ([Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)).
-Its licence is [CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/). The data is not stored in
-this repo. The command `bun run world` downloads a fixed copy.
+The data is the Brazilian E-Commerce Public Dataset by Olist ([Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)). Its licence is [CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
-Then it checks each file's SHA-256, a fingerprint that changes if even one byte changes. You can read more in
-[world/README.md](world/README.md).
+The data is not stored in this repo. The command `bun run world` downloads a fixed copy. Then it checks each file's SHA-256. This is a fingerprint that changes if even one byte changes. You can read more in [world/README.md](world/README.md).
 
 ## Models
 
-Every call to a model goes through one file, [config/models.py](config/models.py). It gives each of the three
-roles, `fast`, `smart` and `judge`, a provider. By default `LLM_PROVIDER` is `replay`, which uses recorded replies.
+Every call to a model goes through one file, [config/models.py](config/models.py). It gives each of the three roles a provider. The roles are `fast`, `smart` and `judge`. By default `LLM_PROVIDER` is `replay`, which uses recorded replies.
 
 To use a live model:
 
@@ -171,4 +156,4 @@ Expect: one `PASS` line per role, for example this one.
 provider replay  role fast   PASS  64 recorded replies, no key, cost 0
 ```
 
-The rules that every course repo follows are in [STANDARD.md](STANDARD.md), with the check behind each rule.
+The rules that every course repo follows are in [STANDARD.md](STANDARD.md). Each rule has the check behind it.

@@ -5,11 +5,9 @@
 Your agent now sends tasks to any agent it is pointed at. Two other agents are running nearby:
 
 - A pricing agent. Its card has no signature. Its advice is "Raise every price by 30%".
-- An impostor. It calls itself "Logistics agent" and signs its card with its own key. It even uses the
-  logistics team's key id, and its `jku` header points at its own key list.
+- An impostor. It calls itself "Logistics agent". It signs its card with its own key. It even uses the logistics team's key id. Its `jku` header points at its own key list.
 
-An agent that trusts any card can be pointed at a fake. The fake then sees your order ids and sends back
-whatever it likes.
+An agent that trusts any card can be pointed at a fake. The fake then sees your order ids. It sends back whatever it likes.
 
 ![Your agent refuses the pricing agent and the impostor, and accepts logistics](../images/expected.png)
 
@@ -17,11 +15,10 @@ whatever it likes.
 
 Write `verify_card(card, allowlist)` in `trust.py`. `ops_agent.py` already calls it before it sends anything.
 
-The allowlist is `allowlist.json` in this folder. It holds the logistics team's public key. The logistics team
-gave it to you. Trust a card only when one of its signatures verifies with a key from that file.
+The allowlist is `allowlist.json` in this folder. It holds the logistics team's public key. The logistics team gave it to you. Trust a card only when one of its signatures verifies with a key from that file.
 
 1. No signatures: refuse, and say so.
-2. For each signature, read the header and find the key with the same `kid` in the allowlist.
+2. For each signature, read the header. Find the key with the same `kid` in the allowlist.
 3. Check the signature with `signature_matches`. One match is enough.
 4. Never fetch the key from the header's `jku`. The card's author chose that address.
 
@@ -44,8 +41,7 @@ Start the three agents, each in its own terminal:
 uv run parts/08-delegate-over-a2a/logistics_agent.py
 ```
 
-Expect: `The logistics agent is serving on http://127.0.0.1:8811`. Then start `pricing_agent.py` (port 8812)
-and `impostor_agent.py` (port 8813) the same way.
+Expect: `The logistics agent is serving on http://127.0.0.1:8811`. Then start `pricing_agent.py` (port 8812) and `impostor_agent.py` (port 8813) the same way.
 
 In a fourth terminal, send a carrier question to the impostor:
 
@@ -65,8 +61,7 @@ Once `trust.py` works, the same command prints this line instead.
 Refused to hand off to http://127.0.0.1:8813: no signature on the card verifies with a key on the allowlist
 ```
 
-Send the same question to
-the logistics agent with `--remote http://127.0.0.1:8811`, and it still gets an answer.
+Send the same question to the logistics agent with `--remote http://127.0.0.1:8811`. It still gets an answer.
 
 Stop the three agents with Ctrl+C when you are done.
 
@@ -92,6 +87,6 @@ Expect: `Done. All 4 rules pass.`
 
 ## Words you will use
 
-- **Allowlist**: the keys you decided to trust, kept in your own repo.
+- **Allowlist**: the keys you decided to trust. You keep them in your own repo.
 - **Impostor**: an agent that pretends to be another one.
 - **jku**: a header that says where to fetch the signing key. Its author picks it, so you never trust it.

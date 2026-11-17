@@ -2,8 +2,7 @@
 
 ## The problem
 
-Read-only mode stops writes. It does not stop every bad query. A query can still read a hidden table, or read a
-million rows at once.
+Read-only mode stops writes. It does not stop every bad query. A query can still read a hidden table. It can also read a million rows at once.
 
 For example, this query is a read:
 
@@ -11,12 +10,11 @@ For example, this query is a read:
 SELECT name, sql FROM sqlite_master
 ```
 
-Read-only mode lets it run. It shows the agent the inside of the database file. And a query that picks every
-column of `geolocation` returns 1,000,163 rows, far more than any answer needs.
+Read-only mode lets it run. It shows the agent the inside of the database file. A query that picks every column of `geolocation` returns 1,000,163 rows. No answer needs that many rows.
 
-So you check each query before it runs. You do not search the SQL text for bad words. Text tricks are easy:
-`WITH ... DELETE` starts like a read. Instead you parse the query into a tree with `sqlglot`, and you look at the
-tree.
+So you check each query before it runs. Do not search the SQL text for bad words. Text tricks are easy to write.
+
+For example, `WITH ... DELETE` starts like a read. Instead, parse the query into a tree with `sqlglot`. Then look at the tree.
 
 ```mermaid
 flowchart LR
@@ -33,8 +31,7 @@ flowchart LR
 
 ## Your challenge
 
-Fill in `check()` in `validator.py`. The comment in it lists each rule. A refused query raises `QueryRefusedError` with a
-short reason. An allowed query comes back as SQL, with `LIMIT 1000` added when it has no limit.
+Fill in `check()` in `validator.py`. The comment in it lists each rule. A refused query raises `QueryRefusedError` with a short reason. An allowed query comes back as SQL. If it has no limit, `LIMIT 1000` is added.
 
 Try one attack by hand:
 
@@ -48,8 +45,7 @@ Expect: this line once your validator works.
 {"ok": false, "reason": "table 'sqlite_master' is not one of the known tables"}
 ```
 
-The 12 attacks the check sends are in `checks/attacks.toml`. Read them. Each one is a real way to get past a
-weak check.
+The 12 attacks the check sends are in `checks/attacks.toml`. Read them. Each one is a real way to get past a weak check.
 
 ## Done when
 
@@ -76,7 +72,7 @@ Expect: `Done. All 6 rules pass.`
 
 ## Words you will use
 
-- **Parse**: turn query text into a tree of parts, such as the SELECT, its tables and its WHERE.
+- **Parse**: turn query text into a tree of parts. The parts are the SELECT, its tables and its WHERE.
 - **Statement**: one complete command. Two queries with a `;` between them hold two statements.
 - **Attack string**: a query written to get past your checks. The check keeps a list of them.
 - **Row cap**: the most rows one query may return. Here it is 1,000.

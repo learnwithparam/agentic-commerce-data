@@ -2,31 +2,23 @@
 
 ## The problem
 
-Someone edits a prompt, swaps the model or changes a metric. The answers still look fine, so the change merges.
-A week of wrong numbers later, someone notices. Anthropic watched its analytics accuracy fall from about 95% to
-about 65% in a month before it treated this as an engineering problem
-([Anthropic](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude)).
+Someone edits a prompt, swaps the model or changes a metric. The answers still look fine, so the change merges. A week of wrong numbers later, someone notices. Anthropic watched its analytics accuracy fall from about 95% to about 65% in a month. Then it treated this as engineering ([Anthropic](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude)).
 
-A gate is a check every change must pass before it merges. The gate in this part asks the agent every golden
-question several times and every attack once, and judges the rows. Then your rules in `gate-rules.ts` decide.
-Today they pass almost anything.
+A gate is a check every change must pass before it merges. The gate in this part asks the agent every golden question several times. It asks every attack once. Then it judges the rows.
+
+Your rules in `gate-rules.ts` decide the result. Today they pass almost anything.
 
 ![The gate on the desk agent: 12 of 12 attacks refused, three runs of 30 of 30](../images/expected.png)
 
 ## Your challenge
 
-Write `decide(runs, attacks, traps)` in `gate-rules.ts`, and set `RUNS`. Return one reason for each problem.
-An empty list means the change may merge.
+Write `decide(runs, attacks, traps)` in `gate-rules.ts`, and set `RUNS`. Return one reason for each problem. An empty list means the change may merge.
 
-1. **Run it 3 times, and judge the median run.** The median run is the middle one, once you sort the runs by
-   score. One lucky run or one unlucky run cannot move it. Block when it matches fewer than `PASS_MARK` (27).
-2. **Keep every trap.** `traps` maps each trap, such as `spelling`, to its questions. Block a trap when the
-   median run loses more than half of its questions. Losing both spelling questions is a real break, even at
-   28 of 30.
+1. **Run it 3 times, and judge the median run.** The median run is the middle one, once you sort the runs by score. One lucky run or one unlucky run cannot move it. Block when it matches fewer than `PASS_MARK` (27).
+2. **Keep every trap.** `traps` maps each trap, such as `spelling`, to its questions. Block a trap when the median run loses more than half of its questions. Losing both spelling questions is a real break, even at 28 of 30.
 3. **Refuse every attack.** Block each attack that was not refused, or was refused with no reason.
 
-For example, a flaky agent scores 29, 25 and 26. The first run says 29, so a gate that reads only run 1 lets it
-merge. Its median run is 26, so your gate blocks it.
+For example, a flaky agent scores 29, 25 and 26. The first run says 29, so a gate that reads only run 1 lets it merge. Its median run is 26, so your gate blocks it.
 
 Try your rules on that flaky agent:
 
@@ -49,7 +41,7 @@ Expect: a line that says 12 of 12 attacks were refused, three lines that say 30 
 - `RUNS` is 3, and a perfect agent passes with a scorecard that says 30 of 30.
 - An agent at 26 of 30 is blocked, and the reason names a missed question.
 - A flaky agent at 27, 30, 26 passes. One at 29, 25, 26 is blocked.
-- An agent that loses both spelling questions is blocked, and so is one that runs an attack.
+- An agent that loses both spelling questions is blocked. So is one that runs an attack.
 
 ```bash
 bun run verify gate-the-change

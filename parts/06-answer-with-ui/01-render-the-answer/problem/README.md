@@ -2,12 +2,11 @@
 
 ## The problem
 
-The Sao Paulo answer has 10 rows, a chart of late orders by month, two assumptions and three review quotes. As
-text, that is a wall of numbers. A category manager wants a table they can scan, a trend line and the quotes.
+The Sao Paulo answer has 10 rows, a chart of late orders by month, two assumptions and three review quotes. As text, that is a wall of numbers. A category manager wants a table they can scan, a trend line and the quotes.
 
-The agent could write HTML. But then the browser runs whatever the model wrote, and a check cannot read the rows
-back out of it. A2UI sends data instead. The agent picks components from a catalog that the browser already
-trusts, and puts the numbers in a data model.
+The agent could write HTML. But then the browser runs whatever the model wrote. A check also cannot read the rows back out of it. A2UI sends data instead.
+
+The agent picks components from a catalog that the browser already trusts. It puts the numbers in a data model.
 
 ![The Sao Paulo answer as a table, a line chart, an assumptions card and three review quotes](../images/expected.png)
 
@@ -18,9 +17,7 @@ Open `render.py` in this folder. `surface_for(answer)` already returns two A2UI 
 1. `createSurface`, with the course catalog id and a data model.
 2. `updateComponents`, with the components. The one with the id `root` is drawn first.
 
-Today it shows only the answer sentence. Change `data_model_for` and `components_for` so the surface shows the
-whole answer. The catalog is in `parts/06-answer-with-ui/catalog.json`. It has `Column`, `Text`, `Table`,
-`LineChart`, `AssumptionCard` and `ReviewQuote`.
+Today it shows only the answer sentence. Change `data_model_for` and `components_for`. Then the surface shows the whole answer. The catalog is in `parts/06-answer-with-ui/catalog.json`. It has `Column`, `Text`, `Table`, `LineChart`, `AssumptionCard` and `ReviewQuote`.
 
 A component points into the data model with a path. For example, the table for the Sao Paulo answer is:
 
@@ -35,8 +32,7 @@ A component points into the data model with a path. For example, the table for t
 
 The data model then holds `"table": {"columns": ["seller_id", "late_orders", ...], "rows": [[...], ...]}`.
 
-To see every key of the answer, run the command below without `--html`. It prints the answer as JSON. For example,
-`answer["chart"]` holds `"x": "month"`, `"y": "late_orders"`, `"series": "seller"`, the `columns` and the `rows`.
+To see every key of the answer, run the command below without `--html`. It prints the answer as JSON. For example, `answer["chart"]` holds `"x": "month"`, `"y": "late_orders"`, `"series": "seller"`, the `columns` and the `rows`.
 
 A chart needs points, not rows. A point is one row with its column names as keys. So this row:
 
@@ -61,9 +57,9 @@ Expect: `Wrote answer.html`. Open it in your browser and compare it with the pic
 ## Done when
 
 - `render.py` prints an answer with a `ui` list for each of the 6 questions.
-- Each `ui` starts with `createSurface` (version 1.0, the course catalog), then `updateComponents`.
+- Each `ui` starts with `createSurface` (version 1.0, the course catalog). Then comes `updateComponents`.
 - Every component is one the course catalog has.
-- A `Table` points into the data model, and there it finds every row of the answer.
+- A `Table` points into the data model. There it finds every row of the answer.
 - The Sao Paulo answer shows its chart and a `ReviewQuote` for each cited review.
 
 ```bash

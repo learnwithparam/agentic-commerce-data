@@ -2,20 +2,16 @@
 
 ## The problem
 
-A seller partner asks the desk a question. The desk can read the `customers` table, so it may answer with a
-buyer's id and zip code. The partner was never meant to see those.
+A seller partner asks the desk a question. The desk can read the `customers` table. So it may answer with a buyer's id and zip code. The partner was never meant to see those.
 
-For example, "which cities do our buyers live in?" comes back with a zip prefix for every buyer. One question, one
-leak. A good desk checks who is asking, and hides private columns before the rows leave.
+For example, "which cities do our buyers live in?" comes back with a zip prefix for every buyer. One question causes one leak. A good desk checks who is asking. It hides private columns before the rows leave.
 
 ## Your challenge
 
 This folder holds `access.py`. It has two TODOs: `check` and `mask`.
 
-1. In `check(role, sql)`, use `sqlglot` to list every table the query reads, even inside a join or a `WITH`
-   clause. Raise `AccessDeniedError` when the role may not read one. Raise for a role that is not listed.
-2. In `mask(role, columns, rows)`, swap each value in `PRIVATE_COLUMNS` for a short hash, so one person keeps one
-   token. Hide the zip prefix. Admin sees the rows as they are.
+1. In `check(role, sql)`, use `sqlglot` to list every table the query reads. That includes tables inside a join or a `WITH` clause. Raise `AccessDeniedError` when the role may not read one. Raise for a role that is not listed.
+2. In `mask(role, columns, rows)`, swap each value in `PRIVATE_COLUMNS` for a short hash. One person keeps one token. Hide the zip prefix. Admin sees the rows as they are.
 
 Try your check on a partner:
 
@@ -41,7 +37,7 @@ flowchart LR
 ## Done when
 
 - Admin may read the customers table.
-- Partner may read sellers but not customers, and the refusal has a reason.
+- Partner may read sellers but not customers. The refusal has a reason.
 - Partner is also refused when customers hides in a join or a `WITH` clause.
 - A role that is not listed may read nothing.
 - Analyst sees one token per person, and the zip prefix is hidden.

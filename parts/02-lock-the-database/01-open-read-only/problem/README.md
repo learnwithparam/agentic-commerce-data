@@ -2,14 +2,11 @@
 
 ## The problem
 
-The naive agent opens the database like this: `sqlite3.connect(DB_PATH)`. That connection can read, and it can
-also change and delete. So if the model ever writes a `DELETE`, the rows are gone.
+The naive agent opens the database like this: `sqlite3.connect(DB_PATH)`. That connection can read. It can also change and delete. So if the model ever writes a `DELETE`, the rows are gone.
 
-For example, send a command that deletes every row of `orders` to a tool that opens the file this way. SQLite runs it. All 99,441 orders
-disappear, and nothing warns you.
+For example, send a command that deletes every row of `orders` to a tool that opens the file this way. SQLite runs it. All 99,441 orders disappear, and nothing warns you.
 
-You can stop this in the database itself. SQLite can open a file in read-only mode. Then SQLite refuses every
-write, whatever the SQL says.
+You can stop this in the database itself. SQLite can open a file in read-only mode. Then SQLite refuses every write, whatever the SQL says.
 
 ```mermaid
 flowchart LR
@@ -22,8 +19,7 @@ flowchart LR
 
 ## Your challenge
 
-This folder holds `sql_tool.py`. It is the only door from the agent to the database. Change `connect()` so it
-opens the file read-only.
+This folder holds `sql_tool.py`. It is the only door from the agent to the database. Change `connect()` so it opens the file read-only.
 
 Try the tool by hand first. A read works:
 
@@ -38,7 +34,7 @@ Do not send a write to your real database by hand. The check sends writes for yo
 ## Done when
 
 - A `SELECT` still returns its rows.
-- A command that deletes every row of `orders` comes back with an error that says the database is read-only.
+- A command that deletes every row of `orders` comes back with an error. The error says the database is read-only.
 - `UPDATE`, `INSERT`, `DROP` and `CREATE` get the same error.
 - After all those writes, every table in the copy keeps its row count.
 - Your real `data/olist.db` still has every row.
@@ -61,5 +57,5 @@ Expect: `Done. All 5 rules pass.`
 ## Words you will use
 
 - **Read-only mode**: SQLite opens the file so that it can only read. Every write fails with an error.
-- **URI**: a file name written like a web address, `file:data/olist.db?mode=ro`. The part after `?` holds options.
+- **URI**: a file name written like a web address, `file:data/olist.db?mode=ro`. The part after `?` holds the options.
 - **Row count**: how many rows a table has. The check compares counts before and after each write.

@@ -2,20 +2,15 @@
 
 ## The problem
 
-A category manager does not want to read a paragraph with twelve numbers in it. A security team will not accept an
-agent that sends HTML or JavaScript to the browser.
+A category manager does not want to read a paragraph with twelve numbers in it. A security team will not accept an agent that sends HTML or JavaScript to the browser.
 
-A2UI solves both. It is a format that sends data, not code. The agent picks parts of the screen from a list the
-browser already trusts. That list is called a catalog. A check can read every row back out of the surface.
+A2UI solves both problems. It is a format that sends data, not code. The agent picks parts of the screen from a list the browser already trusts. That list is called a catalog. A check can read every row back out of the surface.
 
-AG-UI then carries the answer to the screen as small events. The screen shows progress while the agent still
-works.
+AG-UI then carries the answer to the screen as small events. The screen shows progress while the agent still works.
 
 You write Python only. The course gives you the page that draws the screen: `renderer.html` in this folder.
 
-For example, the finished agent's answer about late deliveries in Sao Paulo shows four parts.
-They are a table of sellers, a chart of late orders by month, the assumptions, and three quoted reviews. You saw it in `answer.html` in the
-orientation. In this part you build the same screen from A2UI messages.
+For example, the finished agent's answer about late deliveries in Sao Paulo has four parts. They are a table of sellers, a chart of late orders by month, the assumptions, and three quoted reviews. You saw it in `answer.html` in the orientation. In this part you build the same screen from A2UI messages.
 
 ```mermaid
 flowchart LR
@@ -27,11 +22,9 @@ flowchart LR
 
 ## How the steps run
 
-Each step has one small Python program in its `problem/` folder. You change that program. The helpers it uses
-are in `kit.py` in this folder. The course catalog is `catalog.json`.
+Each step has one small Python program in its `problem/` folder. You change that program. The helpers it uses are in `kit.py` in this folder. The course catalog is `catalog.json`.
 
-You run a step's program with `kit.py` and the step name. Add `--folder solution` after the step name to run the
-sample solution instead.
+You run a step's program with `kit.py` and the step name. Add `--folder solution` after the step name to run the sample solution instead.
 
 ## Steps
 
@@ -81,7 +74,7 @@ Expect: `Part answer-with-ui is done: 3/3 steps pass.`
 
 **The problem.** A category manager will not read twelve numbers in a paragraph.
 
-**What you hand in.** A commit on your repo with your A2UI surfaces, the schema check and the AG-UI stream.
+**What you hand in.** A commit on your repo. It holds your A2UI surfaces, the schema check and the AG-UI stream.
 
 **How it is checked.** Each line is yes or no:
 
@@ -89,25 +82,20 @@ Expect: `Part answer-with-ui is done: 3/3 steps pass.`
 2. Does `bun run verify validate-the-surface` pass, with 5 of 5 broken surfaces rejected?
 3. Does `bun run verify stream-the-events` pass?
 
-**Extension, not graded.** Add one component to `catalog.json` and draw it in `renderer.html`. For example, a
-`Metric` card that shows one big number. Then add a broken surface for it to `surfaces/` and show that your
-check rejects it.
+**Extension, not graded.** Add one component to `catalog.json` and draw it in `renderer.html`. For example, a `Metric` card that shows one big number. Then add a broken surface for it to `surfaces/`. Show that your check rejects it.
 
 ## Finished
 
-Your agent's answer is now a screen. The rows are a table, the trend is a chart, and every quote is a card with
-its review id. You have a check that catches a broken surface, and the events arrive while the agent works.
+Your agent's answer is now a screen. The rows are a table. The trend is a chart.
 
-The stream in stream-the-events does not call your check yet. In production you would run `problems_in()` on
-each surface in `server.py`, and send an error event instead of a broken surface.
+Every quote is a card with its review id. You have a check that catches a broken surface. The events arrive while the agent works.
 
-Next, in approve-the-write, the screen shows a new kind of surface: an approval form. When someone asks to pause
-a seller, the run ends with a question to a person, and nothing changes until that person says yes.
+The stream in stream-the-events does not call your check yet. In production you would run `problems_in()` on each surface in `server.py`. It would send an error event instead of a broken surface.
+
+Next, in approve-the-write, the screen shows a new kind of surface: an approval form. When someone asks to pause a seller, the run ends with a question to a person. Nothing changes until that person says yes.
 
 ## Read before or after
 
-- [A2UI specification](https://a2ui.org/specification/v1.0-a2ui/). The messages the agent sends, and why a
-  catalog makes the screen data, not code.
+- [A2UI specification](https://a2ui.org/specification/v1.0-a2ui/). The messages the agent sends, and why a catalog makes the screen data, not code.
 - [AG-UI events](https://docs.ag-ui.com/concepts/events). The event types used in stream-the-events.
-- [MCP Apps](https://blog.modelcontextprotocol.io/posts/2026-01-26-mcp-apps/). Another way to show a UI, inside
-  Claude Desktop. It sends HTML in a sandbox, so this course shows it here and does not build on it.
+- [MCP Apps](https://blog.modelcontextprotocol.io/posts/2026-01-26-mcp-apps/). Another way to show a UI, inside Claude Desktop. It sends HTML in a sandbox. So this course shows it here, and does not build on it.

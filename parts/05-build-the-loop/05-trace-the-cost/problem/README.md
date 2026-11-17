@@ -2,19 +2,17 @@
 
 ## The problem
 
-Nobody knows what one question costs. A manager asks "why is the desk slow today?" and no one can say which step
-is slow. For example, one answer used 5,000 tokens and took four seconds, and most of that was one step. Without a
-trace, you guess. With one, you read a line.
+Nobody knows what one question costs. A manager asks, "Why is the desk slow today?" No one can say which step is slow.
+
+For example, one answer used 5,000 tokens and took four seconds. Most of that time went to one step. Without a trace, you guess. With one, you read a line.
 
 ## Your challenge
 
 This folder holds `trace.py`. It has three TODOs: `build_trace`, `append_to_log` and `report`.
 
-1. In `build_trace`, add up the seconds and tokens over the steps. Price input and output tokens apart. Name the
-   slowest step.
+1. In `build_trace`, add up the seconds and tokens over the steps. Price input and output tokens apart. Name the slowest step.
 2. In `append_to_log`, add one JSON line per question. Never erase old lines.
-3. In `report`, give the total cost, the slowest question, and the 95th percentile of seconds. That number says
-   "nineteen questions in twenty were this fast or faster".
+3. In `report`, give the total cost, the slowest question, and the 95th percentile of seconds. That number means "nineteen questions in twenty were this fast or faster".
 
 Try one question:
 
@@ -35,7 +33,7 @@ flowchart LR
 
 - A trace adds up seconds and tokens over every step.
 - The cost prices input and output tokens apart.
-- The trace names the slowest step, and an empty question does not crash.
+- The trace names the slowest step. An empty question does not crash it.
 - Every question adds one line to the log.
 - The report gives the total cost, the slowest question and the 95th percentile.
 
@@ -47,11 +45,11 @@ Expect: `Done. All 6 rules pass.`
 
 ## If you get stuck
 
-| What you see                             | Fix                                                                        |
-| ---------------------------------------- | -------------------------------------------------------------------------- |
-| `FAIL ... prices input and output apart` | Use the input price for `tokens_in` and the output price for `tokens_out`. |
-| `FAIL ... adds one line to the log`      | Open the file with `"a"`, not `"w"`.                                       |
-| `FAIL ... 95th percentile`               | Sort first. Then take index `ceil(0.95 * count) - 1`.                      |
+| What you see                             | Fix                                                                         |
+| ---------------------------------------- | --------------------------------------------------------------------------- |
+| `FAIL ... prices input and output apart` | Use the input price for `tokens_in`. Use the output price for `tokens_out`. |
+| `FAIL ... adds one line to the log`      | Open the file with `"a"`, not `"w"`.                                        |
+| `FAIL ... 95th percentile`               | Sort first. Then take index `ceil(0.95 * count) - 1`.                       |
 
 ## Words you will use
 

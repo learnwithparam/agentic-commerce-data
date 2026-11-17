@@ -2,8 +2,8 @@
 
 ## The problem
 
-In March the desk told an ops lead that Sao Paulo city had 694 sellers. After the city-spelling fix, the
-desk says 704. The old answer was overwritten, so nobody can ask what the desk believed in March.
+In March the desk told an ops lead that Sao Paulo city had 694 sellers. After the city-spelling fix, the desk says 704. The old answer was overwritten. So nobody can ask what the desk believed in March.
+
 For example, a report must show 704 now. A replay of the March question must still show 694.
 
 ```mermaid
@@ -16,14 +16,10 @@ flowchart LR
 
 ## Your challenge
 
-Open `changes.py` in this folder. It loads the desk's dated facts as Graphiti `EntityEdge` objects. It asks six
-questions and prints the answers. Write two functions.
+Open `changes.py` in this folder. It loads the desk's dated facts as Graphiti `EntityEdge` objects. It asks six questions and prints the answers. Write two functions.
 
-1. `add(edges, new_edge)`. When a new edge arrives for a fact, close the older current edge by setting its
-   `invalid_at` to the new edge's `valid_at`. Never delete it. Graphiti already has this rule,
-   `resolve_edge_contradictions`, in `graphiti_core.utils.maintenance.edge_operations`. Use it.
-2. `as_of(edges, fact_key, when)`. Return the value that was true on that date. Return `None` if no edge was
-   true yet.
+1. `add(edges, new_edge)`. When a new edge arrives for a fact, close the older current edge by setting its `invalid_at` to the new edge's `valid_at`. Never delete it. Graphiti already has this rule in `resolve_edge_contradictions`, in `graphiti_core.utils.maintenance.edge_operations`, so use it.
+2. `as_of(edges, fact_key, when)`. Return the value that was true on that date. Return `None` if no edge was true yet.
 
 Edges can arrive in any order. Sort the edges of a fact by `valid_at` before you close any of them.
 
@@ -37,7 +33,7 @@ Expect: one line of JSON, with an `answers` list and an `edges` list.
 
 ## Done when
 
-- `add` closes the old Sao Paulo city edge, and the old edge is still in the list.
+- `add` closes the old Sao Paulo city edge. The old edge is still in the list.
 - `as_of` gives 694 for 2026-03-15 and 704 for 2026-07-01.
 - The Sao Paulo state edge stays open, because its value never changed.
 
@@ -55,9 +51,7 @@ Expect: `Done. All 8 rules pass.`
 
 ## What this check does not prove
 
-The check uses hand-written edges and needs no database and no model key. It does not prove that a live
-Graphiti, with a real model, reads a text and dates its facts correctly. That needs your own key and is not
-checked here.
+The check uses hand-written edges. It needs no database and no model key. It does not prove that a live Graphiti, with a real model, reads a text and dates its facts correctly. That needs your own key, and it is not checked here.
 
 ## If you get stuck
 

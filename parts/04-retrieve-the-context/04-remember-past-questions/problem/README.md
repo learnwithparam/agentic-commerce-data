@@ -2,12 +2,9 @@
 
 ## The problem
 
-The desk asks many of the same questions again and again. A past question with SQL that worked is a great
-example to show the model. But a past pair with a wrong answer teaches the model the wrong answer, every time.
+The desk asks many of the same questions again and again. A past question with SQL that worked is a good example to show the model. But a past pair with a wrong answer teaches the model the wrong answer, every time.
 
-For example, an analyst once saved "How many sellers are based in Sao Paulo city?" with
-`WHERE seller_city = 'sao paulo'`. It runs, and it says 694. The right answer is 704. If the store keeps that
-pair, the agent copies the mistake forever.
+For example, an analyst once saved "How many sellers are based in Sao Paulo city?" with `WHERE seller_city = 'sao paulo'`. It runs, and it says 694. The right answer is 704. If the store keeps that pair, the agent copies the mistake forever.
 
 So the store checks each pair before it keeps it. The rows must match the reference query for that question.
 
@@ -26,14 +23,13 @@ flowchart LR
 
 Fill in `why_not_store()` in `memory.py`. Return a reason, so the pair is refused, when:
 
-1. the question has no reference query in `world/golden.toml`.
-2. the SQL does not run.
-3. its rows are not the reference rows. Compare `comparable(rows)`, not the SQL text, and not the row count.
+1. The question has no reference query in `world/golden.toml`.
+2. The SQL does not run.
+3. Its rows are not the reference rows. Compare `comparable(rows)`. Do not compare the SQL text, and do not compare the row count.
 
 Return `None` when the pair is right. `add()` and `examples()` already work.
 
-Run the command below only after you fill in `why_not_store()`. The starter stores every pair, even a wrong one.
-If you ran it too early, delete `data/memory.jsonl`, or run `bun run world reset`.
+Run the command below only after you fill in `why_not_store()`. The starter stores every pair, even a wrong one. If you ran it too early, delete `data/memory.jsonl`. Or run `bun run world reset`.
 
 ```bash
 uv run python parts/04-retrieve-the-context/04-remember-past-questions/problem/memory.py add "How many sellers are based in Sao Paulo city?" "SELECT COUNT(*) FROM sellers WHERE seller_city = 'sao paulo'"
@@ -65,7 +61,7 @@ Expect: `Done. All 5 rules pass.`
 | -------------------------------------------- | ---------------------------------------------------------------------- |
 | `FAIL a pair whose rows match ... is stored` | Two queries can be written differently and still be right.             |
 | `FAIL a pair whose rows do not match ...`    | One row of 694 and one row of 704 have the same count. Compare values. |
-| `FAIL a pair whose SQL does not run`         | Catch the error from `guard.run` and return it as the reason.          |
+| `FAIL a pair whose SQL does not run`         | Catch the error from `guard.run`. Return it as the reason.             |
 
 ## Words you will use
 

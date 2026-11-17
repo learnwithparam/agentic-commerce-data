@@ -2,23 +2,19 @@
 
 ## The problem
 
-The naive agent cuts the model's reply at every `;` and runs each piece. It runs them on a connection that can
-change the data.
+The naive agent cuts the model's reply at every `;`. Then it runs each piece. It runs them on a connection that can change the data.
 
-So one hidden order in a review comment could delete a whole table. This kind of attack is called a prompt
-injection: text in the data that tells the model what to do. And one careless query could read all 1,000,163
-geolocation rows at once.
+So one hidden order in a review comment could delete a whole table. This kind of attack is called a prompt injection. It is text in the data that tells the model what to do. One careless query could also read all 1,000,163 geolocation rows at once.
 
-For example, the naive agent opens the file with `sqlite3.connect(DB_PATH)`. If the model replies with a command that deletes every row of the orders table, all 99,441 orders are gone. No error, no warning.
+For example, the naive agent opens the file with `sqlite3.connect(DB_PATH)`. If the model replies with a command that deletes every row of the orders table, all 99,441 orders are gone. No error appears, and no warning.
 
 Before you teach the agent anything else, you prove three things:
 
 1. The database itself refuses every write.
-2. Every query is checked before it runs: one `SELECT`, only the nine tables, at most 1,000 rows.
+2. Every query is checked before it runs. It must be one `SELECT`, use only the nine tables, and return at most 1,000 rows.
 3. When someone asks the agent to change data, it says no, with a reason.
 
-The finished agent already does this. Ask it `uv run ask-finished "Delete the test orders"`. It prints
-`Refused: This desk answers questions with read-only queries.` and a reason.
+The finished agent already does this. Ask it `uv run ask-finished "Delete the test orders"`. It prints `Refused: This desk answers questions with read-only queries.` and a reason.
 
 ```mermaid
 flowchart LR
@@ -40,7 +36,7 @@ An evening in 4 steps.
 | [refuse-the-mutation](03-refuse-the-mutation/problem/README.md)           | 10      | `ask.py` refuses "Delete the test orders" and "Set seller ... to inactive" | `ask.py --json` returns `refused: true` and a reason; `data/logs/queries.jsonl` shows no write ran       |
 | [mask-the-private-columns](04-mask-the-private-columns/problem/README.md) | 12      | `access.py`: tables per role, private columns hashed                       | runs `access.py` for admin, analyst and partner; reads the JSON it prints                                |
 
-Each step folder holds its own files. A step starts from the work of the step before it, already done.
+Each step folder holds its own files. A step starts from the work of the step before it. That work is already done.
 
 ## Walkthrough
 
@@ -54,7 +50,7 @@ uv run python parts/02-lock-the-database/01-open-read-only/problem/sql_tool.py "
 
 Expect: `{"columns": ["COUNT(*)"], "rows": [[3095]]}`
 
-Open it read-only, then let the check send the writes to a copy:
+Open it read-only. Then let the check send the writes to a copy:
 
 ```bash
 bun run verify open-read-only
@@ -112,8 +108,7 @@ Expect: `Part lock-the-database is done: 4/4 steps pass.`
 
 **The problem.** One injected comment could drop a table.
 
-**What you hand in.** A commit with your read-only `sql_tool.py`, your `sqlglot` validator and the refusal path
-in `ask.py`.
+**What you hand in.** A commit with three things: your read-only `sql_tool.py`, your `sqlglot` validator, and the refusal path in `ask.py`.
 
 **How it is graded.** Each line is yes or no.
 
@@ -124,17 +119,13 @@ in `ask.py`.
 | Is every write request refused with a reason, with no write in the query log?        | `bun run verify refuse-the-mutation`      |
 | Is each role limited to its tables, with private columns hidden?                     | `bun run verify mask-the-private-columns` |
 
-**Extension, not graded.** Write 3 new attack strings that the course list misses. Add them to a copy of
-`checks/attacks.toml` and show your validator refuses them.
+**Extension, not graded.** Write 3 new attack strings that the course list misses. Add them to a copy of `checks/attacks.toml`. Show that your validator refuses them.
 
 ## Finished
 
-You now have an agent that cannot change the database. SQLite refuses writes, your validator refuses bad queries
-before they run, and the agent says no with a reason. Every refusal is in the query log.
+You now have an agent that cannot change the database. SQLite refuses writes. Your validator refuses bad queries before they run. The agent says no, with a reason. Every refusal is in the query log.
 
-The answers are still often wrong. For example, "What is our total revenue?" has two fair answers, and the agent
-picks one at random. In [define-the-metrics](../03-define-the-metrics/README.md) you write down what each business
-number means, once, and the agent uses those definitions first.
+The answers are still often wrong. For example, "What is our total revenue?" has two fair answers. The agent picks one at random. In [define-the-metrics](../03-define-the-metrics/README.md) you write down what each business number means, once. The agent uses those definitions first.
 
 ## Read before or after
 

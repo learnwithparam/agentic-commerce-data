@@ -2,9 +2,9 @@
 
 ## The problem
 
-A model sometimes gets the format wrong. It may name a component the catalog does not have, forget the version,
-or put HTML where data should be. If the agent sends that surface, the screen breaks in front of the category
-manager. Worse, the error says nothing useful.
+A model sometimes gets the format wrong. It may name a component the catalog does not have. It may forget the version. It may put HTML where data should be.
+
+If the agent sends that surface, the screen breaks in front of the category manager. Worse, the error says nothing useful.
 
 So the agent checks every surface before it sends it. When something is wrong, the check says exactly where.
 
@@ -21,16 +21,12 @@ flowchart LR
 
 Open `validate.py` in this folder. Fill in `problems_in(messages)`:
 
-1. Check every message with `kit.schema_problems(index, message)`. It uses the A2UI schemas in `schemas/`,
-   copied from the A2UI project, and the course catalog.
-2. Add two rules the schema cannot see. One component must have the id `root`. Every child id that a `Column`
-   names must be a component of the surface.
+1. Check every message with `kit.schema_problems(index, message)`. It uses the A2UI schemas in `schemas/`, copied from the A2UI project. It also uses the course catalog.
+2. Add two rules the schema cannot see. One component must have the id `root`. Every child id that a `Column` names must be a component of the surface.
 
-Each problem is `{"path": ..., "message": ...}`. The path starts with the message number. For example,
-`/1/updateComponents/components/0/children/7` means: message 1, its components, item 0, its children, item 7.
+Each problem is `{"path": ..., "message": ...}`. The path starts with the message number. For example, `/1/updateComponents/components/0/children/7` means: message 1, its components, item 0, its children, item 7.
 
-The `surfaces/` folder holds 6 good surfaces from golden answers and 5 broken ones. Each broken file says what is
-wrong in `broken`, and where in `expected_path`.
+The `surfaces/` folder holds 6 good surfaces from golden answers and 5 broken ones. Each broken file says what is wrong in `broken`. It also says where, in `expected_path`.
 
 ```bash
 uv run python parts/06-answer-with-ui/kit.py validate-the-surface parts/06-answer-with-ui/02-validate-the-surface/surfaces/bad-missing-child.json

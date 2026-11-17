@@ -2,12 +2,9 @@
 
 ## The problem
 
-Other teams want to send work to your ops desk agent. First they need to know what it is and how to reach it.
-In A2A, an agent says this in an Agent Card. An Agent Card is a small JSON file at a fixed address:
-`/.well-known/agent-card.json`.
+Other teams want to send work to your ops desk agent. First they need to know what it is and how to reach it. In A2A, an agent says this in an Agent Card. An Agent Card is a small JSON file at a fixed address: `/.well-known/agent-card.json`.
 
-Your card today is not ready. It lists no skills, and it does not say which version of A2A it speaks. Another
-agent that reads it learns nothing useful.
+Your card today is not ready. It lists no skills. It does not say which version of A2A it speaks. Another agent that reads it learns nothing useful.
 
 ![Your card, served at /.well-known/agent-card.json](../images/expected.png)
 
@@ -16,8 +13,7 @@ agent that reads it learns nothing useful.
 Fill in `agent-card.json` in this folder so it is a valid A2A 1.0 card. The server in `ops_agent.py` already
 serves the file. You only edit the JSON.
 
-The current A2A spec changed the card. In the old spec, `url` and `protocolVersion` sat at the top of the card. Now they
-live in a list called `supportedInterfaces`. Each entry says where the agent listens and how.
+The current A2A spec changed the card. In the old spec, `url` and `protocolVersion` sat at the top of the card. Now they live in a list called `supportedInterfaces`. Each entry says where the agent listens and how.
 
 For example, this is one entry:
 
@@ -25,8 +21,7 @@ For example, this is one entry:
 { "url": "http://127.0.0.1:8810/a2a", "protocolBinding": "JSONRPC", "protocolVersion": "1.0" }
 ```
 
-Then add at least one skill. A skill needs an `id`, a `name`, a `description`, a list of `tags` and a list of
-`examples`. An example is a real question someone may send, such as this one:
+Then add at least one skill. A skill needs an `id`, a `name`, a `description`, a list of `tags` and a list of `examples`. An example is a real question someone may send, such as this one:
 
 ```text
 How many sellers are based in Sao Paulo city?

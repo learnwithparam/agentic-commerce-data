@@ -2,24 +2,20 @@
 
 ## The problem
 
-When a data agent is wrong in a way you can see, the mistake is cheap: someone notices it. When an agent gives a
-wrong number that looks right, the mistake is expensive. The number goes into a plan, and nobody checks it.
+When a data agent is wrong in a way you can see, the mistake is cheap. Someone notices it.
 
-For example, the naive agent says the total revenue is 15,843,553.24. That looks fine. But the reference answer,
-the sum of all payments, is 16,008,872.12. Nothing on the screen tells you that the two are different.
+When an agent gives a wrong number that looks right, the mistake is expensive. The number goes into a plan. Nobody checks it.
 
-Two words help you read the research below. Text-to-SQL means the model writes SQL straight from the question. A
-semantic layer means the model picks from fixed metric definitions instead.
+For example, the naive agent says the total revenue is 15,843,553.24. That looks fine. But the reference answer is 16,008,872.12. It is the sum of all payments. Nothing on the screen tells you the two numbers differ.
+
+Two words help you read the research below. Text-to-SQL means the model writes SQL straight from the question. A semantic layer means the model picks from fixed metric definitions instead.
 
 Other teams found the same problem:
 
-- dbt Labs asked the same 11 questions 20 times each, on one of its own data projects
-  ([dbt Labs benchmark](https://docs.getdbt.com/blog/semantic-layer-vs-text-to-sql-2026)).
-  This is a company testing its own product, so read it with care.
+- dbt Labs asked the same 11 questions 20 times each, on one of its own data projects ([dbt Labs benchmark](https://docs.getdbt.com/blog/semantic-layer-vs-text-to-sql-2026)). This is a company testing its own product, so read it with care.
 - In that test, text-to-SQL gave wrong answers that looked right. The semantic layer gave a clear error instead.
-- With one model, text-to-SQL scored 90.0% and the semantic layer scored 98.2%.
-- LinkedIn found that 60% of the questions in its text-to-SQL test had more than one accepted answer
-  ([LinkedIn Engineering](https://www.linkedin.com/blog/engineering/ai/practical-text-to-sql-for-data-analytics)).
+- With one model, text-to-SQL scored 90.0%. The semantic layer scored 98.2%.
+- LinkedIn found that 60% of the questions in its text-to-SQL test had more than one accepted answer ([LinkedIn Engineering](https://www.linkedin.com/blog/engineering/ai/practical-text-to-sql-for-data-analytics)).
 - If you ignore this, the score shows 10 to 15% fewer right answers than the agent really gives.
 
 So before you fix anything, you measure. In this part you do three things:
@@ -96,8 +92,7 @@ Expect: `Part score-the-naive-agent is done: 4/4 steps pass.`
 
 **The problem.** Nobody knows how often the chatbot is wrong, or why.
 
-**What you hand in.** A commit with your scored run `runs/naive.json`, your `notes/failures.md` and your
-`golden.toml` with the two `accept` lists.
+**What you hand in.** A commit with three things: your scored run `runs/naive.json`, your `notes/failures.md`, and your `golden.toml` with the two `accept` lists.
 
 **How it is graded.** Each line is yes or no.
 
@@ -108,17 +103,13 @@ Expect: `Part score-the-naive-agent is done: 4/4 steps pass.`
 | Do revenue and GMV accept both fair answers, and does a wrong total fail?                     | `bun run verify accept-many-answers`    |
 | Does your own database open, with every table described and three questions that return rows? | `bun run verify point-at-your-database` |
 
-**Extension, not graded.** Add 5 golden questions from your own work to a copy of `world/golden.toml`. Check each
-answer by hand, and write in the `note` how you checked it. Then score the naive agent on them.
+**Extension, not graded.** Add 5 golden questions from your own work to a copy of `world/golden.toml`. Check each answer by hand. In the `note`, write how you checked it. Then score the naive agent on them.
 
 ## Finished
 
-You now have a score you can trust: 14 of 30 for the naive agent, judged by rows and not by words. You know the
-trap behind each of the 16 misses. And the golden set no longer marks a fair answer wrong.
+You now have a score you can trust. The naive agent scores 14 of 30. It is judged by rows, not by words. You know the trap behind each of the 16 misses. The golden set no longer marks a fair answer wrong.
 
-The agent still runs any SQL the model writes, on a connection that can change the data. For example, a reply that
-deletes every row of the orders table would delete every order. In [lock-the-database](../02-lock-the-database/README.md) you make
-that impossible before you fix anything else.
+The agent still runs any SQL the model writes. It runs it on a connection that can change the data. For example, a reply that deletes every row of the orders table would delete every order. In [lock-the-database](../02-lock-the-database/README.md) you make that impossible. You do this before you fix anything else.
 
 ## Read before or after
 

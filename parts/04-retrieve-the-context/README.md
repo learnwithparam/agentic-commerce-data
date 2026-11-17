@@ -8,15 +8,13 @@ The model cannot guess some facts about this data:
 - `customers` has one row per order, not one per person.
 - `product_name_lenght` is a real column name, even with the typo.
 
-For example, the stored spellings of Sao Paulo include `sao paulo`, `sao paulop`, `sao pauo` and
-`sao paulo / sao paulo`. A query that types only `'sao paulo'` finds 694 sellers, not 704.
+For example, the stored spellings of Sao Paulo include `sao paulo`, `sao paulop`, `sao pauo` and `sao paulo / sao paulo`. A query that types only `'sao paulo'` finds 694 sellers, not 704.
 
-Some answers are not in any column at all. The reason behind a jump in late deliveries is in 40,977 Portuguese
-review comments.
+Some answers are not in any column at all. The reason behind a jump in late deliveries is in 40,977 Portuguese review comments.
 
-Retrieval means finding the right context and handing it to the model at the moment it needs it. In this part you
-build five kinds of it. The agent gets the table cards it needs and the real stored values. It also gets past questions that were
-right, and the review comments that explain a number.
+Retrieval means finding the right context. Then you hand it to the model at the moment it needs it. In this part you build five kinds of context.
+
+The agent gets the table cards it needs, and the real stored values. It also gets past questions that were right. And it gets the review comments that explain a number.
 
 ```mermaid
 flowchart TB
@@ -42,7 +40,7 @@ An evening in 5 steps.
 | [remember-past-questions](04-remember-past-questions/problem/README.md) | 7       | `memory.py`: a store of verified question and SQL pairs               | a pair whose rows do not match its reference is rejected on insert                                              |
 | [search-the-reviews](05-search-the-reviews/problem/README.md)           | 12      | `reviews.py`: review search filtered by SQL first                     | every returned `review_id` belongs to the seller and window asked; an English query finds Portuguese complaints |
 
-Each step folder holds its own files. A step starts from the work of the step before it, already done.
+Each step folder holds its own files. A step starts from the work of the step before it. That work is already done.
 
 ## Walkthrough
 
@@ -106,8 +104,7 @@ Expect: `Part retrieve-the-context is done: 5/5 steps pass.`
 
 **The problem.** The model cannot guess nine spellings or read Portuguese reviews.
 
-**What you hand in.** A commit with your table cards, schema pruning, value index, verified pair store and review
-search.
+**What you hand in.** A commit with five things. It holds your table cards, schema pruning, value index, verified pair store and review search.
 
 **How it is graded.** Each line is yes or no.
 
@@ -119,23 +116,20 @@ search.
 | Is a pair with wrong rows refused on insert?                                               | `bun run verify remember-past-questions` |
 | Does every review found belong to the seller and window asked?                             | `bun run verify search-the-reviews`      |
 
-**Extension, not graded.** Measure the golden score with and without the table cards. Record the difference in
-your write-up.
+**Extension, not graded.** Measure the golden score with and without the table cards. Record the difference in your write-up.
 
 ## Finished
 
 You now have every kind of context the agent needs:
 
-- cards that describe each table, and a pruner that sends only the right ones.
-- a value index that turns "Sao Paulo" into nine stored spellings.
-- a store of past pairs that were right.
-- a review search that quotes real comments with their `review_id`.
+- Cards that describe each table. A pruner that sends only the right ones.
+- A value index that turns "Sao Paulo" into nine stored spellings.
+- A store of past pairs that were right.
+- A review search that quotes real comments with their `review_id`.
 
-Each piece works on its own. In [build-the-loop](../05-build-the-loop/README.md) you join them in one agent loop.
-The loop routes each question to SQL, reviews or both, repairs a failed query, and cites the rows behind every number.
+Each piece works on its own. In [build-the-loop](../05-build-the-loop/README.md) you join them in one agent loop. The loop routes each question to SQL, reviews or both. It repairs a failed query. It cites the rows behind every number.
 
 ## Read before or after
 
 - [Python difflib](https://docs.python.org/3/library/difflib.html). The close-match function the value index uses.
-- [SQLite full-text search](https://www.sqlite.org/fts5.html). A faster way to search many comments, which the
-  finished agent uses.
+- [SQLite full-text search](https://www.sqlite.org/fts5.html). A faster way to search many comments. The finished agent uses it.
